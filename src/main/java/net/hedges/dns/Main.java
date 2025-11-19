@@ -1,71 +1,40 @@
 package net.hedges.dns;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.nio.NioIoHandler;
-import io.netty.channel.socket.nio.NioDatagramChannel;
-
-import io.netty.handler.codec.dns.DatagramDnsQueryDecoder;
-import io.netty.handler.codec.dns.DatagramDnsResponseEncoder;
+import net.hedges.dns.rule.DnsRule;
+import net.hedges.dns.rule.ForwardRule;
+import net.hedges.dns.rule.RuleEngine;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 public class Main {
 
-    private final EventLoopGroup group;
-    private final Channel channel;
-
-    private Main(EventLoopGroup group, Channel channel) {
-        this.group = group;
-        this.channel = channel;
-    }
-
-    public static Main start(DnsServerConfig config, Zone zone) throws InterruptedException {
-
+    public static void main(String[] args) throws Exception {
         EventLoopGroup group = new MultiThreadIoEventLoopGroup(
-                config.workerThreads(),
+                Runtime.getRuntime().availableProcessors(),
                 NioIoHandler.newFactory()
         );
 
-        Bootstrap b = new Bootstrap();
-        b.group(group)
-                .channel(NioDatagramChannel.class)
-                .option(ChannelOption.SO_REUSEADDR, config.reuseAddress())
-                .localAddress(new InetSocketAddress(config.port()))
-                .handler(new ChannelInitializer<NioDatagramChannel>() {
-                    @Override
-                    protected void initChannel(NioDatagramChannel ch) {
-                        ChannelPipeline p = ch.pipeline();
-                        p.addLast(new DatagramDnsQueryDecoder());
-                        p.addLast(new DatagramDnsResponseEncoder());
-                        p.addLast(new RobustDnsHandler(zone));
-                    }
-                });
+        UdpForwarderBackend forwarder = new UdpForwarderBackend(
+                group,
+                new InetSocketAddress("1.1.1.1", 53),
+                2000
+        );
+        forwarder.start();
 
-        Channel ch = b.bind().sync().channel();
-        System.out.println("DNS server listening on UDP port "
-                + ((InetSocketAddress) (b.config().localAddress())).getPort());
-        return new Main(group, ch);
-    }
+        List<DnsRule> rules = List.of(
+                // later: BlockDomainRule, InlineZoneRule, etc
+                new ForwardRule(forwarder)
+        );
 
-    public void awaitClose() throws InterruptedException {
-        channel.closeFuture().sync();
-    }
+        RuleEngine engine = new RuleEngine(rules);
 
-    public void stop() {
-        channel.close();
-        group.shutdownGracefully(0, 5, TimeUnit.SECONDS);
-    }
+        UdpDnsServer server = new UdpDnsServer(engine);
+        server.start(53);
 
-    public static void main(String[] args) throws Exception {
-        Zone zone = Zone.example();  // your in memory zone model
-        DnsServerConfig config = DnsServerConfig.defaultConfig();
-        Main server = start(config, zone);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(server::stop));
-
-        server.awaitClose();
     }
 }
