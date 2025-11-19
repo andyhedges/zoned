@@ -2,7 +2,6 @@ package net.hedges.dns;
 
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.MultiThreadIoEventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.nio.NioIoHandler;
 import net.hedges.dns.rule.DnsRule;
 import net.hedges.dns.rule.ForwardRule;
