@@ -1,11 +1,9 @@
 package net.hedges.dns;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.codec.dns.DatagramDnsQueryDecoder;
@@ -13,7 +11,10 @@ import io.netty.handler.codec.dns.DatagramDnsResponseEncoder;
 import net.hedges.dns.rule.RuleEngine;
 
 public final class UdpDnsServer {
-    private final EventLoopGroup group = new NioEventLoopGroup();
+    private final EventLoopGroup group = new MultiThreadIoEventLoopGroup(
+            Runtime.getRuntime().availableProcessors(),
+            NioIoHandler.newFactory()
+    );
     private final RuleEngine ruleEngine;
 
     public UdpDnsServer(RuleEngine ruleEngine) {

@@ -42,7 +42,7 @@ public final class DnsResponseEnvelope {
                 add
         );
     }
-    
+
     private static List<DnsRecord> copySection(DnsMessage msg, DnsSection sec) {
         List<DnsRecord> out = new ArrayList<>();
         int count = msg.count(sec);

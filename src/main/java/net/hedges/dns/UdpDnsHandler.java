@@ -3,11 +3,17 @@ package net.hedges.dns;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.dns.*;
+import lombok.extern.slf4j.Slf4j;
+import net.hedges.dns.log.DnsLogUtil;
 import net.hedges.dns.rule.RuleEngine;
 
 import java.net.SocketAddress;
 import java.time.Instant;
+import java.util.Map;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
+@Slf4j
 public final class UdpDnsHandler extends SimpleChannelInboundHandler<DatagramDnsQuery> {
 
     private final RuleEngine ruleEngine;
@@ -18,6 +24,9 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<DatagramDns
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramDnsQuery query) {
+        log.info("Received DNS Query",
+                kv("query", DnsLogUtil.toLog(query))
+        );
         SocketAddress client = query.sender();
         DnsQuestion question = query.recordAt(DnsSection.QUESTION);
 

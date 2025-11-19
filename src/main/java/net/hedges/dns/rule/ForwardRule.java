@@ -17,17 +17,15 @@ public final class ForwardRule implements DnsRule {
 
     @Override
     public boolean matches(DnsRequestContext ctx) {
-        // catch all for now
         return true;
     }
 
     @Override
-    public CompletionStage<Optional<DnsResponseEnvelope>> applyAsync(
-            DnsRequestContext ctx,
-            RuleEngine engine) {
+    public CompletionStage<Optional<DnsResponseEnvelope>> applyAsync(DnsRequestContext ctx, RuleEngine engine) {
 
-        return backend.resolve(ctx)
-                .thenApply(resp -> Optional.of(resp))
+        return backend
+                .resolve(ctx)
+                .thenApply(Optional::of)
                 .exceptionally(ex -> {
                     // swallow and indicate we did not handle
                     return Optional.empty();

@@ -25,10 +25,7 @@ public class Main {
         );
         forwarder.start();
 
-        List<DnsRule> rules = List.of(
-                // later: BlockDomainRule, InlineZoneRule, etc
-                new ForwardRule(forwarder)
-        );
+        List<DnsRule> rules = List.of(new ForwardRule(forwarder));
 
         RuleEngine engine = new RuleEngine(rules);
 
