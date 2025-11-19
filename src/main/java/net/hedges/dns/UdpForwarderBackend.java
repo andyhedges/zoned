@@ -8,11 +8,16 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.codec.dns.*;
+import lombok.extern.slf4j.Slf4j;
+import net.hedges.dns.log.DnsLogUtil;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
+@Slf4j
 public final class UdpForwarderBackend implements DnsBackend {
 
     private final EventLoopGroup group;
@@ -81,9 +86,11 @@ public final class UdpForwarderBackend implements DnsBackend {
                 upstream,
                 upstreamId
         );
-
+        upstreamQuery.setRecursionDesired(ctx.getRawMessage().isRecursionDesired());
         DnsQuestion q = ctx.getQuestion();
         upstreamQuery.addRecord(DnsSection.QUESTION, q);
+
+        log.info("Upstreaming query", kv("query", DnsLogUtil.toLog(upstreamQuery)));
 
         ch.writeAndFlush(upstreamQuery).addListener(future -> {
             if (!future.isSuccess()) {

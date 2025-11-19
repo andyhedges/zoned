@@ -1,6 +1,5 @@
 package net.hedges.dns.rule;
 
-import io.netty.handler.codec.dns.DnsResponse;
 import net.hedges.dns.DnsRequestContext;
 import net.hedges.dns.DnsResponseEnvelope;
 
@@ -21,8 +20,7 @@ public final class RuleEngine {
         return applyRuleAtIndex(ctx, 0);
     }
 
-    private CompletionStage<Optional<DnsResponseEnvelope>> applyRuleAtIndex(
-            DnsRequestContext ctx, int index) {
+    private CompletionStage<Optional<DnsResponseEnvelope>> applyRuleAtIndex(DnsRequestContext ctx, int index) {
 
         if (index >= rules.size()) {
             return CompletableFuture.completedStage(Optional.empty());

@@ -20,7 +20,7 @@ public class Main {
 
         UdpForwarderBackend forwarder = new UdpForwarderBackend(
                 group,
-                new InetSocketAddress("1.1.1.1", 53),
+                new InetSocketAddress("8.8.8.8", 53),
                 2000
         );
         forwarder.start();

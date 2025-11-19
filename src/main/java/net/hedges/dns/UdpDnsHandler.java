@@ -41,13 +41,15 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<DatagramDns
             DatagramDnsResponse wireResp;
 
             if (error != null) {
+                log.info("got error", error);
                 wireResp = createServfail(query, question);
             } else if (maybeResp.isEmpty()) {
+                log.info("is empty response", error);
                 wireResp = createServfail(query, question);
             } else {
                 wireResp = toWireResponse(query, maybeResp.get());
             }
-
+            log.info("Sending response", kv("response", DnsLogUtil.toResponseLog(wireResp)));
             ctx.writeAndFlush(wireResp);
         });
     }
