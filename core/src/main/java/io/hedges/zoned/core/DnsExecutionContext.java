@@ -1,5 +1,8 @@
 package io.hedges.zoned.core;
 
+import io.hedges.zoned.core.domain.DnsMessageDom;
+import io.hedges.zoned.core.domain.DnsRequestContextDom;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -29,7 +32,6 @@ public final class DnsExecutionContext {
         attributes.put(key, value);
     }
 
-    @SuppressWarnings("unchecked")
     public <T> Optional<T> getAttr(String key, Class<T> type) {
         Object v = attributes.get(key);
         if (type.isInstance(v)) {

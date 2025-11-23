@@ -1,9 +1,9 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.ActionExecutor;
+import io.hedges.zoned.core.rule.ActionExecutor;
 import io.hedges.zoned.core.DnsExecutionContext;
-import io.hedges.zoned.core.DnsRequestContextDom;
-import io.hedges.zoned.core.RuleEngine;
+import io.hedges.zoned.core.domain.DnsRequestContextDom;
+import io.hedges.zoned.core.rule.RuleEngine;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.dns.*;

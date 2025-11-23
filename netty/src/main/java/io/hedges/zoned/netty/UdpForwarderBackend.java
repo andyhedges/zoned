@@ -1,8 +1,8 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.DnsMessageDom;
-import io.hedges.zoned.core.DnsQuestionDom;
-import io.hedges.zoned.core.DnsRequestContextDom;
+import io.hedges.zoned.core.domain.DnsMessageDom;
+import io.hedges.zoned.core.domain.DnsQuestionDom;
+import io.hedges.zoned.core.domain.DnsRequestContextDom;
 import io.hedges.zoned.core.DnsResolver;
 
 import io.netty.bootstrap.Bootstrap;
@@ -14,6 +14,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.codec.dns.*;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -48,6 +50,7 @@ public final class UdpForwarderBackend implements DnsResolver {
              @Override
              protected void initChannel(DatagramChannel ch) {
                  ChannelPipeline p = ch.pipeline();
+                 p.addLast("upstreamWireLogger", new LoggingHandler(LogLevel.INFO));
                  p.addLast(new DatagramDnsQueryEncoder());
                  p.addLast(new DatagramDnsResponseDecoder());
                  p.addLast(new UpstreamResponseHandler(pending));

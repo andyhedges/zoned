@@ -1,5 +1,5 @@
 # Zoned
-<p align="center"><img src="logo.png" width="30%"></p>
+<p><img src="logo.png"></p>
 
 Zoned is a rules based programmable DNS server focused on flexibility, composability, and clarity. It aims to do for DNS what modern reverse proxies do for HTTP: provide a small, sharp core with powerful extension points.
 

@@ -1,4 +1,4 @@
-package io.hedges.zoned.core;
+package io.hedges.zoned.core.domain;
 
 import java.net.InetSocketAddress;
 import java.time.Instant;

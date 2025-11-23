@@ -1,6 +1,6 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.*;
+import io.hedges.zoned.core.domain.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
@@ -29,6 +29,44 @@ final class NettyDnsMapper {
             ));
         }
 
+        int ansCount = query.count(DnsSection.ANSWER);
+        for (int i = 0; i < ansCount; i++) {
+            //TODO
+        }
+
+        int authCount = query.count(DnsSection.AUTHORITY);
+        for (int i = 0; i < authCount; i++){
+            //TODO
+        }
+
+        int addAcount = query.count(DnsSection.ADDITIONAL);
+        List<DnsRecordDom> additionals = new ArrayList<>();
+        for (int i = 0; i < addAcount; i++){
+            DnsRecord d = query.recordAt(DnsSection.ADDITIONAL, i);
+            if(d instanceof DnsOptPseudoRecord) {
+                System.out.println("TYPE:" + d.getClass().getCanonicalName());
+            }
+            if(d.type() == DnsRecordType.OPT) {
+                System.out.println("OPT:" + d.getClass().getCanonicalName());
+            }
+            ByteBuf dataBuf = null;
+            byte[] rdata;
+            if (d instanceof ByteBufHolder holder) {
+                dataBuf = holder.content();
+                rdata = ByteBufUtil.getBytes(dataBuf.slice());
+            } else {
+                rdata = new byte[0];
+            }
+            System.out.printf("---> name=%s, type=%s, dnsClass=%s, ttl=%d\n", d.name(), d.type(), d.dnsClass(), d.timeToLive());
+            additionals.add(new DnsRecordDom(
+                    new DnsName(d.name()),
+                    mapTypeBack(d.type()),
+                    mapClassBack(d.dnsClass()),
+                    d.timeToLive(),
+                    rdata
+            ));
+        }
+
         DnsMessageDom domMsg = new DnsMessageDom(
                 query.id(),
                 query.isRecursionDesired(),
@@ -38,10 +76,10 @@ final class NettyDnsMapper {
                 questions,
                 List.of(),
                 List.of(),
-                List.of()
+                additionals
         );
 
-        InetSocketAddress client = (InetSocketAddress) query.sender();
+        InetSocketAddress client = query.sender();
 
         return new DnsRequestContextDom(
                 client,
@@ -103,6 +141,7 @@ final class NettyDnsMapper {
             ));
         }
 
+
         copySection(msg, DnsSection.ANSWER, answers);
         copySection(msg, DnsSection.AUTHORITY, authorities);
         copySection(msg, DnsSection.ADDITIONAL, additionals);
@@ -131,6 +170,9 @@ final class NettyDnsMapper {
             }
             ByteBuf dataBuf = null;
             byte[] rdata;
+
+            //System.out.println(sec.name() + "----> " + rec.getClass().getCanonicalName());
+
             if (rec instanceof ByteBufHolder holder) {
                 dataBuf = holder.content();
                 rdata = ByteBufUtil.getBytes(dataBuf.slice());

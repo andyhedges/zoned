@@ -1,4 +1,6 @@
-package io.hedges.zoned.core;
+package io.hedges.zoned.core.rule;
+
+import io.hedges.zoned.core.DnsExecutionContext;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;

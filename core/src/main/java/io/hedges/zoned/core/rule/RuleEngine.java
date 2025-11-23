@@ -1,4 +1,6 @@
-package io.hedges.zoned.core;
+package io.hedges.zoned.core.rule;
+
+import io.hedges.zoned.core.domain.DnsRequestContextDom;
 
 import java.util.ArrayList;
 import java.util.Comparator;

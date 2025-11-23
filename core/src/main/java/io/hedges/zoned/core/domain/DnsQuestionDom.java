@@ -1,4 +1,4 @@
-package io.hedges.zoned.core;
+package io.hedges.zoned.core.domain;
 
 public final class DnsQuestionDom {
     private final DnsName name;
