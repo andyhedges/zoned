@@ -2,6 +2,7 @@ package io.hedges.zoned.netty;
 
 import io.hedges.zoned.core.DnsRequestContextDom;
 import io.hedges.zoned.core.DnsResolver;
+import io.hedges.zoned.core.dom.Transport;
 import io.hedges.zoned.core.rule.ActionExecutor;
 import io.hedges.zoned.core.DnsExecutionContext;
 import io.hedges.zoned.core.rule.RuleEngine;
@@ -21,9 +22,9 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<DatagramDns
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramDnsQuery query) {
-        DnsRequestContextDom domReq = NettyDnsMapper.fromNetty(query);
+        DnsRequestContextDom domReq = NettyDnsMapper.fromNetty(query, Transport.UDP);
         DnsExecutionContext execCtx = new DnsExecutionContext(domReq);
-        System.out.println(query.recordAt(DnsSection.QUESTION, 0).toString());
+
 //        ruleEngine.buildActionPlan(domReq)
 //                  .thenCompose(actions -> actionExecutor.executeAll(actions, execCtx))
 //                  .whenComplete((maybeResp, error) -> {
