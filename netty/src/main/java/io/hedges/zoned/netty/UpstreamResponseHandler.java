@@ -18,14 +18,14 @@ final class UpstreamResponseHandler extends SimpleChannelInboundHandler<Datagram
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramDnsResponse msg) {
-        int upstreamId = msg.id();
-        PendingRequest pr = pending.remove(upstreamId);
-        if (pr == null) {
-            return;
-        }
-        pr.timeoutTask.cancel(false);
-
-        DnsMessageDom dom = NettyDnsMapper.toDomainResponse(msg, pr.originalId);
-        pr.future.complete(dom);
+//        int upstreamId = msg.id();
+//        PendingRequest pr = pending.remove(upstreamId);
+//        if (pr == null) {
+//            return;
+//        }
+//        pr.timeoutTask.cancel(false);
+//
+//        DnsMessageDom dom = NettyDnsMapper.toDomainResponse(msg, pr.originalId);
+//        pr.future.complete(dom);
     }
 }

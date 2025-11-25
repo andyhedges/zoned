@@ -1,7 +1,7 @@
 package io.hedges.zoned.core.rule;
 
+import io.hedges.zoned.core.DnsRequestContextDom;
 import io.hedges.zoned.core.DnsResolver;
-import io.hedges.zoned.core.domain.DnsRequestContextDom;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

@@ -1,8 +1,8 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.domain.DnsMessageDom;
-import io.hedges.zoned.core.domain.DnsQuestionDom;
-import io.hedges.zoned.core.domain.DnsRequestContextDom;
+import io.hedges.zoned.core.DnsRequestContextDom;
+import io.hedges.zoned.core.dom.DnsMessageDom;
+import io.hedges.zoned.core.dom.DnsQuestionDom;
 import io.hedges.zoned.core.DnsResolver;
 
 import io.netty.bootstrap.Bootstrap;
@@ -62,65 +62,67 @@ public final class UdpForwarderBackend implements DnsResolver {
 
     @Override
     public CompletionStage<DnsMessageDom> resolve(DnsRequestContextDom request) {
-        Channel ch = this.channel;
-        if (ch == null || !ch.isActive()) {
-            CompletableFuture<DnsMessageDom> f = new CompletableFuture<>();
-            f.completeExceptionally(new IllegalStateException("Forwarder not started"));
-            return f;
-        }
-
-        int upstreamId = nextId();
-        CompletableFuture<DnsMessageDom> result = new CompletableFuture<>();
-
-        ScheduledFuture<?> timeoutTask = ch.eventLoop().schedule(() -> {
-            PendingRequest removed = pending.remove(upstreamId);
-            if (removed != null) {
-                removed.future.completeExceptionally(
-                        new TimeoutException("DNS upstream timeout"));
-            }
-        }, timeoutMillis, TimeUnit.MILLISECONDS);
-
-        PendingRequest pr = new PendingRequest(request.getQuery().getId(), result, timeoutTask);
-        pending.put(upstreamId, pr);
-
-        DatagramDnsQuery upstreamQuery = buildUpstreamQuery(ch, upstreamId, request);
-
-        ch.writeAndFlush(upstreamQuery).addListener(future -> {
-            if (!future.isSuccess()) {
-                PendingRequest removed = pending.remove(upstreamId);
-                if (removed != null) {
-                    removed.timeoutTask.cancel(false);
-                    removed.future.completeExceptionally(future.cause());
-                }
-            }
-        });
-
-        return result;
+//        Channel ch = this.channel;
+//        if (ch == null || !ch.isActive()) {
+//            CompletableFuture<DnsMessageDom> f = new CompletableFuture<>();
+//            f.completeExceptionally(new IllegalStateException("Forwarder not started"));
+//            return f;
+//        }
+//
+//        int upstreamId = nextId();
+//        CompletableFuture<DnsMessageDom> result = new CompletableFuture<>();
+//
+//        ScheduledFuture<?> timeoutTask = ch.eventLoop().schedule(() -> {
+//            PendingRequest removed = pending.remove(upstreamId);
+//            if (removed != null) {
+//                removed.future.completeExceptionally(
+//                        new TimeoutException("DNS upstream timeout"));
+//            }
+//        }, timeoutMillis, TimeUnit.MILLISECONDS);
+//
+//        PendingRequest pr = new PendingRequest(request.getQuery().getId(), result, timeoutTask);
+//        pending.put(upstreamId, pr);
+//
+//        DatagramDnsQuery upstreamQuery = buildUpstreamQuery(ch, upstreamId, request);
+//
+//        ch.writeAndFlush(upstreamQuery).addListener(future -> {
+//            if (!future.isSuccess()) {
+//                PendingRequest removed = pending.remove(upstreamId);
+//                if (removed != null) {
+//                    removed.timeoutTask.cancel(false);
+//                    removed.future.completeExceptionally(future.cause());
+//                }
+//            }
+//        });
+//
+//        return result;
+        return null;
     }
 
     private DatagramDnsQuery buildUpstreamQuery(Channel ch,
                                                 int upstreamId,
                                                 DnsRequestContextDom request) {
-        InetSocketAddress local = (InetSocketAddress) ch.localAddress();
-        DatagramDnsQuery q = new DatagramDnsQuery(
-                local,
-                upstream,
-                upstreamId
-        );
-
-        q.setRecursionDesired(request.getQuery().isRecursionDesired());
-
-        List<DnsQuestionDom> questions = request.getQuery().getQuestions();
-        for (DnsQuestionDom domQ : questions) {
-            q.addRecord(DnsSection.QUESTION,
-                    new DefaultDnsQuestion(
-                            domQ.getName().value(),
-                            NettyDnsMapper.mapType(domQ.getType()),
-                            NettyDnsMapper.mapClass(domQ.getRecordClass())
-                    ));
-        }
-
-        return q;
+//        InetSocketAddress local = (InetSocketAddress) ch.localAddress();
+//        DatagramDnsQuery q = new DatagramDnsQuery(
+//                local,
+//                upstream,
+//                upstreamId
+//        );
+//
+//        q.setRecursionDesired(request.getQuery().isRecursionDesired());
+//
+//        List<DnsQuestionDom> questions = request.getQuery().getQuestions();
+//        for (DnsQuestionDom domQ : questions) {
+//            q.addRecord(DnsSection.QUESTION,
+//                    new DefaultDnsQuestion(
+//                            domQ.getName().value(),
+//                            NettyDnsMapper.mapType(domQ.getType()),
+//                            NettyDnsMapper.mapClass(domQ.getRecordClass())
+//                    ));
+//        }
+//
+//        return q;
+        return null;
     }
 
     private int nextId() {

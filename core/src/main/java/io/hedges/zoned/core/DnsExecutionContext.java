@@ -1,12 +1,13 @@
 package io.hedges.zoned.core;
 
-import io.hedges.zoned.core.domain.DnsMessageDom;
-import io.hedges.zoned.core.domain.DnsRequestContextDom;
+import io.hedges.zoned.core.dom.DnsMessageDom;
+import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Getter
 public final class DnsExecutionContext {
     private final DnsRequestContextDom request;
     private DnsMessageDom response;

@@ -1,7 +1,7 @@
 package io.hedges.zoned.core.rule;
 
 import io.hedges.zoned.core.DnsExecutionContext;
-import io.hedges.zoned.core.domain.DnsMessageDom;
+import io.hedges.zoned.core.dom.DnsMessageDom;
 
 import java.util.List;
 import java.util.Optional;

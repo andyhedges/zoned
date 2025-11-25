@@ -1,8 +1,9 @@
 package io.hedges.zoned.netty;
 
+import io.hedges.zoned.core.DnsRequestContextDom;
+import io.hedges.zoned.core.DnsResolver;
 import io.hedges.zoned.core.rule.ActionExecutor;
 import io.hedges.zoned.core.DnsExecutionContext;
-import io.hedges.zoned.core.domain.DnsRequestContextDom;
 import io.hedges.zoned.core.rule.RuleEngine;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -20,20 +21,20 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<DatagramDns
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramDnsQuery query) {
-        DnsRequestContextDom domReq = NettyDnsMapper.toDomain(query);
+        DnsRequestContextDom domReq = NettyDnsMapper.fromNetty(query);
         DnsExecutionContext execCtx = new DnsExecutionContext(domReq);
-
-        ruleEngine.buildActionPlan(domReq)
-                  .thenCompose(actions -> actionExecutor.executeAll(actions, execCtx))
-                  .whenComplete((maybeResp, error) -> {
-                      DatagramDnsResponse wireResp;
-                      if (error != null || execCtx.getResponse().isEmpty()) {
-                          wireResp = createServfail(query);
-                      } else {
-                          wireResp = NettyDnsMapper.toNetty(execCtx.getResponse().get(), query);
-                      }
-                      ctx.writeAndFlush(wireResp);
-                  });
+        System.out.println(query.recordAt(DnsSection.QUESTION, 0).toString());
+//        ruleEngine.buildActionPlan(domReq)
+//                  .thenCompose(actions -> actionExecutor.executeAll(actions, execCtx))
+//                  .whenComplete((maybeResp, error) -> {
+//                      DatagramDnsResponse wireResp;
+//                      if (error != null || execCtx.getResponse().isEmpty()) {
+//                          wireResp = createServfail(query);
+//                      } else {
+//                          wireResp = NettyDnsMapper.toNettyResponse(execCtx.getResponse().get(), query);
+//                      }
+//                      ctx.writeAndFlush(wireResp);
+//                  });
     }
 
     private DatagramDnsResponse createServfail(DatagramDnsQuery query) {

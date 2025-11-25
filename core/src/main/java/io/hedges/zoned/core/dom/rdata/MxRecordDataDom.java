@@ -1,0 +1,10 @@
+package io.hedges.zoned.core.dom.rdata;
+
+import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.RDataDom;
+
+public class MxRecordDataDom implements RDataDom {
+    private int preference;
+    private DnsNameDom exchange;
+
+}

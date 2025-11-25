@@ -1,9 +1,12 @@
-package io.hedges.zoned.core.domain;
+package io.hedges.zoned.core;
+
+import io.hedges.zoned.core.dom.DnsMessageDom;
+import io.hedges.zoned.core.dom.Transport;
 
 import java.net.InetSocketAddress;
 import java.time.Instant;
 
-public final class DnsRequestContextDom {
+public class DnsRequestContextDom {
     private final InetSocketAddress clientAddress;
     private final Transport transport;
     private final DnsMessageDom query;
