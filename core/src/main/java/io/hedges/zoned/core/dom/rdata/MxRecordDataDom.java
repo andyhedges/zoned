@@ -2,7 +2,13 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
+@Getter
+@Builder
+@ToString
 public class MxRecordDataDom implements RDataDom {
     private int preference;
     private DnsNameDom exchange;

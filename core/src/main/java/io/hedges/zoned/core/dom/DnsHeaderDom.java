@@ -1,5 +1,12 @@
 package io.hedges.zoned.core.dom;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@Builder
+@ToString
 public class DnsHeaderDom {
 
     private int id;

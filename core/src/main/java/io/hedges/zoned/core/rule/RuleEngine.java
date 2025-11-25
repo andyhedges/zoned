@@ -1,7 +1,6 @@
 package io.hedges.zoned.core.rule;
 
 import io.hedges.zoned.core.DnsRequestContextDom;
-import io.hedges.zoned.core.DnsResolver;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,8 +29,8 @@ public final class RuleEngine {
                                   CompletableFuture<List<DnsAction>> out) {
         if (index >= rules.size()) {
             List<DnsAction> actions = results.stream()
-                    .sorted(Comparator.comparingInt(RuleResult::getPriority))
-                    .flatMap(r -> r.getActions().stream())
+                    .sorted(Comparator.comparingInt(RuleResult::priority))
+                    .flatMap(r -> r.actions().stream())
                     .toList();
             out.complete(actions);
             return;
@@ -46,10 +45,10 @@ public final class RuleEngine {
         rule.evaluate(ctx).whenComplete((rr, error) -> {
             if (error == null && rr != null) {
                 results.add(rr);
-                if (rr.getDisposition() == RuleResult.Disposition.TERMINATE) {
+                if (rr.disposition() == RuleResult.Disposition.TERMINATE) {
                     List<DnsAction> actions = results.stream()
-                            .sorted(Comparator.comparingInt(RuleResult::getPriority))
-                            .flatMap(r -> r.getActions().stream())
+                            .sorted(Comparator.comparingInt(RuleResult::priority))
+                            .flatMap(r -> r.actions().stream())
                             .toList();
                     out.complete(actions);
                     return;
