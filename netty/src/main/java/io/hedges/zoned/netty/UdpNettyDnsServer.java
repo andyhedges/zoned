@@ -1,11 +1,6 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.*;
-
-import io.hedges.zoned.core.rule.ActionExecutor;
-import io.hedges.zoned.core.rule.CatchAllForwardRule;
-import io.hedges.zoned.core.rule.DnsRule;
-import io.hedges.zoned.core.rule.RuleEngine;
+import io.hedges.zoned.core.DnsServer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioIoHandler;
@@ -17,7 +12,6 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 import java.net.InetSocketAddress;
-import java.util.List;
 
 public final class UdpNettyDnsServer implements DnsServer {
 
@@ -42,9 +36,6 @@ public final class UdpNettyDnsServer implements DnsServer {
         );
         forwarder.start();
 
-        DnsRule catchAll = new CatchAllForwardRule(forwarder);
-        RuleEngine ruleEngine = new RuleEngine(List.of(catchAll));
-        ActionExecutor executor = new ActionExecutor();
 
         Bootstrap b = new Bootstrap();
         b.group(group)
@@ -57,7 +48,7 @@ public final class UdpNettyDnsServer implements DnsServer {
                  p.addLast("wireLogger", new LoggingHandler(LogLevel.INFO));
                  p.addLast(new DatagramDnsQueryDecoder());
                  p.addLast(new DatagramDnsResponseEncoder());
-                 p.addLast(new UdpDnsHandler(ruleEngine, executor));
+                 p.addLast(new UdpDnsHandler(/* probable the routing pipeline thing*/));
              }
          });
 

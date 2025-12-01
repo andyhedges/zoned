@@ -1,6 +1,7 @@
 package io.hedges.zoned.core;
 
 import io.hedges.zoned.core.dom.DnsMessageDom;
+
 import java.util.concurrent.CompletionStage;
 
 /**
@@ -14,6 +15,6 @@ public interface DnsResolver {
      * @param request the request context containing the parsed DNS query and metadata
      * @return a {@link CompletionStage} that completes with the DNS response message
      */
-    CompletionStage<DnsMessageDom> resolve(DnsRequestContextDom request);
+    CompletionStage<DnsMessageDom> resolve(DnsRequestContext request);
 
 }

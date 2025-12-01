@@ -1,8 +1,7 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.DnsRequestContextDom;
+import io.hedges.zoned.core.DnsRequestContext;
 import io.hedges.zoned.core.dom.DnsMessageDom;
-import io.hedges.zoned.core.dom.DnsQuestionDom;
 import io.hedges.zoned.core.DnsResolver;
 
 import io.netty.bootstrap.Bootstrap;
@@ -18,7 +17,6 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 import java.net.InetSocketAddress;
-import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -61,7 +59,7 @@ public final class UdpForwarderBackend implements DnsResolver {
     }
 
     @Override
-    public CompletionStage<DnsMessageDom> resolve(DnsRequestContextDom request) {
+    public CompletionStage<DnsMessageDom> resolve(DnsRequestContext request) {
 //        Channel ch = this.channel;
 //        if (ch == null || !ch.isActive()) {
 //            CompletableFuture<DnsMessageDom> f = new CompletableFuture<>();
@@ -101,7 +99,7 @@ public final class UdpForwarderBackend implements DnsResolver {
 
     private DatagramDnsQuery buildUpstreamQuery(Channel ch,
                                                 int upstreamId,
-                                                DnsRequestContextDom request) {
+                                                DnsRequestContext request) {
 //        InetSocketAddress local = (InetSocketAddress) ch.localAddress();
 //        DatagramDnsQuery q = new DatagramDnsQuery(
 //                local,

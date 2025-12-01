@@ -1,6 +1,6 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.DnsRequestContextDom;
+import io.hedges.zoned.core.DnsRequestContext;
 import io.hedges.zoned.core.dom.*;
 import io.hedges.zoned.core.dom.DnsRecordTypeDom;
 import io.netty.handler.codec.dns.*;
@@ -13,7 +13,7 @@ import java.util.List;
 public class NettyDnsMapper {
 
     // Inbound
-    public static DnsRequestContextDom fromNetty(DatagramDnsQuery nettyQuery, Transport transport) {
+    public static DnsRequestContext fromNetty(DatagramDnsQuery nettyQuery, Transport transport) {
         int questionCount = nettyQuery.count(DnsSection.QUESTION);
         List<DnsQuestionDom> questions = new ArrayList<>(questionCount);
         for (int i = 0; i < questionCount; i++) {
@@ -30,7 +30,7 @@ public class NettyDnsMapper {
                             .build()
             );
         }
-        return DnsRequestContextDom
+        return DnsRequestContext
                 .builder()
                 .query(
                         DnsMessageDom
@@ -54,7 +54,7 @@ public class NettyDnsMapper {
                 .build();
     }
 
-    public static DnsRequestContextDom fromNetty(DatagramDnsResponse nettyResponse) {
+    public static DnsRequestContext fromNetty(DatagramDnsResponse nettyResponse) {
         return null;
     }
 

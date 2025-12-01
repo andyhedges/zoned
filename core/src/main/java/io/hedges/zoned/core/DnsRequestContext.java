@@ -8,14 +8,16 @@ import lombok.ToString;
 
 import java.net.InetSocketAddress;
 import java.time.Instant;
+import java.util.Map;
 
 @Getter
 @Builder
 @ToString
-public class DnsRequestContextDom {
+public class DnsRequestContext {
     private InetSocketAddress clientAddress;
     private Transport transport;
     private DnsMessageDom query;
     private Instant receivedAt;
+    private Map<String, Object> data;
 
 }

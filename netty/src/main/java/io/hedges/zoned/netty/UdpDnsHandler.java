@@ -1,41 +1,24 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.DnsRequestContextDom;
-import io.hedges.zoned.core.DnsResolver;
+import io.hedges.zoned.core.DnsRequestContext;
 import io.hedges.zoned.core.dom.Transport;
-import io.hedges.zoned.core.rule.ActionExecutor;
-import io.hedges.zoned.core.DnsExecutionContext;
-import io.hedges.zoned.core.rule.RuleEngine;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.dns.*;
 
 public final class UdpDnsHandler extends SimpleChannelInboundHandler<DatagramDnsQuery> {
 
-    private final RuleEngine ruleEngine;
-    private final ActionExecutor actionExecutor;
 
-    public UdpDnsHandler(RuleEngine ruleEngine, ActionExecutor actionExecutor) {
-        this.ruleEngine = ruleEngine;
-        this.actionExecutor = actionExecutor;
+    public UdpDnsHandler() {
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramDnsQuery query) {
-        DnsRequestContextDom domReq = NettyDnsMapper.fromNetty(query, Transport.UDP);
-        DnsExecutionContext execCtx = new DnsExecutionContext(domReq);
+        DnsRequestContext domReq = NettyDnsMapper.fromNetty(query, Transport.UDP);
 
-//        ruleEngine.buildActionPlan(domReq)
-//                  .thenCompose(actions -> actionExecutor.executeAll(actions, execCtx))
-//                  .whenComplete((maybeResp, error) -> {
-//                      DatagramDnsResponse wireResp;
-//                      if (error != null || execCtx.getResponse().isEmpty()) {
-//                          wireResp = createServfail(query);
-//                      } else {
-//                          wireResp = NettyDnsMapper.toNettyResponse(execCtx.getResponse().get(), query);
-//                      }
-//                      ctx.writeAndFlush(wireResp);
-//                  });
+        System.out.println(domReq);
+
+        //using the routing pipeline
     }
 
     private DatagramDnsResponse createServfail(DatagramDnsQuery query) {
