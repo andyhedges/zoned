@@ -36,5 +36,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: zoned-dns-app
-          path: app/target/*-shaded.jar
+          path: app/target/zoned-dns-app-*.jar
           if-no-files-found: ignore
