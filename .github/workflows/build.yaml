@@ -1,0 +1,40 @@
+name: Build & Dependency Checks
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 22
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22'
+          cache: maven
+
+      - name: Build & test with Maven
+        run: mvn -B -ntp clean verify
+
+      - name: Check dependency & plugin updates
+        run: |
+          mvn -B -ntp \
+            versions:display-dependency-updates \
+            versions:display-plugin-updates \
+            -DprocessAllModules=true
+        continue-on-error: true
+
+      - name: Upload shaded app jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: zoned-dns-app
+          path: app/target/*-shaded.jar
+          if-no-files-found: ignore
