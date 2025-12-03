@@ -19,5 +19,5 @@ public class DnsRequestContext {
     private DnsMessageDom query;
     private Instant receivedAt;
     private Map<String, Object> data;
-
+    private DnsMessageDom response;
 }

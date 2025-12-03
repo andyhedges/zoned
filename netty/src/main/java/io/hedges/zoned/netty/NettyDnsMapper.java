@@ -63,8 +63,10 @@ public class NettyDnsMapper {
         return null;
     }
 
-    public static DatagramDnsResponse toNettyResponse(DnsMessageDom dom, InetSocketAddress sender, InetSocketAddress recipient) {
-        return null;
+    public static DatagramDnsResponse toNettyResponse(DnsMessageDom domResponse, InetSocketAddress sender, InetSocketAddress recipient) {
+        DatagramDnsResponse response = new DatagramDnsResponse(sender, recipient, domResponse.header().id());
+        //TODO: write the rest of the mapping
+        return response;
     }
 
     private static DnsRecordTypeDom fromNettyRecordType(DnsRecordType nettyRecordType) {

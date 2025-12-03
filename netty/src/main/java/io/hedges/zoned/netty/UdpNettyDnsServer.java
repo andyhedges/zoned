@@ -1,5 +1,6 @@
 package io.hedges.zoned.netty;
 
+import io.hedges.zoned.core.DnsRequestHandler;
 import io.hedges.zoned.core.DnsServer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -10,6 +11,7 @@ import io.netty.handler.codec.dns.DatagramDnsQueryDecoder;
 import io.netty.handler.codec.dns.DatagramDnsResponseEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import lombok.Setter;
 
 import java.net.InetSocketAddress;
 
@@ -18,6 +20,8 @@ public final class UdpNettyDnsServer implements DnsServer {
     private final EventLoopGroup group;
     private final int listenPort;
     private Channel channel;
+    @Setter
+    private DnsRequestHandler requestHandler;
 
     public UdpNettyDnsServer(int listenPort) {
         this.listenPort = listenPort;
@@ -28,15 +32,6 @@ public final class UdpNettyDnsServer implements DnsServer {
     }
 
     public void start() throws InterruptedException {
-        // Forwarder backend using the same group
-        UdpForwarderBackend forwarder = new UdpForwarderBackend(
-                group,
-                new InetSocketAddress("1.1.1.1", 53),
-                2000
-        );
-        forwarder.start();
-
-
         Bootstrap b = new Bootstrap();
         b.group(group)
          .channel(NioDatagramChannel.class)
@@ -48,7 +43,7 @@ public final class UdpNettyDnsServer implements DnsServer {
                  p.addLast("wireLogger", new LoggingHandler(LogLevel.INFO));
                  p.addLast(new DatagramDnsQueryDecoder());
                  p.addLast(new DatagramDnsResponseEncoder());
-                 p.addLast(new UdpDnsHandler(/* probable the routing pipeline thing*/));
+                 p.addLast(new UdpDnsHandler(requestHandler));
              }
          });
 

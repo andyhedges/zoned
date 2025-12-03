@@ -1,38 +1,42 @@
 package io.hedges.zoned.netty;
 
 import io.hedges.zoned.core.DnsRequestContext;
+import io.hedges.zoned.core.DnsRequestHandler;
+import io.hedges.zoned.core.dom.DnsMessageDom;
 import io.hedges.zoned.core.dom.Transport;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.dns.*;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.net.InetSocketAddress;
+
+@Slf4j
+@AllArgsConstructor
 public final class UdpDnsHandler extends SimpleChannelInboundHandler<DatagramDnsQuery> {
 
-
-    public UdpDnsHandler() {
-    }
+    private DnsRequestHandler requestHandler;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramDnsQuery query) {
-        DnsRequestContext domReq = NettyDnsMapper.fromNetty(query, Transport.UDP);
+        DnsRequestContext drc = NettyDnsMapper.fromNetty(query, Transport.UDP);
 
-        System.out.println(domReq);
+        requestHandler.handle(drc);
 
-        //using the routing pipeline
-    }
-
-    private DatagramDnsResponse createServfail(DatagramDnsQuery query) {
-        DatagramDnsResponse resp = new DatagramDnsResponse(
-                query.recipient(),
-                query.sender(),
-                query.id()
-        );
-        int qCount = query.count(DnsSection.QUESTION);
-        for (int i = 0; i < qCount; i++) {
-            DnsQuestion q = query.recordAt(DnsSection.QUESTION, i);
-            resp.addRecord(DnsSection.QUESTION, q);
+        DnsMessageDom response = drc.response();
+        if(response == null){
+            return;
         }
-        resp.setCode(DnsResponseCode.SERVFAIL);
-        return resp;
+
+        //Flip them around to send back
+        InetSocketAddress sender   = query.recipient();
+        InetSocketAddress recipient = query.sender();
+
+        DatagramDnsResponse nettyResponse = NettyDnsMapper.toNettyResponse(response, sender, recipient);
+
+        ctx.writeAndFlush(nettyResponse);
     }
+
+
 }
