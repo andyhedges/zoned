@@ -4,6 +4,7 @@ import io.hedges.zoned.core.dom.DnsMessageDom;
 import io.hedges.zoned.core.dom.Transport;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.net.InetSocketAddress;
@@ -19,5 +20,6 @@ public class DnsRequestContext {
     private DnsMessageDom query;
     private Instant receivedAt;
     private Map<String, Object> data;
+    @Setter
     private DnsMessageDom response;
 }

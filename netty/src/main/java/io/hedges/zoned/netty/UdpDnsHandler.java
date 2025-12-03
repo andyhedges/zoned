@@ -25,12 +25,11 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<DatagramDns
         requestHandler.handle(drc);
 
         DnsMessageDom response = drc.response();
-        if(response == null){
+        if (response == null) {
             return;
         }
 
-        //Flip them around to send back
-        InetSocketAddress sender   = query.recipient();
+        InetSocketAddress sender = query.recipient();
         InetSocketAddress recipient = query.sender();
 
         DatagramDnsResponse nettyResponse = NettyDnsMapper.toNettyResponse(response, sender, recipient);
