@@ -65,7 +65,14 @@ public class NettyDnsMapper {
 
     public static DatagramDnsResponse toNettyResponse(DnsMessageDom domResponse, InetSocketAddress sender, InetSocketAddress recipient) {
         DatagramDnsResponse response = new DatagramDnsResponse(sender, recipient, domResponse.header().id());
-        //TODO: write the rest of the mapping
+
+        response.setOpCode(DnsOpCode.QUERY);
+        response.setCode(DnsResponseCode.SERVFAIL);
+        response.setRecursionDesired(false);
+        response.setRecursionAvailable(false);
+        response.setTruncated(false);
+        response.setAuthoritativeAnswer(false);
+
         return response;
     }
 
