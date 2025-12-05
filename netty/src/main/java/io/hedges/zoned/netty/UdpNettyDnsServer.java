@@ -13,7 +13,6 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.Setter;
 
-import java.net.InetSocketAddress;
 
 public final class UdpNettyDnsServer implements DnsServer {
 
@@ -23,12 +22,9 @@ public final class UdpNettyDnsServer implements DnsServer {
     @Setter
     private DnsRequestHandler requestHandler;
 
-    public UdpNettyDnsServer(int listenPort) {
+    public UdpNettyDnsServer(EventLoopGroup group, int listenPort) {
         this.listenPort = listenPort;
-        this.group = new MultiThreadIoEventLoopGroup(
-                Runtime.getRuntime().availableProcessors(),
-                NioIoHandler.newFactory()
-        );
+        this.group = group;
     }
 
     public void start() throws InterruptedException {
