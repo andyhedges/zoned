@@ -22,19 +22,19 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<DatagramDns
     protected void channelRead0(ChannelHandlerContext ctx, DatagramDnsQuery query) {
         DnsRequestContext drc = NettyDnsMapper.fromNetty(query, Transport.UDP);
 
-        requestHandler.handle(drc);
+        requestHandler.handle(drc).whenComplete((response, t) -> {
 
-        DnsMessageDom response = drc.response();
-        if (response == null) {
-            return;
-        }
+            if (response == null) {
+                return;
+            }
 
-        InetSocketAddress sender = query.recipient();
-        InetSocketAddress recipient = query.sender();
+            InetSocketAddress sender = query.recipient();
+            InetSocketAddress recipient = query.sender();
 
-        DatagramDnsResponse nettyResponse = NettyDnsMapper.toNettyResponse(response, sender, recipient);
+            DatagramDnsResponse nettyResponse = NettyDnsMapper.toNettyResponse(response, sender, recipient);
 
-        ctx.writeAndFlush(nettyResponse);
+            ctx.writeAndFlush(nettyResponse);
+        });
     }
 
 

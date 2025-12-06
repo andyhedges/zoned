@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletionStage;
 
 @AllArgsConstructor
 public class DefaultDnsRequestRouter implements DnsRequestRouter {
@@ -19,29 +20,28 @@ public class DefaultDnsRequestRouter implements DnsRequestRouter {
     private DnsClient client;
 
     @Override
-    public void handle(DnsRequestContext ctx) {
+    public CompletionStage<DnsMessageDom> handle(DnsRequestContext ctx) {
         String query = ctx.query().questions().getFirst().name().toFqdn();
 
         List<DnsResourceRecordDom> answers = new ArrayList<>();
-        client.lookup(query).whenComplete((addresses, t) -> {
+        return client.lookup(query).handle((addresses, t) -> {
 
             addresses.forEach(a -> {
                 DnsResourceRecordDom dom = DnsResourceRecordDom.builder().name(DnsNameDom.builder().labels(Arrays.stream(a.getHostName().split("\\.")).toList()).build()).build();
                 answers.add(dom);
             });
 
-            ctx.response(
-                    DnsMessageDom
-                            .builder()
-                            .header(
-                                    DnsHeaderDom
-                                            .builder()
-                                            .id(ctx.query().header().id())
-                                            .build()
-                            )
-                            .answers(answers)
-                            .build());
-        });
+            return DnsMessageDom
+                    .builder()
+                    .header(
+                            DnsHeaderDom
+                                    .builder()
+                                    .id(ctx.query().header().id())
+                                    .build()
+                    )
+                    .answers(answers)
+                    .build();
 
+        });
     }
 }

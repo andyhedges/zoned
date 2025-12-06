@@ -1,6 +1,10 @@
 package io.hedges.zoned.core;
 
+import io.hedges.zoned.core.dom.DnsMessageDom;
+
+import java.util.concurrent.CompletionStage;
+
 public interface DnsRequestHandler {
 
-    public void handle(DnsRequestContext ctx);
+    public CompletionStage<DnsMessageDom> handle(DnsRequestContext ctx);
 }
