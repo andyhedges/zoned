@@ -19,6 +19,9 @@ jobs:
           curl -fsSL https://mise.run | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
+      - name: Install dependencies using mise
+        run: mist install
+
       - name: Build & test with Maven
         run: mvn -B -ntp clean verify
 
