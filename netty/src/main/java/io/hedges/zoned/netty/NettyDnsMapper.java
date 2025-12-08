@@ -3,6 +3,7 @@ package io.hedges.zoned.netty;
 import io.hedges.zoned.core.DnsRequestContext;
 import io.hedges.zoned.core.dom.*;
 import io.hedges.zoned.core.dom.DnsRecordTypeDom;
+import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.dns.*;
 
 import java.net.InetSocketAddress;
@@ -60,7 +61,92 @@ public class NettyDnsMapper {
 
     // Outbound
     public static DatagramDnsQuery toNettyQuery(DnsMessageDom dom, InetSocketAddress sender, InetSocketAddress recipient) {
-        return null;
+        DatagramDnsQuery nettyQuery = new DatagramDnsQuery(sender, recipient, dom.header().id());
+        nettyQuery.setOpCode(toNettyDnsOpCode(dom.header().opCode()));
+        nettyQuery.setRecursionDesired(dom.header().recursionDesired());
+
+        dom.answers().stream().map(r ->
+                        new DefaultDnsRawRecord(
+                                r.name().toFqdn(),
+                                toNettyDnsRecordType(r.type()),
+                                r.ttlSeconds(),
+                                Unpooled.wrappedBuffer(new byte[]{}) //TODO actually mediate the data
+                        )
+                ).forEach(d ->
+                        nettyQuery.addRecord(DnsSection.ANSWER, d)
+                );
+
+        dom.questions().stream().map(r ->
+                        new DefaultDnsQuestion(
+                                r.name().toFqdn(),
+                                toNettyDnsRecordType(r.recordType()),
+                                toNettyDnsRecordClass(r.recordClass()))
+                ).forEach(d ->
+                        nettyQuery.addRecord(DnsSection.QUESTION, d)
+                );
+
+        dom.additionals().stream()
+                .map(r -> new DefaultDnsRawRecord(
+                        r.name().toFqdn(),
+                        toNettyDnsRecordType(r.type()),
+                        r.ttlSeconds(),
+                        Unpooled.wrappedBuffer(new byte[]{})   //TODO actually mediate the data
+                ))
+                .forEach(rec ->
+                        nettyQuery.addRecord(DnsSection.ADDITIONAL, rec)
+                );
+
+        dom.authorities().stream()
+                .map(r -> new DefaultDnsRawRecord(
+                        r.name().toFqdn(),
+                        toNettyDnsRecordType(r.type()),
+                        r.ttlSeconds(),
+                        Unpooled.wrappedBuffer(new byte[]{})   //TODO actually mediate the data
+                ))
+                .forEach(rec ->
+                        nettyQuery.addRecord(DnsSection.AUTHORITY, rec)
+                );
+
+        return nettyQuery;
+    }
+
+    private static int toNettyDnsRecordClass(DnsRecordClassDom recordClassDom) {
+        return switch (recordClassDom) {
+            case HS -> DnsRecord.CLASS_HESIOD;
+            case CH -> DnsRecord.CLASS_CHAOS;
+            case IN -> DnsRecord.CLASS_IN;
+            case ANY -> DnsRecord.CLASS_ANY;
+        };
+    }
+
+    private static DnsRecordType toNettyDnsRecordType(DnsRecordTypeDom recordTypeDom) {
+        return switch (recordTypeDom) {
+            case A -> DnsRecordType.A;
+            case DS -> DnsRecordType.DS;
+            case MX -> DnsRecordType.MX;
+            case NS -> DnsRecordType.NS;
+            case OPT -> DnsRecordType.OPT;
+            case PTR -> DnsRecordType.PTR;
+            case SOA -> DnsRecordType.SOA;
+            case SRV -> DnsRecordType.SRV;
+            case TXT -> DnsRecordType.TXT;
+            case AAAA -> DnsRecordType.AAAA;
+            case NSEC -> DnsRecordType.NSEC;
+            case CNAME -> DnsRecordType.CNAME;
+            case NSEC3 -> DnsRecordType.NSEC3;
+            case RRSIG -> DnsRecordType.RRSIG;
+            case DNSKEY -> DnsRecordType.DNSKEY;
+        };
+    }
+
+    private static DnsOpCode toNettyDnsOpCode(DnsOpCodeDom opCodeDom) {
+        return switch (opCodeDom) {
+            case QUERY -> DnsOpCode.QUERY;
+            case IQUERY -> DnsOpCode.IQUERY;
+            case NOTIFY -> DnsOpCode.NOTIFY;
+            case STATUS -> DnsOpCode.STATUS;
+            case UPDATE -> DnsOpCode.UPDATE;
+        };
     }
 
     public static DatagramDnsResponse toNettyResponse(DnsMessageDom domResponse, InetSocketAddress sender, InetSocketAddress recipient) {

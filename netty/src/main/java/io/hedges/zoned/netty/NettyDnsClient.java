@@ -1,6 +1,7 @@
 package io.hedges.zoned.netty;
 
 import io.hedges.zoned.core.DnsClient;
+import io.hedges.zoned.core.dom.DnsMessageDom;
 import io.netty.channel.EventLoop;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
@@ -36,12 +37,13 @@ public class NettyDnsClient implements DnsClient {
         ));
     }
 
-    public CompletionStage<List<InetAddress>> lookup(String name) {
-        Future<List<InetAddress>> f = resolvers.get(group.next()).resolveAll(name);
+    public CompletionStage<List<InetAddress>> send(DnsMessageDom msg) {
+        Future<List<InetAddress>> f = resolvers.get(group.next()).resolveAll("hedges.net");
         CompletableFuture<List<InetAddress>> cf = new CompletableFuture<>();
 
         f.addListener((Future<List<InetAddress>> fut) -> {
             if (fut.isSuccess()) {
+                System.out.println(fut.getNow());
                 cf.complete(fut.getNow());
             } else {
                 cf.completeExceptionally(fut.cause());
