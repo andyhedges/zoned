@@ -15,10 +15,11 @@ import java.util.Arrays;
 @ToString
 public class ARecordDataDom implements RDataDom {
     private Inet4Address address;
-    @Override
-    public RDataDom from(byte[] rdata) {
-        this.address = RDataUtils.toInet4Address(rdata);
-        return this;
+
+    public static RDataDom from(byte[] rdata) {
+        return ARecordDataDom.builder()
+                .address(RDataUtils.toInet4Address(rdata))
+                .build();
     }
 
     @Override

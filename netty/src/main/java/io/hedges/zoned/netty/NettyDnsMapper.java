@@ -4,6 +4,10 @@ import io.hedges.zoned.core.DnsRequestContext;
 import io.hedges.zoned.core.dom.*;
 import io.hedges.zoned.core.dom.DnsRecordTypeDom;
 import io.hedges.zoned.core.dom.rdata.ARecordDataDom;
+import io.hedges.zoned.core.dom.rdata.NsRecordDataDom;
+import io.hedges.zoned.core.dom.rdata.RDataFactory;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufHolder;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.dns.*;
 
@@ -63,13 +67,17 @@ public class NettyDnsMapper {
         List<DnsResourceRecordDom> answers = new ArrayList<>(answerCount);
         for (int i = 0; i < answerCount; i++) {
             DnsRecord dnsAnswer = nettyResponse.recordAt(DnsSection.ANSWER, i);
+
+            byte[] rd = extractRdata(dnsAnswer);
+            RDataDom rdata = RDataFactory.fromBytes(fromNettyRecordType(dnsAnswer.type()), rd);
+
             answers.add(
                     DnsResourceRecordDom.builder()
                             .name(DnsNameDom.fromFqdn(dnsAnswer.name()))
                             .type(fromNettyRecordType(dnsAnswer.type()))
                             .recordClass(fromNettyRecordClass(dnsAnswer.dnsClass()))
                             .ttlSeconds(dnsAnswer.timeToLive())
-                            .rdata(ARecordDataDom.builder().build().from(new byte[]{1,1,1,1}))
+                            .rdata(rdata)
                             .build()
             );
         }
@@ -150,7 +158,7 @@ public class NettyDnsMapper {
         response.setCode(DnsResponseCode.SERVFAIL);
         response.setRecursionDesired(domResponse.header().recursionDesired());
         response.setRecursionAvailable(domResponse.header().recursionAvailable());
-        response.setTruncated(false);
+        response.setTruncated(false); //TODO set this properly
         response.setAuthoritativeAnswer(domResponse.header().authoritativeAnswer());
 
         for(DnsResourceRecordDom domRecord: domResponse.answers()){
@@ -269,5 +277,26 @@ public class NettyDnsMapper {
             case STATUS -> DnsOpCode.STATUS;
             case UPDATE -> DnsOpCode.UPDATE;
         };
+    }
+
+    private static byte[] extractRdata(DnsRecord record) {
+        // Questions never have RDATA.
+        if (!(record instanceof ByteBufHolder)) {
+            return new byte[0];
+        }
+
+        ByteBuf buf = ((ByteBufHolder) record).content();
+
+        if (buf == null || !buf.isReadable()) {
+            return new byte[0];
+        }
+
+        int len = buf.readableBytes();
+        byte[] out = new byte[len];
+
+        // Important: getBytes does NOT move readerIndex.
+        buf.getBytes(buf.readerIndex(), out);
+
+        return out;
     }
 }

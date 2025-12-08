@@ -17,10 +17,10 @@ public class AAAARecordDataDom implements RDataDom {
 
     private Inet6Address address;
 
-    @Override
-    public RDataDom from(byte[] rdata) {
-        this.address = RDataUtils.toInet6Address(rdata);
-        return this;
+    public static RDataDom from(byte[] rdata) {
+        return AAAARecordDataDom.builder()
+                .address(RDataUtils.toInet6Address(rdata))
+                .build();
     }
 
     @Override

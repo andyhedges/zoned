@@ -9,13 +9,13 @@ import lombok.ToString;
 @Builder
 @ToString
 public class DsRecordDataDom implements RDataDom {
-    @Override
-    public RDataDom from(byte[] raw) {
-        throw new RuntimeException("Not Implemented");
+
+    public static RDataDom from(byte[] rdata) {
+        throw new RuntimeException("Not Implemented"); //TODO
     }
 
     @Override
     public byte[] to() {
-        throw new RuntimeException("Not Implemented");
+        throw new RuntimeException("Not Implemented"); //TODO
     }
 }

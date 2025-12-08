@@ -18,13 +18,12 @@ public class SoaRecordDataDom implements RDataDom {
     private long expireSeconds;
     private long minimumTtlSeconds;
 
-    @Override
-    public RDataDom from(byte[] raw) {
-        throw new RuntimeException("Not Implemented");
+    public static RDataDom from(byte[] rdata) {
+        throw new RuntimeException("Not Implemented"); //TODO
     }
 
     @Override
     public byte[] to() {
-        throw new RuntimeException("Not Implemented");
+        throw new RuntimeException("Not Implemented"); //TODO
     }
 }

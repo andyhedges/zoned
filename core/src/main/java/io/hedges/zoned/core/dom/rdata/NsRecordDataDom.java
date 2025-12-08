@@ -10,16 +10,16 @@ import lombok.ToString;
 @Builder
 @ToString
 public class NsRecordDataDom implements RDataDom {
-    private DnsNameDom nsdname;
+    private DnsNameDom nsName;
 
-    @Override
-    public RDataDom from(byte[] raw) {
-        this.nsdname = RDataUtils.toDnsNameDom(raw);
-        return this;
+    public static RDataDom from(byte[] rdata) {
+        return NsRecordDataDom.builder()
+                .nsName(RDataUtils.toDnsNameDom(rdata))
+                .build();
     }
 
     @Override
     public byte[] to() {
-        return RDataUtils.toByteArray(this.nsdname);
+        return RDataUtils.toByteArray(this.nsName);
     }
 }
