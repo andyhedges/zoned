@@ -13,8 +13,9 @@ public class NsRecordDataDom implements RDataDom {
     private DnsNameDom nsdname;
 
     @Override
-    public void from(byte[] raw) {
+    public RDataDom from(byte[] raw) {
         this.nsdname = RDataUtils.toDnsNameDom(raw);
+        return this;
     }
 
     @Override

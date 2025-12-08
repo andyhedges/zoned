@@ -17,8 +17,9 @@ public class CnameRecordDataDom implements RDataDom {
     private DnsNameDom cname;
 
     @Override
-    public void from(byte[] rdata) {
+    public RDataDom from(byte[] rdata) {
         cname = RDataUtils.toDnsNameDom(rdata);
+        return this;
     }
 
     @Override

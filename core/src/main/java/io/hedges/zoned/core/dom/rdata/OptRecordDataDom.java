@@ -18,7 +18,7 @@ public class OptRecordDataDom implements RDataDom {
     private List<EdnsOptionDom> ednsOptions;
 
     @Override
-    public void from(byte[] raw) {
+    public RDataDom from(byte[] raw) {
         throw new RuntimeException("Not Implemented");
     }
 

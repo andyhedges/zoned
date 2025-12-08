@@ -19,7 +19,7 @@ public class SoaRecordDataDom implements RDataDom {
     private long minimumTtlSeconds;
 
     @Override
-    public void from(byte[] raw) {
+    public RDataDom from(byte[] raw) {
         throw new RuntimeException("Not Implemented");
     }
 

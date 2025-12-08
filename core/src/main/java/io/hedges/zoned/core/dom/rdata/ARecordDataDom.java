@@ -16,8 +16,9 @@ import java.util.Arrays;
 public class ARecordDataDom implements RDataDom {
     private Inet4Address address;
     @Override
-    public void from(byte[] rdata) {
+    public RDataDom from(byte[] rdata) {
         this.address = RDataUtils.toInet4Address(rdata);
+        return this;
     }
 
     @Override

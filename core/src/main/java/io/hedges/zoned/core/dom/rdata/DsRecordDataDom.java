@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class DsRecordDataDom implements RDataDom {
     @Override
-    public void from(byte[] raw) {
+    public RDataDom from(byte[] raw) {
         throw new RuntimeException("Not Implemented");
     }
 

@@ -18,8 +18,9 @@ public class AAAARecordDataDom implements RDataDom {
     private Inet6Address address;
 
     @Override
-    public void from(byte[] rdata) {
+    public RDataDom from(byte[] rdata) {
         this.address = RDataUtils.toInet6Address(rdata);
+        return this;
     }
 
     @Override

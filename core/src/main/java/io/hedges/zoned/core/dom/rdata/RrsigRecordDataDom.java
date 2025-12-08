@@ -11,7 +11,7 @@ import lombok.ToString;
 public class RrsigRecordDataDom implements RDataDom {
 
     @Override
-    public void from(byte[] raw) {
+    public RDataDom from(byte[] raw) {
         throw new RuntimeException("Not Implemented");
     }
 

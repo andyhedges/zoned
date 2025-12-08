@@ -14,7 +14,7 @@ public class TxtRecordDataDom implements RDataDom {
     private List<String> strings;
 
     @Override
-    public void from(byte[] raw) {
+    public RDataDom from(byte[] raw) {
         throw new RuntimeException("Not Implemented");
     }
 
