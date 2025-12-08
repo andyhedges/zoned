@@ -123,8 +123,7 @@ public class NettyDnsMapper {
 
         return response;
     }
-
-    private static RDataDom to
+    
 
     private static DnsRecordTypeDom fromNettyRecordType(DnsRecordType nettyRecordType) {
         if (nettyRecordType == null) {
