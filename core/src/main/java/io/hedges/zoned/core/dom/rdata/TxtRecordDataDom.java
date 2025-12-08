@@ -13,13 +13,12 @@ import java.util.List;
 public class TxtRecordDataDom implements RDataDom {
     private List<String> strings;
 
-    @Override
-    public void from(byte[] raw) {
-        throw new RuntimeException("Not Implemented");
+    public static RDataDom from(byte[] rdata) {
+        throw new RuntimeException("Not Implemented"); //TODO
     }
 
     @Override
     public byte[] to() {
-        throw new RuntimeException("Not Implemented");
+        throw new RuntimeException("Not Implemented"); //TODO
     }
 }

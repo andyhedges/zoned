@@ -16,9 +16,10 @@ import java.util.List;
 public class CnameRecordDataDom implements RDataDom {
     private DnsNameDom cname;
 
-    @Override
-    public void from(byte[] rdata) {
-        cname = RDataUtils.toDnsNameDom(rdata);
+    public static RDataDom from(byte[] rdata) {
+        return CnameRecordDataDom.builder()
+                .cname(RDataUtils.toDnsNameDom(rdata))
+                .build();
     }
 
     @Override

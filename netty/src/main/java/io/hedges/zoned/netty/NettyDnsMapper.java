@@ -3,6 +3,11 @@ package io.hedges.zoned.netty;
 import io.hedges.zoned.core.DnsRequestContext;
 import io.hedges.zoned.core.dom.*;
 import io.hedges.zoned.core.dom.DnsRecordTypeDom;
+import io.hedges.zoned.core.dom.rdata.ARecordDataDom;
+import io.hedges.zoned.core.dom.rdata.NsRecordDataDom;
+import io.hedges.zoned.core.dom.rdata.RDataFactory;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufHolder;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.dns.*;
 
@@ -28,6 +33,7 @@ public class NettyDnsMapper {
                                     )
                             )
                             .recordType(fromNettyRecordType(dnsQuestion.type()))
+                            .recordClass(fromNettyRecordClass(dnsQuestion.dnsClass()))
                             .build()
             );
         }
@@ -55,8 +61,40 @@ public class NettyDnsMapper {
                 .build();
     }
 
+
     public static DnsMessageDom fromNetty(DatagramDnsResponse nettyResponse) {
-        return null;
+        int answerCount = nettyResponse.count(DnsSection.ANSWER);
+        List<DnsResourceRecordDom> answers = new ArrayList<>(answerCount);
+        for (int i = 0; i < answerCount; i++) {
+            DnsRecord dnsAnswer = nettyResponse.recordAt(DnsSection.ANSWER, i);
+
+            byte[] rd = extractRdata(dnsAnswer);
+            RDataDom rdata = RDataFactory.fromBytes(fromNettyRecordType(dnsAnswer.type()), rd);
+
+            answers.add(
+                    DnsResourceRecordDom.builder()
+                            .name(DnsNameDom.fromFqdn(dnsAnswer.name()))
+                            .type(fromNettyRecordType(dnsAnswer.type()))
+                            .recordClass(fromNettyRecordClass(dnsAnswer.dnsClass()))
+                            .ttlSeconds(dnsAnswer.timeToLive())
+                            .rdata(rdata)
+                            .build()
+            );
+        }
+
+        return DnsMessageDom.builder()
+                .header(
+                        DnsHeaderDom.builder()
+                                .id(nettyResponse.id())
+                                .opCode(fromNettyOpCode(nettyResponse.opCode()))
+                                .recursionDesired(nettyResponse.isRecursionDesired())
+                                .authoritativeAnswer(nettyResponse.isAuthoritativeAnswer())
+                                .recursionAvailable(nettyResponse.isRecursionAvailable())
+                                .response(true)
+                                .build()
+                )
+                .answers(answers)
+                .build();
     }
 
     // Outbound
@@ -66,24 +104,26 @@ public class NettyDnsMapper {
         nettyQuery.setRecursionDesired(dom.header().recursionDesired());
 
         dom.answers().stream().map(r ->
-                        new DefaultDnsRawRecord(
-                                r.name().toFqdn(),
-                                toNettyDnsRecordType(r.type()),
-                                r.ttlSeconds(),
-                                Unpooled.wrappedBuffer(r.rdata().to())
-                        )
-                ).forEach(d ->
-                        nettyQuery.addRecord(DnsSection.ANSWER, d)
-                );
+                new DefaultDnsRawRecord(
+                        r.name().toFqdn(),
+                        toNettyDnsRecordType(r.type()),
+                        r.ttlSeconds(),
+                        Unpooled.wrappedBuffer(r.rdata().to())
+                )
+        ).forEach(d ->
+                nettyQuery.addRecord(DnsSection.ANSWER, d)
+        );
 
-        dom.questions().stream().map(r ->
-                        new DefaultDnsQuestion(
-                                r.name().toFqdn(),
-                                toNettyDnsRecordType(r.recordType()),
-                                toNettyDnsRecordClass(r.recordClass()))
-                ).forEach(d ->
-                        nettyQuery.addRecord(DnsSection.QUESTION, d)
-                );
+        dom.questions().stream().map(r -> {
+                    System.out.println("-->" + r);
+                    return new DefaultDnsQuestion(
+                            r.name().toFqdn(),
+                            toNettyDnsRecordType(r.recordType()),
+                            toNettyDnsRecordClass(r.recordClass()));
+                }
+        ).forEach(d ->
+                nettyQuery.addRecord(DnsSection.QUESTION, d)
+        );
 
         dom.additionals().stream()
                 .map(r -> new DefaultDnsRawRecord(
@@ -116,12 +156,33 @@ public class NettyDnsMapper {
 
         response.setOpCode(DnsOpCode.QUERY);
         response.setCode(DnsResponseCode.SERVFAIL);
-        response.setRecursionDesired(false);
-        response.setRecursionAvailable(false);
-        response.setTruncated(false);
-        response.setAuthoritativeAnswer(false);
+        response.setRecursionDesired(domResponse.header().recursionDesired());
+        response.setRecursionAvailable(domResponse.header().recursionAvailable());
+        response.setTruncated(false); //TODO set this properly
+        response.setAuthoritativeAnswer(domResponse.header().authoritativeAnswer());
+
+        for(DnsResourceRecordDom domRecord: domResponse.answers()){
+            response.addRecord(DnsSection.ANSWER, toNettyDnsRecord(domRecord));
+        }
+
+        for(DnsResourceRecordDom domRecord: domResponse.authorities()){
+            response.addRecord(DnsSection.AUTHORITY, toNettyDnsRecord(domRecord));
+        }
+
+        for(DnsResourceRecordDom domRecord: domResponse.additionals()){
+            response.addRecord(DnsSection.ADDITIONAL, toNettyDnsRecord(domRecord));
+        }
 
         return response;
+    }
+
+    private static DnsRecord toNettyDnsRecord(DnsResourceRecordDom domRecord) {
+        return new DefaultDnsRawRecord(
+                domRecord.name().toFqdn(),
+                toNettyDnsRecordType(domRecord.type()),
+                domRecord.ttlSeconds(),
+                Unpooled.wrappedBuffer(domRecord.rdata().to())
+        );
     }
 
 
@@ -161,12 +222,30 @@ public class NettyDnsMapper {
         throw new UnsupportedOperationException("Unsupported DNS OpCode: " + nettyOpCode.toString());
     }
 
+    private static DnsRecordClassDom fromNettyRecordClass(int classId) {
+        switch (classId) {
+            case (DnsRecord.CLASS_IN):
+                return DnsRecordClassDom.IN;
+            case (DnsRecord.CLASS_HESIOD):
+                return DnsRecordClassDom.HESIOD;
+            case (DnsRecord.CLASS_CHAOS):
+                return DnsRecordClassDom.CHAOS;
+            case (DnsRecord.CLASS_ANY):
+                return DnsRecordClassDom.ANY;
+            case (DnsRecord.CLASS_NONE):
+                return DnsRecordClassDom.NONE;
+        }
+        throw new UnsupportedOperationException("Unsupported DNS Recode Class: " + classId);
+
+    }
+
     private static int toNettyDnsRecordClass(DnsRecordClassDom recordClassDom) {
         return switch (recordClassDom) {
-            case HS -> DnsRecord.CLASS_HESIOD;
-            case CH -> DnsRecord.CLASS_CHAOS;
+            case HESIOD -> DnsRecord.CLASS_HESIOD;
+            case CHAOS -> DnsRecord.CLASS_CHAOS;
             case IN -> DnsRecord.CLASS_IN;
             case ANY -> DnsRecord.CLASS_ANY;
+            case NONE -> DnsRecord.CLASS_NONE;
         };
     }
 
@@ -198,5 +277,26 @@ public class NettyDnsMapper {
             case STATUS -> DnsOpCode.STATUS;
             case UPDATE -> DnsOpCode.UPDATE;
         };
+    }
+
+    private static byte[] extractRdata(DnsRecord record) {
+        // Questions never have RDATA.
+        if (!(record instanceof ByteBufHolder)) {
+            return new byte[0];
+        }
+
+        ByteBuf buf = ((ByteBufHolder) record).content();
+
+        if (buf == null || !buf.isReadable()) {
+            return new byte[0];
+        }
+
+        int len = buf.readableBytes();
+        byte[] out = new byte[len];
+
+        // Important: getBytes does NOT move readerIndex.
+        buf.getBytes(buf.readerIndex(), out);
+
+        return out;
     }
 }
