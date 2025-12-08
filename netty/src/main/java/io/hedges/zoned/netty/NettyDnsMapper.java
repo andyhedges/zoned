@@ -55,7 +55,7 @@ public class NettyDnsMapper {
                 .build();
     }
 
-    public static DnsRequestContext fromNetty(DatagramDnsResponse nettyResponse) {
+    public static DnsMessageDom fromNetty(DatagramDnsResponse nettyResponse) {
         return null;
     }
 
@@ -70,7 +70,7 @@ public class NettyDnsMapper {
                                 r.name().toFqdn(),
                                 toNettyDnsRecordType(r.type()),
                                 r.ttlSeconds(),
-                                Unpooled.wrappedBuffer(r.rdata().to()) //TODO actually mediate the data
+                                Unpooled.wrappedBuffer(r.rdata().to())
                         )
                 ).forEach(d ->
                         nettyQuery.addRecord(DnsSection.ANSWER, d)
@@ -90,7 +90,7 @@ public class NettyDnsMapper {
                         r.name().toFqdn(),
                         toNettyDnsRecordType(r.type()),
                         r.ttlSeconds(),
-                        Unpooled.wrappedBuffer(r.rdata().to())   //TODO actually mediate the data
+                        Unpooled.wrappedBuffer(r.rdata().to())
                 ))
                 .forEach(rec ->
                         nettyQuery.addRecord(DnsSection.ADDITIONAL, rec)
@@ -101,7 +101,7 @@ public class NettyDnsMapper {
                         r.name().toFqdn(),
                         toNettyDnsRecordType(r.type()),
                         r.ttlSeconds(),
-                        Unpooled.wrappedBuffer(r.rdata().to())   //TODO actually mediate the data
+                        Unpooled.wrappedBuffer(r.rdata().to())
                 ))
                 .forEach(rec ->
                         nettyQuery.addRecord(DnsSection.AUTHORITY, rec)
@@ -123,7 +123,7 @@ public class NettyDnsMapper {
 
         return response;
     }
-    
+
 
     private static DnsRecordTypeDom fromNettyRecordType(DnsRecordType nettyRecordType) {
         if (nettyRecordType == null) {
