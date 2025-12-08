@@ -6,9 +6,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Builder
 @ToString
 public class CnameRecordDataDom implements RDataDom {
     private DnsNameDom cname;
+
+    @Override
+    public void from(byte[] rdata) {
+        cname = RDataUtils.toDnsNameDom(rdata);
+    }
+
+    @Override
+    public byte[] to() {
+        return RDataUtils.toByteArray(cname);
+    }
+
 }

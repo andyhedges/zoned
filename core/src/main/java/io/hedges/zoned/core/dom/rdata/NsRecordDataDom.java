@@ -11,4 +11,14 @@ import lombok.ToString;
 @ToString
 public class NsRecordDataDom implements RDataDom {
     private DnsNameDom nsdname;
+
+    @Override
+    public void from(byte[] raw) {
+        this.nsdname = RDataUtils.toDnsNameDom(raw);
+    }
+
+    @Override
+    public byte[] to() {
+        return RDataUtils.toByteArray(this.nsdname);
+    }
 }

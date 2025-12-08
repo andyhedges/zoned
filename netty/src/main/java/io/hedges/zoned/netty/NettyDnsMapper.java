@@ -70,7 +70,7 @@ public class NettyDnsMapper {
                                 r.name().toFqdn(),
                                 toNettyDnsRecordType(r.type()),
                                 r.ttlSeconds(),
-                                Unpooled.wrappedBuffer(new byte[]{}) //TODO actually mediate the data
+                                Unpooled.wrappedBuffer(r.rdata().to()) //TODO actually mediate the data
                         )
                 ).forEach(d ->
                         nettyQuery.addRecord(DnsSection.ANSWER, d)
@@ -90,7 +90,7 @@ public class NettyDnsMapper {
                         r.name().toFqdn(),
                         toNettyDnsRecordType(r.type()),
                         r.ttlSeconds(),
-                        Unpooled.wrappedBuffer(new byte[]{})   //TODO actually mediate the data
+                        Unpooled.wrappedBuffer(r.rdata().to())   //TODO actually mediate the data
                 ))
                 .forEach(rec ->
                         nettyQuery.addRecord(DnsSection.ADDITIONAL, rec)
@@ -101,13 +101,65 @@ public class NettyDnsMapper {
                         r.name().toFqdn(),
                         toNettyDnsRecordType(r.type()),
                         r.ttlSeconds(),
-                        Unpooled.wrappedBuffer(new byte[]{})   //TODO actually mediate the data
+                        Unpooled.wrappedBuffer(r.rdata().to())   //TODO actually mediate the data
                 ))
                 .forEach(rec ->
                         nettyQuery.addRecord(DnsSection.AUTHORITY, rec)
                 );
 
         return nettyQuery;
+    }
+
+
+    public static DatagramDnsResponse toNettyResponse(DnsMessageDom domResponse, InetSocketAddress sender, InetSocketAddress recipient) {
+        DatagramDnsResponse response = new DatagramDnsResponse(sender, recipient, domResponse.header().id());
+
+        response.setOpCode(DnsOpCode.QUERY);
+        response.setCode(DnsResponseCode.SERVFAIL);
+        response.setRecursionDesired(false);
+        response.setRecursionAvailable(false);
+        response.setTruncated(false);
+        response.setAuthoritativeAnswer(false);
+
+        return response;
+    }
+
+    private static RDataDom to
+
+    private static DnsRecordTypeDom fromNettyRecordType(DnsRecordType nettyRecordType) {
+        if (nettyRecordType == null) {
+            throw new IllegalArgumentException("nettyRecordType is null");
+        }
+        try {
+            return DnsRecordTypeDom.valueOf(nettyRecordType.name());
+        } catch (IllegalArgumentException ex) {
+            throw new UnsupportedOperationException("Unsupported Netty DnsRecordType: " + nettyRecordType.name(), ex);
+        }
+    }
+
+    private static DnsOpCodeDom fromNettyOpCode(DnsOpCode nettyOpCode) {
+        if (nettyOpCode == null) {
+            throw new IllegalArgumentException("nettyOpCode is null");
+        }
+
+        // Identity comparison because Netty uses singletons for known opcodes
+        if (nettyOpCode == DnsOpCode.QUERY) {
+            return DnsOpCodeDom.QUERY;
+        }
+        if (nettyOpCode == DnsOpCode.IQUERY) {
+            return DnsOpCodeDom.IQUERY;
+        }
+        if (nettyOpCode == DnsOpCode.STATUS) {
+            return DnsOpCodeDom.STATUS;
+        }
+        if (nettyOpCode == DnsOpCode.NOTIFY) {
+            return DnsOpCodeDom.NOTIFY;
+        }
+        if (nettyOpCode == DnsOpCode.UPDATE) {
+            return DnsOpCodeDom.UPDATE;
+        }
+
+        throw new UnsupportedOperationException("Unsupported DNS OpCode: " + nettyOpCode.toString());
     }
 
     private static int toNettyDnsRecordClass(DnsRecordClassDom recordClassDom) {
@@ -147,54 +199,5 @@ public class NettyDnsMapper {
             case STATUS -> DnsOpCode.STATUS;
             case UPDATE -> DnsOpCode.UPDATE;
         };
-    }
-
-    public static DatagramDnsResponse toNettyResponse(DnsMessageDom domResponse, InetSocketAddress sender, InetSocketAddress recipient) {
-        DatagramDnsResponse response = new DatagramDnsResponse(sender, recipient, domResponse.header().id());
-
-        response.setOpCode(DnsOpCode.QUERY);
-        response.setCode(DnsResponseCode.SERVFAIL);
-        response.setRecursionDesired(false);
-        response.setRecursionAvailable(false);
-        response.setTruncated(false);
-        response.setAuthoritativeAnswer(false);
-
-        return response;
-    }
-
-    private static DnsRecordTypeDom fromNettyRecordType(DnsRecordType nettyRecordType) {
-        if (nettyRecordType == null) {
-            throw new IllegalArgumentException("nettyRecordType is null");
-        }
-        try {
-            return DnsRecordTypeDom.valueOf(nettyRecordType.name());
-        } catch (IllegalArgumentException ex) {
-            throw new UnsupportedOperationException("Unsupported Netty DnsRecordType: " + nettyRecordType.name(), ex);
-        }
-    }
-
-    private static DnsOpCodeDom fromNettyOpCode(DnsOpCode nettyOpCode) {
-        if (nettyOpCode == null) {
-            throw new IllegalArgumentException("nettyOpCode is null");
-        }
-
-        // Identity comparison because Netty uses singletons for known opcodes
-        if (nettyOpCode == DnsOpCode.QUERY) {
-            return DnsOpCodeDom.QUERY;
-        }
-        if (nettyOpCode == DnsOpCode.IQUERY) {
-            return DnsOpCodeDom.IQUERY;
-        }
-        if (nettyOpCode == DnsOpCode.STATUS) {
-            return DnsOpCodeDom.STATUS;
-        }
-        if (nettyOpCode == DnsOpCode.NOTIFY) {
-            return DnsOpCodeDom.NOTIFY;
-        }
-        if (nettyOpCode == DnsOpCode.UPDATE) {
-            return DnsOpCodeDom.UPDATE;
-        }
-
-        throw new UnsupportedOperationException("Unsupported DNS OpCode: " + nettyOpCode.toString());
     }
 }

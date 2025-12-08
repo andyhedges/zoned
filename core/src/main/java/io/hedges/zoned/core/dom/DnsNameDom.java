@@ -20,4 +20,5 @@ public class DnsNameDom {
     public static DnsNameDom fromFqdn(String fqdn) {
         return DnsNameDom.builder().labels(Arrays.stream(fqdn.split("\\.")).toList()).build();
     }
+
 }

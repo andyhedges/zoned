@@ -13,4 +13,13 @@ public class MxRecordDataDom implements RDataDom {
     private int preference;
     private DnsNameDom exchange;
 
+    @Override
+    public void from(byte[] raw) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public byte[] to() {
+        throw new RuntimeException("Not Implemented");
+    }
 }

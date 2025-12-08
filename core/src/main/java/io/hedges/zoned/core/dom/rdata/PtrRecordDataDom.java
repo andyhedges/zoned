@@ -9,4 +9,14 @@ import lombok.ToString;
 @Builder
 @ToString
 public class PtrRecordDataDom implements RDataDom {
+
+    @Override
+    public void from(byte[] raw) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public byte[] to() {
+        throw new RuntimeException("Not Implemented");
+    }
 }
