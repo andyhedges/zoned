@@ -3,10 +3,7 @@ package io.hedges.zoned.app;
 import io.hedges.zoned.core.DnsClient;
 import io.hedges.zoned.core.DnsRequestContext;
 import io.hedges.zoned.core.DnsRequestRouter;
-import io.hedges.zoned.core.dom.DnsHeaderDom;
-import io.hedges.zoned.core.dom.DnsMessageDom;
-import io.hedges.zoned.core.dom.DnsNameDom;
-import io.hedges.zoned.core.dom.DnsResourceRecordDom;
+import io.hedges.zoned.core.dom.*;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
@@ -21,15 +18,16 @@ public class DefaultDnsRequestRouter implements DnsRequestRouter {
 
     @Override
     public CompletionStage<DnsMessageDom> handle(DnsRequestContext ctx) {
-        String query = ctx.query().questions().getFirst().name().toFqdn();
 
         List<DnsResourceRecordDom> answers = new ArrayList<>();
-        return client.lookup(query).handle((addresses, t) -> {
+        return client.send(ctx.query()).handle((addresses, t) -> {
 
             addresses.forEach(a -> {
                 DnsResourceRecordDom dom = DnsResourceRecordDom.builder().name(DnsNameDom.builder().labels(Arrays.stream(a.getHostName().split("\\.")).toList()).build()).build();
                 answers.add(dom);
+                System.out.println("-->" + dom);
             });
+
 
             return DnsMessageDom
                     .builder()
@@ -41,7 +39,6 @@ public class DefaultDnsRequestRouter implements DnsRequestRouter {
                     )
                     .answers(answers)
                     .build();
-
         });
     }
 }
