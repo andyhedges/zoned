@@ -27,6 +27,10 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<UdpDnsInbou
 
         requestHandler.handle(drc).whenComplete((response, t) -> {
 
+            if(t != null) {
+                t.printStackTrace(); //TODO return appropriate error
+            }
+
             if (response == null) {
                 return;
             }
