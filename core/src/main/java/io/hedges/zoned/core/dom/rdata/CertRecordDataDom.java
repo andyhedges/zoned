@@ -8,7 +8,8 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class Nsec3RecordDataDom implements RDataDom {
+public class CertRecordDataDom implements RDataDom {
+
     public static RDataDom from(byte[] rdata) {
         throw new UnsupportedOperationException("Not Implemented"); //TODO
     }

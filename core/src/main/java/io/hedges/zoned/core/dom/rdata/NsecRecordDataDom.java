@@ -10,11 +10,11 @@ import lombok.ToString;
 @ToString
 public class NsecRecordDataDom implements RDataDom {
     public static RDataDom from(byte[] rdata) {
-        throw new RuntimeException("Not Implemented"); //TODO
+        throw new UnsupportedOperationException("Not Implemented"); //TODO
     }
 
     @Override
     public byte[] to() {
-        throw new RuntimeException("Not Implemented"); //TODO
+        throw new UnsupportedOperationException("Not Implemented"); //TODO
     }
 }
