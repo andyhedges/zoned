@@ -13,6 +13,8 @@ import java.util.List;
 
 public class RDataUtils {
 
+    public static final int COMPRESSION_POINTER_MARKER = 0xC0;
+
     protected static Inet6Address toInet6Address(byte[] rdata) {
         if (rdata == null || rdata.length != 16) {
             throw new IllegalArgumentException("AAAA RDATA must be exactly 16 bytes");
@@ -79,6 +81,10 @@ public class RDataUtils {
             int len = rdata[idx] & 0xFF;
             idx++;
 
+            if (len == COMPRESSION_POINTER_MARKER) {
+                throw new UnsupportedOperationException("Compressed RDATA is not yet supported");
+            }
+
             if (len > 63) {
                 throw new IllegalArgumentException("Label length exceeds 63 bytes");
             }
@@ -127,7 +133,7 @@ public class RDataUtils {
                 throw new IllegalArgumentException("Label exceeds 63 bytes: " + label);
             }
             totalLength += 1 + b.length;
-            if(totalLength > 255) {
+            if (totalLength > 255) {
                 throw new IllegalArgumentException("DNS Name exceeds 255 bytes");
             }
         }
