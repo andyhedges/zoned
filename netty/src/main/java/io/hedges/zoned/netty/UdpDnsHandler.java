@@ -2,25 +2,28 @@ package io.hedges.zoned.netty;
 
 import io.hedges.zoned.core.DnsRequestContext;
 import io.hedges.zoned.core.DnsRequestHandler;
-import io.hedges.zoned.core.dom.DnsMessageDom;
 import io.hedges.zoned.core.dom.Transport;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.dns.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.InetSocketAddress;
+import java.time.Instant;
 
 @Slf4j
 @AllArgsConstructor
-public final class UdpDnsHandler extends SimpleChannelInboundHandler<DatagramDnsQuery> {
+public final class UdpDnsHandler extends SimpleChannelInboundHandler<UdpDnsInbound> {
 
     private DnsRequestHandler requestHandler;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, DatagramDnsQuery query) {
-        DnsRequestContext drc = NettyDnsMapper.fromNetty(query, Transport.UDP);
+    protected void channelRead0(ChannelHandlerContext ctx, UdpDnsInbound inbound) {
+        DnsRequestContext drc = DnsRequestContext.builder()
+                .query(inbound.message())
+                .clientAddress(inbound.sender())
+                .transport(Transport.UDP)
+                .receivedAt(Instant.now())
+                .build();
 
         requestHandler.handle(drc).whenComplete((response, t) -> {
 
@@ -28,12 +31,7 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<DatagramDns
                 return;
             }
 
-            InetSocketAddress sender = query.recipient();
-            InetSocketAddress recipient = query.sender();
-
-            DatagramDnsResponse nettyResponse = NettyDnsMapper.toNettyResponse(response, sender, recipient);
-
-            ctx.writeAndFlush(nettyResponse);
+            ctx.writeAndFlush(new UdpDnsOutbound(response, inbound.sender()));
         });
     }
 

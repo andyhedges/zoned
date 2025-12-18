@@ -18,11 +18,11 @@ public class OptRecordDataDom implements RDataDom {
     private List<EdnsOptionDom> ednsOptions;
 
     public static RDataDom from(byte[] rdata) {
-        throw new RuntimeException("Not Implemented"); //TODO
+        throw new UnsupportedOperationException("Not Implemented"); //TODO
     }
 
     @Override
     public byte[] to() {
-        throw new RuntimeException("Not Implemented"); //TODO
+        throw new UnsupportedOperationException("Not Implemented"); //TODO
     }
 }

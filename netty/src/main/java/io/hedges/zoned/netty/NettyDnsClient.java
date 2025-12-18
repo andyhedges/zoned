@@ -4,19 +4,10 @@ import io.hedges.zoned.core.DnsClient;
 import io.hedges.zoned.core.dom.DnsMessageDom;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
-import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
-import io.netty.handler.codec.dns.*;
-import io.netty.resolver.dns.DnsNameResolver;
-import io.netty.resolver.dns.DnsNameResolverBuilder;
-import io.netty.resolver.dns.SingletonDnsServerAddressStreamProvider;
-import io.netty.util.concurrent.Future;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -32,9 +23,8 @@ public class NettyDnsClient implements DnsClient {
     }
 
     public CompletionStage<DnsMessageDom> send(DnsMessageDom msg) {
-        InetSocketAddress sender = new InetSocketAddress(0);
-        DatagramDnsQuery dnsQuery = NettyDnsMapper.toNettyQuery(msg, sender, upstream);
         CompletableFuture<DnsMessageDom> cf = new CompletableFuture<>();
+        InetSocketAddress sender = new InetSocketAddress(0);
         EventLoop loop = group.next();
         Bootstrap b = new Bootstrap()
                 .group(loop)
@@ -42,25 +32,24 @@ public class NettyDnsClient implements DnsClient {
                 .option(ChannelOption.SO_BROADCAST, false)
                 .localAddress(sender)
                 .remoteAddress(upstream)
-                .handler(new ChannelInitializer<DatagramChannel>() {
+                .handler(new ChannelInitializer<NioDatagramChannel>() {
                     @Override
-                    protected void initChannel(DatagramChannel ch) {
-                        ch.pipeline().addLast(new DatagramDnsQueryEncoder());
-                        ch.pipeline().addLast(new DatagramDnsResponseDecoder());
-                        ch.pipeline().addLast(new SimpleChannelInboundHandler<DatagramDnsResponse>() {
+                    protected void initChannel(NioDatagramChannel ch) {
+                        ch.pipeline().addLast(new DnsDatagramDecoder());
+                        ch.pipeline().addLast(new DnsDatagramEncoder());
+                        ch.pipeline().addLast(new SimpleChannelInboundHandler<UdpDnsInbound>() {
 
                             @Override
                             protected void channelRead0(ChannelHandlerContext ctx,
-                                                        DatagramDnsResponse resp) {
+                                                        UdpDnsInbound inbound) {
                                 try {
                                     // Only handle the response that matches our query ID
-                                    if (resp.id() != dnsQuery.id()) {
+                                    if (inbound.message().header().id() != msg.header().id()) {
                                         return;
                                     }
 
-                                    DnsMessageDom dom = NettyDnsMapper.fromNetty(resp);
                                     if (!cf.isDone()) {
-                                        cf.complete(dom);
+                                        cf.complete(inbound.message());
                                     }
                                 } catch (Throwable t) {
                                     if (!cf.isDone()) {
@@ -90,7 +79,7 @@ public class NettyDnsClient implements DnsClient {
             }
 
             Channel ch = bindFuture.channel();
-            ch.writeAndFlush(dnsQuery).addListener((ChannelFuture writeFuture) -> {
+            ch.writeAndFlush(new UdpDnsOutbound(msg, upstream)).addListener((ChannelFuture writeFuture) -> {
                 if (!writeFuture.isSuccess()) {
                     if (!cf.isDone()) {
                         cf.completeExceptionally(writeFuture.cause());
