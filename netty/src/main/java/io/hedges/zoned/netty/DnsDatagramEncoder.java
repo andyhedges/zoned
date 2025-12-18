@@ -53,8 +53,8 @@ public final class DnsDatagramEncoder extends MessageToMessageEncoder<UdpDnsOutb
 
         for (DnsQuestionDom question : questions) {
             writeName(out, question.name());
-            out.writeShort(DnsWireMappings.codeForRecordType(question.recordType()));
-            out.writeShort(DnsWireMappings.codeForRecordClass(question.recordClass()));
+            out.writeShort(question.recordType().code());
+            out.writeShort(question.recordClass().code());
         }
 
         for (DnsResourceRecordDom record : answers) {
@@ -82,8 +82,8 @@ public final class DnsDatagramEncoder extends MessageToMessageEncoder<UdpDnsOutb
 
     private static void writeResourceRecord(ByteBuf out, DnsResourceRecordDom record) {
         writeName(out, record.name());
-        out.writeShort(DnsWireMappings.codeForRecordType(record.type()));
-        out.writeShort(DnsWireMappings.codeForRecordClass(record.recordClass()));
+        out.writeShort(record.type().code());
+        out.writeShort(record.recordClass().code());
         out.writeInt((int) record.ttlSeconds());
         byte[] rdata = record.rdata() == null ? new byte[0] : record.rdata().to();
         out.writeShort(rdata.length);
@@ -118,7 +118,7 @@ public final class DnsDatagramEncoder extends MessageToMessageEncoder<UdpDnsOutb
         if (header.response()) {
             flags |= 0x8000;
         }
-        flags |= (DnsWireMappings.codeForOpCode(header.opCode()) & 0xF) << 11;
+        flags |= (header.opCode() == null ? 0 : (header.opCode().code() & 0xF)) << 11;
         if (header.authoritativeAnswer()) {
             flags |= 0x0400;
         }
@@ -137,7 +137,7 @@ public final class DnsDatagramEncoder extends MessageToMessageEncoder<UdpDnsOutb
         if (header.checkingDisabled()) {
             flags |= 0x0010;
         }
-        flags |= (DnsWireMappings.codeForResponseCode(header.responseCode()) & 0xF);
+        flags |= (header.responseCode() == null ? 0 : (header.responseCode().code() & 0xF));
         return flags;
     }
 }

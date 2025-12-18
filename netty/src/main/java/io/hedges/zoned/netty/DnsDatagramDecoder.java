@@ -3,10 +3,12 @@ package io.hedges.zoned.netty;
 import io.hedges.zoned.core.dom.DnsHeaderDom;
 import io.hedges.zoned.core.dom.DnsMessageDom;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsOpCodeDom;
 import io.hedges.zoned.core.dom.DnsQuestionDom;
 import io.hedges.zoned.core.dom.DnsRecordClassDom;
 import io.hedges.zoned.core.dom.DnsRecordTypeDom;
 import io.hedges.zoned.core.dom.DnsResourceRecordDom;
+import io.hedges.zoned.core.dom.DnsResponseCodeDom;
 import io.hedges.zoned.core.dom.rdata.RDataFactory;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -48,21 +50,21 @@ public final class DnsDatagramDecoder extends SimpleChannelInboundHandler<Datagr
         DnsHeaderDom header = DnsHeaderDom.builder()
                 .id(id)
                 .response((flags & 0x8000) != 0)
-                .opCode(DnsWireMappings.opCodeFromCode((flags >> 11) & 0xF))
+                .opCode(DnsOpCodeDom.fromCode((flags >> 11) & 0xF))
                 .authoritativeAnswer((flags & 0x0400) != 0)
                 .truncation((flags & 0x0200) != 0)
                 .recursionDesired((flags & 0x0100) != 0)
                 .recursionAvailable((flags & 0x0080) != 0)
                 .authenticatedData((flags & 0x0020) != 0)
                 .checkingDisabled((flags & 0x0010) != 0)
-                .responseCode(DnsWireMappings.responseCodeFromCode(flags & 0xF))
+                .responseCode(DnsResponseCodeDom.fromCode(flags & 0xF))
                 .build();
 
         List<DnsQuestionDom> questions = new ArrayList<>(qdCount);
         for (int i = 0; i < qdCount; i++) {
             DnsNameDom name = readName(buf);
-            DnsRecordTypeDom type = DnsWireMappings.recordTypeFromCode(buf.readUnsignedShort());
-            DnsRecordClassDom recordClass = DnsWireMappings.recordClassFromCode(buf.readUnsignedShort());
+            DnsRecordTypeDom type = DnsRecordTypeDom.fromCode(buf.readUnsignedShort());
+            DnsRecordClassDom recordClass = DnsRecordClassDom.fromCode(buf.readUnsignedShort());
             questions.add(DnsQuestionDom.builder()
                     .name(name)
                     .recordType(type)
@@ -148,8 +150,8 @@ public final class DnsDatagramDecoder extends SimpleChannelInboundHandler<Datagr
         List<DnsResourceRecordDom> records = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             DnsNameDom name = readName(buf);
-            DnsRecordTypeDom type = DnsWireMappings.recordTypeFromCode(buf.readUnsignedShort());
-            DnsRecordClassDom recordClass = DnsWireMappings.recordClassFromCode(buf.readUnsignedShort());
+            DnsRecordTypeDom type = DnsRecordTypeDom.fromCode(buf.readUnsignedShort());
+            DnsRecordClassDom recordClass = DnsRecordClassDom.fromCode(buf.readUnsignedShort());
             long ttl = buf.readUnsignedInt();
             int rdLength = buf.readUnsignedShort();
             if (rdLength > buf.readableBytes()) {
