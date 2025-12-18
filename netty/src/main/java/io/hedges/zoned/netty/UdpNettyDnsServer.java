@@ -4,11 +4,8 @@ import io.hedges.zoned.core.DnsRequestHandler;
 import io.hedges.zoned.core.DnsServer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
-import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
-import io.netty.handler.codec.dns.DatagramDnsQueryDecoder;
-import io.netty.handler.codec.dns.DatagramDnsResponseEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.Setter;
@@ -37,8 +34,8 @@ public final class UdpNettyDnsServer implements DnsServer {
              protected void initChannel(DatagramChannel ch) {
                  ChannelPipeline p = ch.pipeline();
                  p.addLast("wireLogger", new LoggingHandler(LogLevel.INFO));
-                 p.addLast(new DatagramDnsQueryDecoder());
-                 p.addLast(new DatagramDnsResponseEncoder());
+                 p.addLast(new DnsDatagramDecoder());
+                 p.addLast(new DnsDatagramEncoder());
                  p.addLast(new UdpDnsHandler(requestHandler));
              }
          });
