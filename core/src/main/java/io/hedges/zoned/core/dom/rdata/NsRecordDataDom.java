@@ -18,6 +18,12 @@ public class NsRecordDataDom implements RDataDom {
                 .build();
     }
 
+    public static RDataDom from(byte[] rdata, NameResolver resolver) {
+        return NsRecordDataDom.builder()
+                .nsName(RDataUtils.toDnsNameDom(rdata, resolver))
+                .build();
+    }
+
     @Override
     public byte[] to() {
         return RDataUtils.toByteArray(this.nsName);

@@ -18,6 +18,12 @@ public class CnameRecordDataDom implements RDataDom {
                 .build();
     }
 
+    public static RDataDom from(byte[] rdata, NameResolver resolver) {
+        return CnameRecordDataDom.builder()
+                .cname(RDataUtils.toDnsNameDom(rdata, resolver))
+                .build();
+    }
+
     @Override
     public byte[] to() {
         return RDataUtils.toByteArray(cname);
