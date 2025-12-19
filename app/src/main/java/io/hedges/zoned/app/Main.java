@@ -3,6 +3,7 @@ package io.hedges.zoned.app;
 import io.hedges.zoned.core.DnsImplementationProvider;
 import io.hedges.zoned.core.DnsServer;
 import io.hedges.zoned.netty.NettyDnsImplementationProvider;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import picocli.CommandLine;
@@ -67,7 +68,7 @@ public final class Main implements Callable<Integer> {
             throw new IllegalArgumentException("Config file not found: " + normalized);
         }
         try (InputStream input = Files.newInputStream(normalized)) {
-            Yaml yaml = new Yaml(new Constructor(ZonedConfig.class));
+            Yaml yaml = new Yaml(new Constructor(ZonedConfig.class, new LoaderOptions()));
             ZonedConfig config = yaml.load(input);
             return config == null ? new ZonedConfig() : config;
         }

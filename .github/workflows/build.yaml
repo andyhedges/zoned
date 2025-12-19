@@ -20,6 +20,9 @@ jobs:
           install: true
           cache: true
 
+      - name: Setup Docker
+        uses: docker/setup-docker-action@v4
+
       - name: Build & test with Maven
         run: mvn -B -ntp clean verify
 
