@@ -1,5 +1,6 @@
 package io.hedges.zoned.core.dom.rdata;
 
+import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 
 import java.net.Inet4Address;

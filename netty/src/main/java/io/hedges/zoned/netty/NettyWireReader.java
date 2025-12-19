@@ -1,6 +1,6 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.dom.DnsWireReader;
+import io.hedges.zoned.core.DnsWireReader;
 import io.netty.buffer.ByteBuf;
 
 final class NettyWireReader implements DnsWireReader {

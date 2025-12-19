@@ -1,6 +1,6 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.dom.DnsMessageEncoder;
+import io.hedges.zoned.core.DnsMessageEncoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.socket.DatagramPacket;

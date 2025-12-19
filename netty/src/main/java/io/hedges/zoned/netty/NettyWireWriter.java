@@ -1,6 +1,6 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.dom.DnsWireWriter;
+import io.hedges.zoned.core.DnsWireWriter;
 import io.netty.buffer.ByteBuf;
 
 final class NettyWireWriter implements DnsWireWriter {

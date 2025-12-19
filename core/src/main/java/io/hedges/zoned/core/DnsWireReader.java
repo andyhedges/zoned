@@ -1,4 +1,4 @@
-package io.hedges.zoned.core.dom;
+package io.hedges.zoned.core;
 
 public interface DnsWireReader {
 

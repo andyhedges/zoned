@@ -1,6 +1,6 @@
 package io.hedges.zoned.netty;
 
-import io.hedges.zoned.core.dom.DnsMessageDecoder;
+import io.hedges.zoned.core.DnsMessageDecoder;
 import io.hedges.zoned.core.dom.DnsMessageDom;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

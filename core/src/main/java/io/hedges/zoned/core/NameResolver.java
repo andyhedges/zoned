@@ -1,4 +1,4 @@
-package io.hedges.zoned.core.dom.rdata;
+package io.hedges.zoned.core;
 
 import io.hedges.zoned.core.dom.DnsNameDom;
 

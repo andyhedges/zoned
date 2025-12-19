@@ -1,6 +1,14 @@
-package io.hedges.zoned.core.dom;
+package io.hedges.zoned.core;
 
-import io.hedges.zoned.core.dom.rdata.NameResolver;
+import io.hedges.zoned.core.dom.DnsHeaderDom;
+import io.hedges.zoned.core.dom.DnsMessageDom;
+import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsOpCodeDom;
+import io.hedges.zoned.core.dom.DnsQuestionDom;
+import io.hedges.zoned.core.dom.DnsRecordClassDom;
+import io.hedges.zoned.core.dom.DnsRecordTypeDom;
+import io.hedges.zoned.core.dom.DnsResourceRecordDom;
+import io.hedges.zoned.core.dom.DnsResponseCodeDom;
 import io.hedges.zoned.core.dom.rdata.OptRecordDataDom;
 import io.hedges.zoned.core.dom.rdata.RDataFactory;
 
@@ -33,17 +41,17 @@ public final class DnsMessageDecoder {
         int arCount = reader.readU16();
 
         DnsHeaderDom header = DnsHeaderDom.builder()
-                .id(id)
-                .response((flags & 0x8000) != 0)
-                .opCode(DnsOpCodeDom.fromCode((flags >> 11) & 0xF))
-                .authoritativeAnswer((flags & 0x0400) != 0)
-                .truncation((flags & 0x0200) != 0)
-                .recursionDesired((flags & 0x0100) != 0)
-                .recursionAvailable((flags & 0x0080) != 0)
-                .authenticatedData((flags & 0x0020) != 0)
-                .checkingDisabled((flags & 0x0010) != 0)
-                .responseCode(DnsResponseCodeDom.fromCode(flags & 0xF))
-                .build();
+                                          .id(id)
+                                          .response((flags & 0x8000) != 0)
+                                          .opCode(DnsOpCodeDom.fromCode((flags >> 11) & 0xF))
+                                          .authoritativeAnswer((flags & 0x0400) != 0)
+                                          .truncation((flags & 0x0200) != 0)
+                                          .recursionDesired((flags & 0x0100) != 0)
+                                          .recursionAvailable((flags & 0x0080) != 0)
+                                          .authenticatedData((flags & 0x0020) != 0)
+                                          .checkingDisabled((flags & 0x0010) != 0)
+                                          .responseCode(DnsResponseCodeDom.fromCode(flags & 0xF))
+                                          .build();
 
         NameResolver resolver = offset -> resolveNameAt(reader, offset);
 

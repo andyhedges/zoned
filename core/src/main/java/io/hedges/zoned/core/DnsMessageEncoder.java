@@ -1,5 +1,10 @@
-package io.hedges.zoned.core.dom;
+package io.hedges.zoned.core;
 
+import io.hedges.zoned.core.dom.DnsHeaderDom;
+import io.hedges.zoned.core.dom.DnsMessageDom;
+import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsQuestionDom;
+import io.hedges.zoned.core.dom.DnsResourceRecordDom;
 import io.hedges.zoned.core.dom.rdata.OptRecordDataDom;
 
 import java.nio.charset.StandardCharsets;
