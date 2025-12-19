@@ -6,9 +6,6 @@ import io.hedges.zoned.core.DnsRequestRouter;
 import io.hedges.zoned.core.dom.*;
 import lombok.AllArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.CompletionStage;
 
 @AllArgsConstructor

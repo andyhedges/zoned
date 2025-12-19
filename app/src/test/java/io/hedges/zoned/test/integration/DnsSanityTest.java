@@ -1,41 +1,37 @@
 package io.hedges.zoned.test.integration;
 
 import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
-import com.github.dockerjava.api.model.Ports.Binding;
-import io.netty.channel.EventLoop;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioDatagramChannel;
-import io.netty.resolver.dns.DnsNameResolver;
-import io.netty.resolver.dns.DnsNameResolverBuilder;
-import io.netty.resolver.dns.SingletonDnsServerAddressStreamProvider;
+import io.hedges.zoned.app.ZonedApp;
+import io.hedges.zoned.core.DnsServer;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
+import org.xbill.DNS.ARecord;
+import org.xbill.DNS.Lookup;
+import org.xbill.DNS.Record;
+import org.xbill.DNS.SimpleResolver;
+import org.xbill.DNS.Type;
 
-import java.io.File;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.util.List;
-import java.util.Objects;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
 class DnsSanityTest {
 
-    private static final int PORT = 9457;
+    private static final int UPSTREAM_PORT = 9457;
+    private static final String UPSTREAM_HOST = "127.0.0.1";
 
     @Container
     static final GenericContainer<?> compose =
@@ -51,56 +47,80 @@ class DnsSanityTest {
                         cmd.withExposedPorts(tcp53, udp53);
 
                         Ports ports = new Ports();
-                        ports.bind(udp53, Ports.Binding.bindPort(PORT));
-                        ports.bind(tcp53, Ports.Binding.bindPort(PORT));
+                        ports.bind(udp53, Ports.Binding.bindPort(UPSTREAM_PORT));
+                        ports.bind(tcp53, Ports.Binding.bindPort(UPSTREAM_PORT));
                         cmd.getHostConfig().withPortBindings(ports);
                     })
                     .waitingFor(Wait.forHealthcheck());
 
-    private EventLoopGroup group;
-    private DnsNameResolver resolver;
+    private static DnsServer server;
+    private static int appPort;
+    private static Path configPath;
+    private SimpleResolver resolver;
 
-
-    @BeforeEach
-    void setUp() {
-        group = new NioEventLoopGroup(1);
-        EventLoop loop = (EventLoop) group.next();
-
-        InetSocketAddress dnsServer =
-                new InetSocketAddress("127.0.0.1", PORT);
-
-        resolver = new DnsNameResolverBuilder(loop)
-                .datagramChannelType(NioDatagramChannel.class)
-                .nameServerProvider(
-                        new SingletonDnsServerAddressStreamProvider(dnsServer)
-                )
-                .searchDomains(List.of())     // important
-                .recursionDesired(true)
-                .build();
+    @BeforeAll
+    static void startZoned() throws Exception {
+        appPort = findFreePort();
+        configPath = writeConfig(appPort);
+        server = ZonedApp.start(configPath, null).server();
     }
 
-    @AfterEach
-    void tearDown() {
-        if (resolver != null) {
-            resolver.close();
+    @BeforeEach
+    void setUp() throws Exception {
+        resolver = new SimpleResolver(UPSTREAM_HOST);
+        resolver.setPort(appPort);
+    }
+
+    @AfterAll
+    static void tearDown() throws IOException {
+        if (server != null) {
+            server.stop();
         }
-        if (group != null) {
-            group.shutdownGracefully();
+        if (configPath != null) {
+            Files.deleteIfExists(configPath);
         }
     }
 
     @Test
     void resolvesARecordFromUnbound() throws Exception {
-        var fut = resolver.resolveAll("example.test.");
-        List<InetAddress> addrs = fut.get();
+        Lookup lookup = new Lookup("example.test.", Type.A);
+        lookup.setResolver(resolver);
+        Record[] records = lookup.run();
+        assertNotNull(records, "expected DNS records from zoned");
 
-        assertFalse(addrs.isEmpty());
+        boolean found = false;
+        for (Record record : records) {
+            if (record instanceof ARecord aRecord) {
+                if ("192.0.2.123".equals(aRecord.getAddress().getHostAddress())) {
+                    found = true;
+                    break;
+                }
+            }
+        }
 
-        addrs.forEach(System.out::println);
+        assertTrue(found, "Expected address not found in DNS response");
+    }
 
-        boolean found = addrs.stream()
-                             .anyMatch(a -> "192.0.2.123".equals(a.getHostAddress()));
+    private static int findFreePort() throws IOException {
+        try (ServerSocket socket = new ServerSocket(0)) {
+            return socket.getLocalPort();
+        }
+    }
 
-        assertTrue(found, addrs.toString());
+    private static Path writeConfig(int serverPort) throws IOException {
+        String yaml = String.join(
+                "\n",
+                "serverPort: " + serverPort,
+                "activeDnsServerPool: default",
+                "dnsServerPools:",
+                "  default:",
+                "    - do53:",
+                "        host: " + UPSTREAM_HOST,
+                "        port: " + UPSTREAM_PORT,
+                ""
+        );
+        Path path = Files.createTempFile("zoned-", ".yaml");
+        Files.writeString(path, yaml);
+        return path;
     }
 }

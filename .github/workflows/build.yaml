@@ -23,6 +23,11 @@ jobs:
       - name: Setup Docker
         uses: docker/setup-docker-action@v4
 
+        # Here for my benefit so I remember what these flags do and don't have to look them up everytime
+        # -B turns on batch mode
+        #   Disables interactive input and reduces progress output. This is mainly for CI so the build never waits for user input
+        # -ntp turns off transfer progress
+        #   Turns off the animated dependency download progress lines. Logs become stable and much shorter
       - name: Build & test with Maven
         run: mvn -B -ntp clean verify
 

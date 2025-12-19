@@ -2,6 +2,7 @@ package io.hedges.zoned.netty;
 
 import io.hedges.zoned.core.DnsRequestHandler;
 import io.hedges.zoned.core.DnsServer;
+import io.hedges.zoned.core.DnsServerStartException;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.DatagramChannel;
@@ -24,23 +25,30 @@ public final class UdpNettyDnsServer implements DnsServer {
         this.group = group;
     }
 
-    public void start() throws InterruptedException {
-        Bootstrap b = new Bootstrap();
-        b.group(group)
-         .channel(NioDatagramChannel.class)
-         .option(ChannelOption.SO_REUSEADDR, true)
-         .handler(new ChannelInitializer<DatagramChannel>() {
-             @Override
-             protected void initChannel(DatagramChannel ch) {
-                 ChannelPipeline p = ch.pipeline();
-                 p.addLast("wireLogger", new LoggingHandler(LogLevel.INFO));
-                 p.addLast(new DnsDatagramDecoder());
-                 p.addLast(new DnsDatagramEncoder());
-                 p.addLast(new UdpDnsHandler(requestHandler));
-             }
-         });
+    public void start() throws DnsServerStartException {
+        try {
+            Bootstrap b = new Bootstrap();
+            b.group(group)
+             .channel(NioDatagramChannel.class)
+             .option(ChannelOption.SO_REUSEADDR, true)
+             .handler(new ChannelInitializer<DatagramChannel>() {
+                 @Override
+                 protected void initChannel(DatagramChannel ch) {
+                     ChannelPipeline p = ch.pipeline();
+                     p.addLast("wireLogger", new LoggingHandler(LogLevel.INFO));
+                     p.addLast(new DnsDatagramDecoder());
+                     p.addLast(new DnsDatagramEncoder());
+                     p.addLast(new UdpDnsHandler(requestHandler));
+                 }
+             });
 
-        this.channel = b.bind(listenPort).sync().channel();
+            this.channel = b.bind(listenPort).sync().channel();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new DnsServerStartException("DNS server start interrupted", e);
+        } catch (Exception e) {
+            throw new DnsServerStartException("DNS server failed to start", e);
+        }
     }
 
     public void stop() {
