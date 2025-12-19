@@ -18,6 +18,7 @@ import org.xbill.DNS.CNAMERecord;
 import org.xbill.DNS.Lookup;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.SimpleResolver;
+import org.xbill.DNS.TXTRecord;
 import org.xbill.DNS.Type;
 
 import java.io.IOException;
@@ -113,6 +114,27 @@ class DnsSanityTest {
         for (Record record : records) {
             if (record instanceof CNAMERecord cRecord) {
                 if ("example.test.".equals(cRecord.getTarget().toString())) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        assertTrue(found, "Expected address not found in DNS response");
+    }
+
+    @Test
+    void resolvesTxtRecordFromUnbound() throws Exception {
+        Lookup lookup = new Lookup("test.example.test.", Type.TXT);
+        lookup.setResolver(resolver);
+        Record[] records = lookup.run();
+        assertNotNull(records, "expected DNS records from zoned");
+
+        boolean found = false;
+        for (Record record : records) {
+            System.out.printf("Found TXT record: %s\n", record);
+            if (record instanceof TXTRecord txtRecord) {
+                if ("Hello, World!".equals(txtRecord.toString())) {
                     found = true;
                     break;
                 }
