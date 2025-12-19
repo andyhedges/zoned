@@ -1,5 +1,6 @@
 package io.hedges.zoned.core.dom.rdata;
 
+import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsRecordTypeDom;
 import io.hedges.zoned.core.dom.RDataDom;
 
@@ -57,6 +58,14 @@ public class RDataFactory {
             case URI -> UriRecordDataDom.from(bytes);
             case ZONEMD -> ZonemdRecordDataDom.from(bytes);
             case null -> throw new IllegalArgumentException("Null byte array");
+        };
+    }
+
+    public static RDataDom fromWire(DnsRecordTypeDom type, byte[] bytes, NameResolver resolver) {
+        return switch (type) {
+            case CNAME -> CnameRecordDataDom.from(bytes, resolver);
+            case NS -> NsRecordDataDom.from(bytes, resolver);
+            default -> fromBytes(type, bytes);
         };
     }
 }

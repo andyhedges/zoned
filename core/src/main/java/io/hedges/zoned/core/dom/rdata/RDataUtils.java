@@ -1,5 +1,6 @@
 package io.hedges.zoned.core.dom.rdata;
 
+import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 
 import java.net.Inet4Address;
@@ -66,6 +67,10 @@ public class RDataUtils {
     }
 
     protected static DnsNameDom toDnsNameDom(byte[] rdata) {
+        return toDnsNameDom(rdata, null);
+    }
+
+    protected static DnsNameDom toDnsNameDom(byte[] rdata, NameResolver resolver) {
         if (rdata == null || rdata.length == 0) {
             throw new IllegalArgumentException("Name RDATA cannot be empty");
         }
@@ -79,11 +84,23 @@ public class RDataUtils {
 
         while (idx < rdata.length) {
             int len = rdata[idx] & 0xFF;
-            idx++;
-
-            if (len == COMPRESSION_POINTER_MARKER) {
-                throw new UnsupportedOperationException("Compressed RDATA is not yet supported");
+            if ((len & COMPRESSION_POINTER_MARKER) == COMPRESSION_POINTER_MARKER) {
+                if (idx + 1 >= rdata.length) {
+                    throw new IllegalArgumentException("Truncated compression pointer");
+                }
+                if (resolver == null) {
+                    throw new UnsupportedOperationException("Compressed RDATA is not yet supported");
+                }
+                int pointer = ((len & 0x3F) << 8) | (rdata[idx + 1] & 0xFF);
+                DnsNameDom resolved = resolver.resolve(pointer);
+                if (resolved == null || resolved.labels() == null) {
+                    throw new IllegalArgumentException("Resolved name is null");
+                }
+                decoded.addAll(resolved.labels());
+                idx += 2;
+                break;
             }
+            idx++;
 
             if (len > 63) {
                 throw new IllegalArgumentException("Label length exceeds 63 bytes");
