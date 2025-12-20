@@ -11,7 +11,6 @@
     <module>core</module>
     <module>netty</module>
     <module>app</module>
-    <module>report-aggregate</module>
   </modules>
 
   <properties>
@@ -23,9 +22,6 @@
     <netty.version>4.2.9.Final</netty.version>
     <testcontainers.version>2.0.3</testcontainers.version>
     <junit.version>6.0.1</junit.version>
-    <sonar.coverage.jacoco.xmlReportPaths>
-      ${project.basedir}/report-aggregate/target/site/jacoco-aggregate/jacoco.xml
-    </sonar.coverage.jacoco.xmlReportPaths>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -142,49 +138,6 @@
           </execution>
         </executions>
       </plugin>
-       <plugin>
-      <groupId>org.jacoco</groupId>
-      <artifactId>jacoco-maven-plugin</artifactId>
-      <version>0.8.12</version>
-      <executions>
-        <execution>
-          <id>prepare-agent</id>
-          <goals>
-            <goal>prepare-agent</goal>
-          </goals>
-        </execution>
-
-        <execution>
-          <id>report</id>
-          <phase>verify</phase>
-          <goals>
-            <goal>report</goal>
-          </goals>
-        </execution>
-
-        <execution>
-          <id>check</id>
-          <phase>verify</phase>
-          <goals>
-            <goal>check</goal>
-          </goals>
-          <configuration>
-            <rules>
-              <rule>
-                <element>BUNDLE</element>
-                <limits>
-                  <limit>
-                    <counter>INSTRUCTION</counter>
-                    <value>COVEREDRATIO</value>
-                    <minimum>0.01</minimum>
-                  </limit>
-                </limits>
-              </rule>
-            </rules>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
