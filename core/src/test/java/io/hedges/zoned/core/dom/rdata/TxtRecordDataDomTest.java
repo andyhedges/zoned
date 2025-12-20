@@ -59,8 +59,11 @@ class TxtRecordDataDomTest {
 
     @Test
     void toRejectsNullCharacterString() {
+        List<byte[]> strings = new ArrayList<>();
+        strings.add(new byte[] {1});
+        strings.add(null);
         TxtRecordDataDom dom = TxtRecordDataDom.builder()
-                .characterStrings(List.of(new byte[] {1}, null))
+                .characterStrings(strings)
                 .build();
         assertThrows(IllegalArgumentException.class, dom::to);
     }
