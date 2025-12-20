@@ -2,7 +2,6 @@
 
 [![Build](https://github.com/andyhedges/zoned/actions/workflows/ci.yaml/badge.svg)](https://github.com/andyhedges/zoned/actions/workflows/ci.yaml)
 [![License](https://img.shields.io/github/license/andyhedges/zoned)](LICENSE)
-[![Java](https://img.shields.io/badge/java-21+-blue)](https://adoptium.net/)
 [![DNS](https://img.shields.io/badge/DNS-UDP%20%7C%20TCP-informational)](#)
 
 > ⚠️ **Status: early, incomplete, and not functional**
@@ -31,8 +30,8 @@ At present, this project should be treated as a work-in-progress design and rese
 
 Zoned is licensed under the Apache License, Version 2.0.
 
-See the [LICENSE](LICENSE) file for the full license text  
-and the [NOTICE](NOTICE) file for copyright and attribution information.
+See the [LICENSE](LICENSE.txt) file for the full license text  
+and the [NOTICE](NOTICE.txt) file for copyright and attribution information.
 
 Contributions are accepted under the same license.
 
