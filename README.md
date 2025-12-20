@@ -1,7 +1,6 @@
 # Zoned
 
 [![Build](https://github.com/andyhedges/zoned/actions/workflows/build.yaml/badge.svg)](https://github.com/andyhedges/zoned/actions/workflows/build.yaml)
-[![CodeQL](https://github.com/andyhedges/zoned/actions/workflows/codeql.yml/badge.svg)](https://github.com/andyhedges/zoned/actions/workflows/codeql.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/andyhedges/zoned)](https://codecov.io/gh/andyhedges/zoned)
 [![Release](https://img.shields.io/github/v/release/andyhedges/zoned)](https://github.com/andyhedges/zoned/releases)
 [![License](https://img.shields.io/github/license/andyhedges/zoned)](LICENSE)
