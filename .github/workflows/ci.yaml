@@ -1,5 +1,8 @@
 name: Build & Dependency Checks
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
   push:
