@@ -11,6 +11,7 @@
     <module>core</module>
     <module>netty</module>
     <module>app</module>
+    <module>report-aggregate</module>
   </modules>
 
   <properties>
@@ -22,6 +23,9 @@
     <netty.version>4.2.9.Final</netty.version>
     <testcontainers.version>2.0.3</testcontainers.version>
     <junit.version>6.0.1</junit.version>
+    <sonar.coverage.jacoco.xmlReportPaths>
+      ${project.basedir}/report-aggregate/target/site/jacoco-aggregate/jacoco.xml
+    </sonar.coverage.jacoco.xmlReportPaths>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -156,18 +160,6 @@
           <goals>
             <goal>report</goal>
           </goals>
-        </execution>
-
-        <execution>
-          <id>report-aggregate</id>
-          <phase>verify</phase>
-          <goals>
-            <goal>report-aggregate</goal>
-          </goals>
-          <configuration>
-            <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
-          </configuration>
-          <inherited>false</inherited>
         </execution>
 
         <execution>
