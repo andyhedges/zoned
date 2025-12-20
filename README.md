@@ -1,11 +1,5 @@
 # Zoned
 
-<img
-src="logo.png"
-alt="Zoned logo"
-width="50%"
-style="float: right; margin: 0 0 1em 1em;">
-
 > ⚠️ **Status: early, incomplete, and not functional**
 >
 > This repository is public primarily to enable GitHub features that require public visibility, such as Actions, code scanning, and dependency tooling.
