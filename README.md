@@ -1,6 +1,6 @@
 # Zoned
 
-[![Build](https://github.com/andyhedges/zoned/actions/workflows/build.yaml/badge.svg)](https://github.com/andyhedges/zoned/actions/workflows/build.yaml)
+[![Build](https://github.com/andyhedges/zoned/actions/workflows/ci.yaml/badge.svg)](https://github.com/andyhedges/zoned/actions/workflows/ci.yaml)
 [![License](https://img.shields.io/github/license/andyhedges/zoned)](LICENSE)
 [![Java](https://img.shields.io/badge/java-21+-blue)](https://adoptium.net/)
 [![DNS](https://img.shields.io/badge/DNS-UDP%20%7C%20TCP-informational)](#)
