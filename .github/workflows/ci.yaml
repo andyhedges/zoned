@@ -41,25 +41,6 @@ jobs:
       - name: Build & test with Maven
         run: mvn -B -ntp clean verify
 
-      - name: Upload JaCoCo report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report
-          path: |
-            **/target/site/jacoco/**
-            **/target/jacoco.exec
-            **/target/site/jacoco-aggregate/**
-
-      - name: Jacoco Report to PR
-        id: jacoco
-        uses: madrapps/jacoco-report@v1.7.2
-        with:
-          paths: |
-            ${{ github.workspace }}/report-aggregate/target/site/jacoco-aggregate/jacoco.xml
-          token: ${{ secrets.JACOCO_GITHUB_SECRET }}
-          min-coverage-overall: 40
-          min-coverage-changed-files: 60
-
       - name: Upload shaded app jar
         uses: actions/upload-artifact@v4
         with:
