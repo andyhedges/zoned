@@ -148,7 +148,8 @@ class DnsSanityTest {
         TXTRecord txtRecord = (TXTRecord) records[0];
         List<byte[]> actual = txtRecord.getStringsAsByteArrays();
 
-        assertEquals(expected.size(), actual.size(), "Number of strings in TXT record differ from expected: " + txtRecord.getStrings());
+        assertEquals(expected.size(), actual.size(),
+                     "Number of strings in TXT record differ from expected: " + txtRecord.getStrings());
 
         for (int i = 0; i < expected.size(); i++) {
             assertArrayEquals(
@@ -157,8 +158,6 @@ class DnsSanityTest {
                     "Mismatch in TXT character-string at index " + i
             );
         }
-
-
     }
 
     private static int findFreePort() throws IOException {
