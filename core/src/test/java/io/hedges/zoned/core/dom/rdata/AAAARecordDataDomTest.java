@@ -32,7 +32,7 @@ class AAAARecordDataDomTest {
         RDataDom dom = AAAARecordDataDom.from(bytes);
         AAAARecordDataDom aaaa = assertInstanceOf(AAAARecordDataDom.class, dom);
 
-        assertArrayEquals(bytes, aaaa.getAddress().getAddress());
+        assertArrayEquals(bytes, aaaa.address().getAddress());
     }
 
     @Test
@@ -72,6 +72,6 @@ class AAAARecordDataDomTest {
         RDataDom decoded = AAAARecordDataDom.from(original.to());
         AAAARecordDataDom parsed = assertInstanceOf(AAAARecordDataDom.class, decoded);
 
-        assertEquals(inet6.getHostAddress(), parsed.getAddress().getHostAddress());
+        assertEquals(inet6.getHostAddress(), parsed.address().getHostAddress());
     }
 }
