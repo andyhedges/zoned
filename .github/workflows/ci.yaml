@@ -22,6 +22,14 @@ jobs:
           install: true
           cache: true
 
+      - name: Check dependency & plugin updates
+        run: |
+          mvn -B -ntp \
+            versions:display-dependency-updates \
+            versions:display-plugin-updates \
+            -DprocessAllModules=true
+        continue-on-error: true
+
       - name: Setup Docker
         uses: docker/setup-docker-action@v4
 
@@ -51,14 +59,6 @@ jobs:
           token: ${{ secrets.JACOCO_GITHUB_SECRET }}
           min-coverage-overall: 40
           min-coverage-changed-files: 60
-
-      - name: Check dependency & plugin updates
-        run: |
-          mvn -B -ntp \
-            versions:display-dependency-updates \
-            versions:display-plugin-updates \
-            -DprocessAllModules=true
-        continue-on-error: true
 
       - name: Upload shaded app jar
         uses: actions/upload-artifact@v4
