@@ -23,9 +23,15 @@ import org.xbill.DNS.Type;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -105,7 +111,7 @@ class DnsSanityTest {
 
     @Test
     void resolvesCnameRecordFromUnbound() throws Exception {
-        Lookup lookup = new Lookup("test.example.test.", Type.CNAME);
+        Lookup lookup = new Lookup("cname.example.test.", Type.CNAME);
         lookup.setResolver(resolver);
         Record[] records = lookup.run();
         assertNotNull(records, "expected DNS records from zoned");
@@ -125,23 +131,33 @@ class DnsSanityTest {
 
     @Test
     void resolvesTxtRecordFromUnbound() throws Exception {
-        Lookup lookup = new Lookup("test.example.test.", Type.TXT);
+        Lookup lookup = new Lookup("txt.example.test.", Type.TXT);
         lookup.setResolver(resolver);
         Record[] records = lookup.run();
-        assertNotNull(records, "expected DNS records from zoned");
 
-        boolean found = false;
-        for (Record record : records) {
-            System.out.printf("Found TXT record: %s\n", record);
-            if (record instanceof TXTRecord txtRecord) {
-                if ("Hello, World!".equals(txtRecord.toString())) {
-                    found = true;
-                    break;
-                }
-            }
+        assertNotNull(records, "'expected DNS records, lookup failed: " + lookup.getErrorString() + "'");
+
+        List<byte[]> expected = List.of(
+                "Hello, World!".getBytes(StandardCharsets.US_ASCII),
+                "Goodbye".getBytes(StandardCharsets.US_ASCII)
+        );
+
+        assertEquals(1, records.length);
+        assertInstanceOf(TXTRecord.class, records[0]);
+
+        TXTRecord txtRecord = (TXTRecord) records[0];
+        List<byte[]> actual = txtRecord.getStringsAsByteArrays();
+
+        assertEquals(expected.size(), actual.size(), "Number of strings in TXT record differ from expected: " + txtRecord.getStrings());
+
+        for (int i = 0; i < expected.size(); i++) {
+            assertArrayEquals(
+                    expected.get(i),
+                    actual.get(i),
+                    "Mismatch in TXT character-string at index " + i
+            );
         }
 
-        assertTrue(found, "Expected address not found in DNS response");
     }
 
     private static int findFreePort() throws IOException {
