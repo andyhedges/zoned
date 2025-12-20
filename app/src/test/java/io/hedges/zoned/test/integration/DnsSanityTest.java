@@ -2,6 +2,8 @@ package io.hedges.zoned.test.integration;
 
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
+import com.github.dockerjava.api.model.HealthCheck;
+
 import io.hedges.zoned.app.ZonedApp;
 import io.hedges.zoned.core.DnsServer;
 import org.junit.jupiter.api.AfterAll;
@@ -13,6 +15,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
+
 import org.xbill.DNS.ARecord;
 import org.xbill.DNS.CNAMERecord;
 import org.xbill.DNS.Lookup;
@@ -42,24 +45,26 @@ class DnsSanityTest {
     private static final String UPSTREAM_HOST = "127.0.0.1";
 
     @Container
-    static final GenericContainer<?> compose =
-            new GenericContainer<>("mvance/unbound:latest")
-                    .withCopyFileToContainer(
-                            MountableFile.forClasspathResource("unbound/unbound.conf"),
-                            "/opt/unbound/etc/unbound/unbound.conf"
-                    )
-                    .withCreateContainerCmdModifier(cmd -> {
-                        ExposedPort udp53 = ExposedPort.udp(53);
-                        ExposedPort tcp53 = ExposedPort.tcp(53);
-
-                        cmd.withExposedPorts(tcp53, udp53);
-
-                        Ports ports = new Ports();
-                        ports.bind(udp53, Ports.Binding.bindPort(UPSTREAM_PORT));
-                        ports.bind(tcp53, Ports.Binding.bindPort(UPSTREAM_PORT));
-                        cmd.getHostConfig().withPortBindings(ports);
-                    })
-                    .waitingFor(Wait.forHealthcheck());
+    static final GenericContainer<?> compose = new GenericContainer<>("alpinelinux/unbound:latest")
+            .withCopyFileToContainer(
+                    MountableFile.forClasspathResource("unbound/unbound.conf"),
+                    "/etc/unbound/unbound.conf")
+            .withCreateContainerCmdModifier(cmd -> {
+                ExposedPort udp53 = ExposedPort.udp(53);
+                ExposedPort tcp53 = ExposedPort.tcp(53);
+                cmd.withExposedPorts(tcp53, udp53);
+                Ports ports = new Ports();
+                ports.bind(udp53, Ports.Binding.bindPort(UPSTREAM_PORT));
+                ports.bind(tcp53, Ports.Binding.bindPort(UPSTREAM_PORT));
+                cmd.getHostConfig().withPortBindings(ports);
+            })
+            .withCreateContainerCmdModifier(cmd ->
+                cmd.withHealthcheck(new HealthCheck()
+                    .withTest(List.of("CMD-SHELL", "unbound-control status >/dev/null 2>&1"))
+                    .withInterval(10_000_000_000L) // 10s (nanoseconds)
+                    .withTimeout(3_000_000_000L) // 3s
+                    .withRetries(5)))
+            .waitingFor(Wait.forHealthcheck());
 
     private static DnsServer server;
     private static int appPort;
@@ -139,8 +144,7 @@ class DnsSanityTest {
 
         List<byte[]> expected = List.of(
                 "Hello, World!".getBytes(StandardCharsets.US_ASCII),
-                "Goodbye".getBytes(StandardCharsets.US_ASCII)
-        );
+                "Goodbye".getBytes(StandardCharsets.US_ASCII));
 
         assertEquals(1, records.length);
         assertInstanceOf(TXTRecord.class, records[0]);
@@ -149,14 +153,13 @@ class DnsSanityTest {
         List<byte[]> actual = txtRecord.getStringsAsByteArrays();
 
         assertEquals(expected.size(), actual.size(),
-                     "Number of strings in TXT record differ from expected: " + txtRecord.getStrings());
+                "Number of strings in TXT record differ from expected: " + txtRecord.getStrings());
 
         for (int i = 0; i < expected.size(); i++) {
             assertArrayEquals(
                     expected.get(i),
                     actual.get(i),
-                    "Mismatch in TXT character-string at index " + i
-            );
+                    "Mismatch in TXT character-string at index " + i);
         }
     }
 
@@ -176,8 +179,7 @@ class DnsSanityTest {
                 "    - do53:",
                 "        host: " + UPSTREAM_HOST,
                 "        port: " + UPSTREAM_PORT,
-                ""
-        );
+                "");
         Path path = Files.createTempFile("zoned-", ".yaml");
         Files.writeString(path, yaml);
         return path;
