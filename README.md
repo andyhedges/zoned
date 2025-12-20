@@ -4,8 +4,7 @@
 src="logo.png"
 alt="Zoned logo"
 width="50%"
-style="float: right; margin: 0 0 1em 1em;"
->
+style="float: right; margin: 0 0 1em 1em;">
 
 > ⚠️ **Status: early, incomplete, and not functional**
 >
