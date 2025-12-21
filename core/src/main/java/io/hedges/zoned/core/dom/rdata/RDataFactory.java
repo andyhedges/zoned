@@ -7,6 +7,10 @@ import io.hedges.zoned.core.dom.RDataDom;
 public class RDataFactory {
 
     public static RDataDom fromBytes(DnsRecordTypeDom type, byte[] bytes) {
+        return fromBytes(type, bytes, null);
+    }
+
+    public static RDataDom fromBytes(DnsRecordTypeDom type, byte[] bytes, NameResolver resolver) {
         return switch (type) {
             case A -> ARecordDataDom.from(bytes);
             case AAAA -> AAAARecordDataDom.from(bytes);
@@ -15,7 +19,7 @@ public class RDataFactory {
             case APL -> AplRecordDataDom.from(bytes);
             case AXFR -> AxfrRecordDataDom.from(bytes);
             case CAA -> CaaRecordDataDom.from(bytes);
-            case CNAME -> CnameRecordDataDom.from(bytes);
+            case CNAME -> CnameRecordDataDom.from(bytes, resolver);
             case CDS -> CdsRecordDataDom.from(bytes);
             case CDNSKEY -> CdnskeyRecordDataDom.from(bytes);
             case CERT -> CertRecordDataDom.from(bytes);
@@ -33,9 +37,9 @@ public class RDataFactory {
             case KEY -> KeyRecordDataDom.from(bytes);
             case KX -> KxRecordDataDom.from(bytes);
             case LOC -> LocRecordDataDom.from(bytes);
-            case MX -> MxRecordDataDom.from(bytes);
+            case MX -> MxRecordDataDom.from(bytes, resolver);
             case NAPTR -> NaptrRecordDataDom.from(bytes);
-            case NS -> NsRecordDataDom.from(bytes);
+            case NS -> NsRecordDataDom.from(bytes, resolver);
             case NSEC -> NsecRecordDataDom.from(bytes);
             case NSEC3 -> Nsec3RecordDataDom.from(bytes);
             case NSEC3PARAM -> Nsec3paramRecordDataDom.from(bytes);
@@ -62,10 +66,6 @@ public class RDataFactory {
     }
 
     public static RDataDom fromWire(DnsRecordTypeDom type, byte[] bytes, NameResolver resolver) {
-        return switch (type) {
-            case CNAME -> CnameRecordDataDom.from(bytes, resolver);
-            case NS -> NsRecordDataDom.from(bytes, resolver);
-            default -> fromBytes(type, bytes);
-        };
+        return fromBytes(type, bytes, resolver);
     }
 }

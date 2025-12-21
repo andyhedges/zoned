@@ -13,18 +13,20 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CnameRecordDataDomTest {
+    private static final NameResolver RESOLVER =
+            offset -> DnsNameDom.builder().labels(List.of("alias", "example")).build();
 
     @Test
     void fromRejectsInvalidName() {
-        assertThrows(IllegalArgumentException.class, () -> CnameRecordDataDom.from(null));
-        assertThrows(IllegalArgumentException.class, () -> CnameRecordDataDom.from(new byte[0]));
+        assertThrows(IllegalArgumentException.class, () -> CnameRecordDataDom.from(null, RESOLVER));
+        assertThrows(IllegalArgumentException.class, () -> CnameRecordDataDom.from(new byte[0], RESOLVER));
     }
 
     @Test
     void fromParsesName() {
         byte[] rdata = new byte[] {3, 'w', 'w', 'w', 7, 'e', 'x', 'a', 'm', 'p', 'l', 'e', 4, 't', 'e', 's', 't', 0};
 
-        RDataDom dom = CnameRecordDataDom.from(rdata);
+        RDataDom dom = CnameRecordDataDom.from(rdata, RESOLVER);
         CnameRecordDataDom cname = assertInstanceOf(CnameRecordDataDom.class, dom);
 
         assertEquals(List.of("www", "example", "test"), cname.cname().labels());
@@ -33,9 +35,8 @@ class CnameRecordDataDomTest {
     @Test
     void fromUsesResolverForCompressedNames() {
         byte[] rdata = new byte[] {(byte) 0xC0, 0x10};
-        NameResolver resolver = offset -> DnsNameDom.builder().labels(List.of("alias", "example")).build();
 
-        RDataDom dom = CnameRecordDataDom.from(rdata, resolver);
+        RDataDom dom = CnameRecordDataDom.from(rdata, RESOLVER);
         CnameRecordDataDom cname = assertInstanceOf(CnameRecordDataDom.class, dom);
 
         assertEquals(List.of("alias", "example"), cname.cname().labels());
@@ -65,7 +66,7 @@ class CnameRecordDataDomTest {
         DnsNameDom name = DnsNameDom.builder().labels(List.of("service", "example", "test")).build();
         CnameRecordDataDom original = CnameRecordDataDom.builder().cname(name).build();
 
-        RDataDom decoded = CnameRecordDataDom.from(original.to());
+        RDataDom decoded = CnameRecordDataDom.from(original.to(), RESOLVER);
         CnameRecordDataDom parsed = assertInstanceOf(CnameRecordDataDom.class, decoded);
 
         assertEquals(List.of("service", "example", "test"), parsed.cname().labels());
