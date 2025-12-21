@@ -18,7 +18,7 @@ public class MxRecordDataDom implements RDataDom {
         if (rdata == null || rdata.length <= 2) {
             throw new IllegalArgumentException("MX RDATA requires a 2-byte preference and exchange name");
         }
-        int preference = ((rdata[0] & 0xFF) << 8) | (rdata[1] & 0xFF);
+        int preference = RDataUtils.readU16(rdata, 0);
         byte[] nameBytes = new byte[rdata.length - 2];
         System.arraycopy(rdata, 2, nameBytes, 0, nameBytes.length);
         DnsNameDom exchange = RDataUtils.toDnsNameDom(nameBytes, resolver);
