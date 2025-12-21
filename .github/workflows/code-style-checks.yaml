@@ -33,7 +33,7 @@ jobs:
         run: |
           set -euo pipefail
           DATE=$(date -u +%F)
-          REPORT="dependency-report-$(DATE).txt"
+          REPORT="codestyle-report-$(DATE).txt"
           echo "REPORT=$REPORT" >> "$GITHUB_ENV"
           echo "DATE=$DATE" >> "$GITHUB_ENV"
           mvn \
@@ -45,6 +45,6 @@ jobs:
       - name: Upload report
         uses: actions/upload-artifact@v4
         with:
-          name: dependency-report-${{ env.DATE }}
+          name: codestyle-report-${{ env.DATE }}
           path: ${{ env.REPORT }}
           if-no-files-found: error
