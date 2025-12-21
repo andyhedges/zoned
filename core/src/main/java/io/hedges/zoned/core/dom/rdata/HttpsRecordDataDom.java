@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.util.SortedMap;
+
 /**
  * Domain model for HTTPS (SVCB-based) RDATA as defined in RFC 9460.
  *
@@ -30,7 +31,7 @@ import java.util.SortedMap;
 @Getter
 @Builder
 @ToString
-public class HttpsRecordDataDom implements RDataDom {
+public class HttpsRecordDataDom extends SvcbLikeRecordDataDom {
 
     private int svcPriority;
     private DnsNameDom targetName;
@@ -50,7 +51,7 @@ public class HttpsRecordDataDom implements RDataDom {
     }
 
     @Override
-    public byte[] to() {
-        return SvcbRdataCodec.encode(svcPriority, targetName, svcParams, "HTTPS");
+    protected String typeLabel() {
+        return "HTTPS";
     }
 }
