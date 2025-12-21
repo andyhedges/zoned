@@ -1,5 +1,7 @@
 package io.hedges.zoned.core.dom.rdata;
 
+import io.hedges.zoned.core.NameResolver;
+import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,12 +12,16 @@ import lombok.ToString;
 @ToString
 public class PtrRecordDataDom implements RDataDom {
 
-    public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+    private DnsNameDom ptrName;
+
+    public static RDataDom from(byte[] rdata, NameResolver resolver) {
+        return PtrRecordDataDom.builder()
+                .ptrName(RDataUtils.toDnsNameDom(rdata, resolver))
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        return RDataUtils.toByteArray(ptrName);
     }
 }
