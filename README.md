@@ -30,8 +30,8 @@ At present, this project should be treated as a work-in-progress design and rese
 
 Zoned is licensed under the Apache License, Version 2.0.
 
-See the [LICENSE](LICENSE.txt) file for the full license text  
-and the [NOTICE](NOTICE.txt) file for copyright and attribution information.
+See the [LICENSE](LICENSE) file for the full license text  
+and the [NOTICE](NOTICE) file for copyright and attribution information.
 
 Contributions are accepted under the same license.
 
