@@ -1,0 +1,5 @@
+# CODEOWNERS for andyhedges/zoned
+# Order matters: last match wins.
+
+# Default: everything in the repo
+* @andyhedges
