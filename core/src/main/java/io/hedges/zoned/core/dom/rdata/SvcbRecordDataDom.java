@@ -12,7 +12,7 @@ import java.util.SortedMap;
 @Getter
 @Builder
 @ToString
-public class SvcbRecordDataDom implements RDataDom {
+public class SvcbRecordDataDom extends SvcbLikeRecordDataDom {
 
     private int svcPriority;
     private DnsNameDom targetName;
@@ -32,7 +32,7 @@ public class SvcbRecordDataDom implements RDataDom {
     }
 
     @Override
-    public byte[] to() {
-        return SvcbRdataCodec.encode(svcPriority, targetName, svcParams, "SVCB");
+    protected String typeLabel() {
+        return "SVCB";
     }
 }
