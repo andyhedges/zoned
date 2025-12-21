@@ -31,16 +31,12 @@ jobs:
 
       - name: Check style violations using PMD
         run: |
-          set -euo pipefail
-          DATE="$(date -u +%F)"
-          REPORT="codestyle-report-$(DATE).txt"
-          echo "REPORT=$REPORT" >> "$GITHUB_ENV"
-          echo "DATE=$DATE" >> "$GITHUB_ENV"
-          mvn \
-            -B -ntp \
-            -Dstyle.color=never \
-            pmd:check \
-            | tee "$REPORT"
+            set -euo pipefail
+            DATE="$(date -u +%F)"
+            REPORT="codestyle-report-${DATE}.txt"
+            echo "REPORT=$REPORT" >> "$GITHUB_ENV"
+            echo "DATE=$DATE" >> "$GITHUB_ENV"
+            mvn -B -ntp -Dstyle.color=never pmd:check | tee "$REPORT"
 
       - name: Upload report
         uses: actions/upload-artifact@v4
