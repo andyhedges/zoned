@@ -81,8 +81,8 @@ public class OptRecordDataDom implements RDataDom {
         List<EdnsOptionDom> options = new ArrayList<>();
         int idx = 0;
         while (idx + 4 <= rdata.length) {
-            int code = ((rdata[idx] & 0xFF) << 8) | (rdata[idx + 1] & 0xFF);
-            int length = ((rdata[idx + 2] & 0xFF) << 8) | (rdata[idx + 3] & 0xFF);
+            int code = RDataUtils.readU16(rdata, idx);
+            int length = RDataUtils.readU16(rdata, idx + 2);
             idx += 4;
             if (length < 0 || idx + length > rdata.length) {
                 break;

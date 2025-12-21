@@ -69,7 +69,10 @@ class MxRecordDataDomTest {
         byte[] encoded = dom.to();
 
         assertArrayEquals(
-                new byte[] {0, 10, 3, 'm', 'x', '1', 7, 'e', 'x', 'a', 'm', 'p', 'l', 'e', 0},
+                TestBytes.concat(
+                        new byte[] {0, 10},
+                        new byte[] {3, 'm', 'x', '1', 7, 'e', 'x', 'a', 'm', 'p', 'l', 'e', 0}
+                ),
                 encoded
         );
     }

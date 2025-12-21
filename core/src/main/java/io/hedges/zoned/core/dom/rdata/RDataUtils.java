@@ -16,6 +16,16 @@ public class RDataUtils {
 
     public static final int COMPRESSION_POINTER_MARKER = 0xC0;
 
+    protected static int readU16(byte[] rdata, int offset) {
+        if (rdata == null) {
+            throw new IllegalArgumentException("RDATA is null");
+        }
+        if (offset < 0 || offset + 1 >= rdata.length) {
+            throw new IllegalArgumentException("RDATA offset out of bounds");
+        }
+        return ((rdata[offset] & 0xFF) << 8) | (rdata[offset + 1] & 0xFF);
+    }
+
     protected static Inet6Address toInet6Address(byte[] rdata) {
         if (rdata == null || rdata.length != 16) {
             throw new IllegalArgumentException("AAAA RDATA must be exactly 16 bytes");
@@ -71,16 +81,28 @@ public class RDataUtils {
     }
 
     protected static DnsNameDom toDnsNameDom(byte[] rdata, NameResolver resolver) {
+        DnsNameParseResult parsed = parseDnsName(rdata, 0, resolver);
+        if (parsed.nextIndex() != rdata.length) {
+            throw new IllegalArgumentException("Extra bytes after RDATA name");
+        }
+        return parsed.name();
+    }
+
+    protected static DnsNameParseResult parseDnsName(byte[] rdata, int offset, NameResolver resolver) {
         if (rdata == null || rdata.length == 0) {
             throw new IllegalArgumentException("Name RDATA cannot be empty");
         }
 
-        if (rdata.length > 255) {
+        if (offset < 0 || offset >= rdata.length) {
+            throw new IllegalArgumentException("Name RDATA offset out of bounds");
+        }
+
+        if (rdata.length - offset > 255) {
             throw new IllegalArgumentException("DNS name exceeds 255 bytes");
         }
 
         List<String> decoded = new ArrayList<>();
-        int idx = 0;
+        int idx = offset;
 
         while (idx < rdata.length) {
             int len = rdata[idx] & 0xFF;
@@ -124,11 +146,7 @@ public class RDataUtils {
             throw new IllegalArgumentException("Name must have at least one label");
         }
 
-        if (idx != rdata.length) {
-            throw new IllegalArgumentException("Extra bytes after RDATA name");
-        }
-
-        return DnsNameDom.builder().labels(decoded).build();
+        return new DnsNameParseResult(DnsNameDom.builder().labels(decoded).build(), idx);
     }
 
     protected static byte[] toByteArray(DnsNameDom name) {
@@ -170,4 +188,21 @@ public class RDataUtils {
         return rdata;
     }
 
+    protected static final class DnsNameParseResult {
+        private final DnsNameDom name;
+        private final int nextIndex;
+
+        private DnsNameParseResult(DnsNameDom name, int nextIndex) {
+            this.name = name;
+            this.nextIndex = nextIndex;
+        }
+
+        protected DnsNameDom name() {
+            return name;
+        }
+
+        protected int nextIndex() {
+            return nextIndex;
+        }
+    }
 }
