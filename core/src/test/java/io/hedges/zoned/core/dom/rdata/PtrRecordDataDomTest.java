@@ -18,15 +18,15 @@ class PtrRecordDataDomTest {
 
     @Test
     void fromRejectsInvalidName() {
-        assertThrows(IllegalArgumentException.class, () -> PtrRecordDataDom.from(null));
-        assertThrows(IllegalArgumentException.class, () -> PtrRecordDataDom.from(new byte[0]));
+        assertThrows(IllegalArgumentException.class, () -> PtrRecordDataDom.from(null, null));
+        assertThrows(IllegalArgumentException.class, () -> PtrRecordDataDom.from(new byte[0], null));
     }
 
     @Test
     void fromParsesName() {
         byte[] rdata = new byte[] {3, 'p', 't', 'r', 7, 'e', 'x', 'a', 'm', 'p', 'l', 'e', 0};
 
-        RDataDom dom = PtrRecordDataDom.from(rdata);
+        RDataDom dom = PtrRecordDataDom.from(rdata, null);
         PtrRecordDataDom ptr = assertInstanceOf(PtrRecordDataDom.class, dom);
 
         assertEquals(List.of("ptr", "example"), ptr.ptrName().labels());
