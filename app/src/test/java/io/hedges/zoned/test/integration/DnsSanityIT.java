@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
-class DnsSanityTest {
+class DnsSanityIT {
 
     private static final int UPSTREAM_PORT = 9457;
     private static final String UPSTREAM_HOST = "127.0.0.1";

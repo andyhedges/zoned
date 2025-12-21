@@ -30,6 +30,7 @@
     <shade.plugin.version>3.6.1</shade.plugin.version>
     <pmd.plugin.version>3.28.0</pmd.plugin.version>
     <jxr.plugin.version>3.2.0</jxr.plugin.version>
+    <failsafe.plugin.version>3.5.4</failsafe.plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -198,6 +199,11 @@
             </rulesets>
             <includeTests>true</includeTests>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${failsafe.plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
