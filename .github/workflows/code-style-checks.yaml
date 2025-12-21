@@ -32,7 +32,7 @@ jobs:
       - name: Check style violations using PMD
         run: |
           set -euo pipefail
-          DATE=$(date -u +%F)
+          DATE="$(date -u +%F)"
           REPORT="codestyle-report-$(DATE).txt"
           echo "REPORT=$REPORT" >> "$GITHUB_ENV"
           echo "DATE=$DATE" >> "$GITHUB_ENV"
