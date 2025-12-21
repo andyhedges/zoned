@@ -1,21 +1,38 @@
 package io.hedges.zoned.core.dom.rdata;
 
+import io.hedges.zoned.core.NameResolver;
+import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.util.SortedMap;
 
 @Getter
 @Builder
 @ToString
 public class SvcbRecordDataDom implements RDataDom {
 
+    private int svcPriority;
+    private DnsNameDom targetName;
+    private SortedMap<Integer, byte[]> svcParams;
+
     public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        return from(rdata, null);
+    }
+
+    public static RDataDom from(byte[] rdata, NameResolver resolver) {
+        SvcbRdataCodec.SvcbRdataFields parsed = SvcbRdataCodec.parse(rdata, resolver, "SVCB");
+        return SvcbRecordDataDom.builder()
+                .svcPriority(parsed.svcPriority())
+                .targetName(parsed.targetName())
+                .svcParams(parsed.svcParams())
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        return SvcbRdataCodec.encode(svcPriority, targetName, svcParams, "SVCB");
     }
 }
