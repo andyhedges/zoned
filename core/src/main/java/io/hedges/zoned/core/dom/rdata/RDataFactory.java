@@ -45,7 +45,7 @@ public class RDataFactory {
             case NSEC3PARAM -> Nsec3paramRecordDataDom.from(bytes);
             case OPENPGPKEY -> OpenpgpkeyRecordDataDom.from(bytes);
             case OPT -> OptRecordDataDom.from(bytes);
-            case PTR -> PtrRecordDataDom.from(bytes);
+            case PTR -> PtrRecordDataDom.from(bytes, resolver);
             case RP -> RpRecordDataDom.from(bytes);
             case RRSIG -> RrsigRecordDataDom.from(bytes);
             case SIG -> SigRecordDataDom.from(bytes);
