@@ -1,0 +1,50 @@
+name: Check Dependencies
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check-dependencies:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Check style violations using PMD
+        run: |
+          set -euo pipefail
+          DATE=$(date -u +%F)
+          REPORT="dependency-report-$(DATE).txt"
+          echo "REPORT=$REPORT" >> "$GITHUB_ENV"
+          echo "DATE=$DATE" >> "$GITHUB_ENV"
+          mvn \
+            -B -ntp \
+            -Dstyle.color=never \
+            pmd:check \
+            | tee "$REPORT"
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-report-${{ env.DATE }}
+          path: ${{ env.REPORT }}
+          if-no-files-found: error
