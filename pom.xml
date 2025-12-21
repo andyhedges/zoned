@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.hedges</groupId>
   <artifactId>zoned-dns</artifactId>
@@ -22,6 +22,8 @@
     <netty.version>4.2.9.Final</netty.version>
     <testcontainers.version>2.0.3</testcontainers.version>
     <junit.version>6.0.1</junit.version>
+    <checkstyle.plugin.version>3.6.0</checkstyle.plugin.version>
+
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -129,14 +131,17 @@
                 <requireJavaVersion>
                   <version>${java.version}</version>
                 </requireJavaVersion>
-                <dependencyConvergence/>
-                <requireReleaseDeps/>
-                <banDuplicatePomDependencyVersions/>
+                <dependencyConvergence />
+                <requireReleaseDeps />
+                <banDuplicatePomDependencyVersions />
               </rules>
               <fail>true</fail>
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
       </plugin>
     </plugins>
     <pluginManagement>
@@ -167,7 +172,29 @@
             </filters>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>3.28.0</version>
+          <configuration>
+            <failOnViolation>true</failOnViolation>
+            <printFailingErrors>true</printFailingErrors>
+            <rulesets>
+              <ruleset>${session.topLevelProject.basedir}/config/pmd.xml</ruleset>
+            </rulesets>
+            <includeTests>true</includeTests>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>3.2.0</version>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
