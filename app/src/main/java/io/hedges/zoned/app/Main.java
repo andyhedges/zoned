@@ -7,6 +7,7 @@ import picocli.CommandLine.Option;
 
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 
 @Command(name = "zoned", mixinStandardHelpOptions = true, description = "Zoned DNS server")
 public final class Main implements Callable<Integer> {
@@ -26,8 +27,13 @@ public final class Main implements Callable<Integer> {
         Path resolvedConfigPath = ConfigPathResolver.resolve(configPath);
         ZonedApp.StartedServer started = ZonedApp.start(resolvedConfigPath, serverPortOverride);
         DnsServer server = started.server();
-        Runtime.getRuntime().addShutdownHook(new Thread(server::stop));
+        CountDownLatch shutdown = new CountDownLatch(1);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            server.stop();
+            shutdown.countDown();
+        }));
         System.out.println("zoned DNS server listening on UDP " + started.port());
+        shutdown.await();
         return 0;
     }
 }
