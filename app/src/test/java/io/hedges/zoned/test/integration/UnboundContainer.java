@@ -4,6 +4,7 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HealthCheck;
 import com.github.dockerjava.api.model.Ports;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.Container.ExecResult;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
 
@@ -93,7 +94,7 @@ final class UnboundContainer {
 
     private static void reload() throws IOException {
         try {
-            var result = CONTAINER.execInContainer("unbound-control", "reload");
+            ExecResult result = CONTAINER.execInContainer("unbound-control", "reload");
             if (result.getExitCode() != 0) {
                 throw new IOException("unbound-control reload failed: " + result.getStderr());
             }
