@@ -1,0 +1,7 @@
+serverPort: 53
+activeDnsServerPool: default
+dnsServerPools:
+  default:
+    - do53:
+        host: 1.1.1.1
+        port: 53
