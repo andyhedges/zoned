@@ -18,7 +18,7 @@
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <lombok.version>1.18.42</lombok.version>
     <slf4j.version>2.0.17</slf4j.version>
-    <logback.version>1.5.22</logback.version>
+    <logback.version>1.5.23</logback.version>
     <netty.version>4.2.9.Final</netty.version>
     <testcontainers.version>2.0.3</testcontainers.version>
     <junit.version>6.0.1</junit.version>
@@ -29,7 +29,7 @@
     <versions.plugin.version>2.20.1</versions.plugin.version>
     <shade.plugin.version>3.6.1</shade.plugin.version>
     <pmd.plugin.version>3.28.0</pmd.plugin.version>
-    <jxr.plugin.version>3.2.0</jxr.plugin.version>
+    <jxr.plugin.version>3.6.0</jxr.plugin.version>
     <failsafe.plugin.version>3.5.4</failsafe.plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
