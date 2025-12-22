@@ -1,20 +1,11 @@
 package io.hedges.zoned.test.integration;
 
-import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.Ports;
-import com.github.dockerjava.api.model.HealthCheck;
-
 import io.hedges.zoned.app.ZonedApp;
 import io.hedges.zoned.core.DnsServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.MountableFile;
 
 import org.xbill.DNS.ARecord;
 import org.xbill.DNS.CNAMERecord;
@@ -37,33 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Testcontainers
 class DnsSanityIT {
-
-    private static final int UPSTREAM_PORT = 9457;
-    private static final String UPSTREAM_HOST = "127.0.0.1";
-
-    @Container
-    static final GenericContainer<?> compose = new GenericContainer<>("alpinelinux/unbound:latest")
-            .withCopyFileToContainer(
-                    MountableFile.forClasspathResource("unbound/unbound.conf"),
-                    "/etc/unbound/unbound.conf")
-            .withCreateContainerCmdModifier(cmd -> {
-                ExposedPort udp53 = ExposedPort.udp(53);
-                ExposedPort tcp53 = ExposedPort.tcp(53);
-                cmd.withExposedPorts(tcp53, udp53);
-                Ports ports = new Ports();
-                ports.bind(udp53, Ports.Binding.bindPort(UPSTREAM_PORT));
-                ports.bind(tcp53, Ports.Binding.bindPort(UPSTREAM_PORT));
-                cmd.getHostConfig().withPortBindings(ports);
-            })
-            .withCreateContainerCmdModifier(cmd ->
-                cmd.withHealthcheck(new HealthCheck()
-                    .withTest(List.of("CMD-SHELL", "unbound-control status >/dev/null 2>&1"))
-                    .withInterval(10_000_000_000L) // 10s (nanoseconds)
-                    .withTimeout(3_000_000_000L) // 3s
-                    .withRetries(5)))
-            .waitingFor(Wait.forHealthcheck());
 
     private static DnsServer server;
     private static int appPort;
@@ -72,6 +37,12 @@ class DnsSanityIT {
 
     @BeforeAll
     static void startZoned() throws Exception {
+        UnboundContainer.getContainer();
+        UnboundContainer.clearLocalData();
+        UnboundContainer.addLocalData(List.of(
+                "\"example.test. 60 A 192.0.2.123\"",
+                "\"cname.example.test. 300 CNAME example.test.\"",
+                "'txt.example.test. 300 TXT \"Hello, World!\"\"Goodbye\"'"));
         appPort = findFreePort();
         configPath = writeConfig(appPort);
         server = ZonedApp.start(configPath, null).server();
@@ -79,7 +50,7 @@ class DnsSanityIT {
 
     @BeforeEach
     void setUp() throws Exception {
-        resolver = new SimpleResolver(UPSTREAM_HOST);
+        resolver = new SimpleResolver(UnboundContainer.UPSTREAM_HOST);
         resolver.setPort(appPort);
     }
 
@@ -98,7 +69,7 @@ class DnsSanityIT {
         Lookup lookup = new Lookup("example.test.", Type.A);
         lookup.setResolver(resolver);
         Record[] records = lookup.run();
-        assertNotNull(records, "expected DNS records from zoned");
+        assertNotNull(records, "expected DNS A records from zoned");
 
         boolean found = false;
         for (Record record : records) {
@@ -118,7 +89,7 @@ class DnsSanityIT {
         Lookup lookup = new Lookup("cname.example.test.", Type.CNAME);
         lookup.setResolver(resolver);
         Record[] records = lookup.run();
-        assertNotNull(records, "expected DNS records from zoned");
+        assertNotNull(records, "expected DNS CNAME records from zoned");
 
         boolean found = false;
         for (Record record : records) {
@@ -176,8 +147,8 @@ class DnsSanityIT {
                 "dnsServerPools:",
                 "  default:",
                 "    - do53:",
-                "        host: " + UPSTREAM_HOST,
-                "        port: " + UPSTREAM_PORT,
+                "        host: " + UnboundContainer.UPSTREAM_HOST,
+                "        port: " + UnboundContainer.UPSTREAM_PORT,
                 "");
         Path path = Files.createTempFile("zoned-", ".yaml");
         Files.writeString(path, yaml);
