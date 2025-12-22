@@ -39,6 +39,7 @@ jobs:
             -DtrimStackTrace=false \
             -Dstyle.color=never \
             clean verify
+            
       - name: Upload JaCoCo aggregate coverage to Codecov
         uses: codecov/codecov-action@v4
         with:

@@ -11,6 +11,7 @@
     <module>core</module>
     <module>netty</module>
     <module>app</module>
+    <module>coverage</module>
   </modules>
 
   <properties>
@@ -188,46 +189,6 @@
             </goals>
             <configuration>
               <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-              <formats>
-                <format>XML</format>
-                <format>HTML</format>
-              </formats>
-            </configuration>
-          </execution>
-          <execution>
-            <id>report-aggregate</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>report-aggregate</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
-              <dataFileIncludes>
-                <dataFileInclude>**/jacoco.exec</dataFileInclude>
-              </dataFileIncludes>
-              <dataFileExcludes>
-                <dataFileExclude>**/jacoco-it.exec</dataFileExclude>
-              </dataFileExcludes>
-              <formats>
-                <format>XML</format>
-                <format>HTML</format>
-              </formats>
-            </configuration>
-          </execution>
-          <execution>
-            <id>report-aggregate-it</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>report-aggregate</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate-it</outputDirectory>
-              <dataFileIncludes>
-                <dataFileInclude>**/jacoco-it.exec</dataFileInclude>
-              </dataFileIncludes>
-              <dataFileExcludes>
-                <dataFileExclude>**/jacoco.exec</dataFileExclude>
-              </dataFileExcludes>
               <formats>
                 <format>XML</format>
                 <format>HTML</format>
