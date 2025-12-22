@@ -1,6 +1,6 @@
 # Zoned
 
-[![Build](https://github.com/andyhedges/zoned/actions/workflows/ci.yaml/badge.svg)](https://github.com/andyhedges/zoned/actions/workflows/ci.yaml)
+[![Build](https://github.com/andyhedges/zoned/actions/workflows/continous-integration.yaml/badge.svg)](https://github.com/andyhedges/zoned/actions/workflows/continous-integration.yaml)
 [![License](https://img.shields.io/github/license/andyhedges/zoned)](LICENSE)
 [![DNS](https://img.shields.io/badge/DNS-UDP%20%7C%20TCP-informational)](#)
 
