@@ -13,12 +13,6 @@ import lombok.ToString;
 public class NsRecordDataDom implements RDataDom {
     private DnsNameDom nsName;
 
-    public static RDataDom from(byte[] rdata) {
-        return NsRecordDataDom.builder()
-                .nsName(RDataUtils.toDnsNameDom(rdata))
-                .build();
-    }
-
     public static RDataDom from(byte[] rdata, NameResolver resolver) {
         return NsRecordDataDom.builder()
                 .nsName(RDataUtils.toDnsNameDom(rdata, resolver))
