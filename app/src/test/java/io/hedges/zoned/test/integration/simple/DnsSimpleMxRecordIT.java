@@ -1,9 +1,9 @@
-package io.hedges.zoned.test.integration;
+package io.hedges.zoned.test.integration.simple;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.xbill.DNS.Lookup;
-import org.xbill.DNS.PTRRecord;
+import org.xbill.DNS.MXRecord;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.Type;
 
@@ -14,30 +14,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DnsSimplePtrRecordIT extends DnsSimpleBaseIT {
+class DnsSimpleMxRecordIT extends DnsSimpleBaseIT {
 
     @BeforeAll
     static void setUpRecords() throws IOException {
         resetLocalData(List.of(
-                "\"1.0.0.127.in-addr.arpa. 300 PTR ptr.example.test.\""));
+                "\"mx.example.test. 300 MX 10 mail.example.test.\""));
     }
 
     @Test
-    void resolvesPtrRecordFromUnbound() throws Exception {
-        Lookup lookup = new Lookup("1.0.0.127.in-addr.arpa.", Type.PTR);
+    void resolvesMxRecordFromUnbound() throws Exception {
+        Lookup lookup = new Lookup("mx.example.test.", Type.MX);
         lookup.setResolver(resolver);
         Record[] records = lookup.run();
-        assertNotNull(records, "expected DNS PTR records from zoned");
+        assertNotNull(records, "expected DNS MX records from zoned");
 
         boolean found = false;
         for (Record record : records) {
-            if (record instanceof PTRRecord ptrRecord) {
-                assertEquals("ptr.example.test.", ptrRecord.getTarget().toString());
+            if (record instanceof MXRecord mxRecord) {
+                assertEquals(10, mxRecord.getPriority());
+                assertEquals("mail.example.test.", mxRecord.getTarget().toString());
                 found = true;
                 break;
             }
         }
 
-        assertTrue(found, "Expected PTR record not found in DNS response");
+        assertTrue(found, "Expected MX record not found in DNS response");
     }
 }

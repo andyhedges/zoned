@@ -1,7 +1,8 @@
-package io.hedges.zoned.test.integration;
+package io.hedges.zoned.test.integration.simple;
 
 import io.hedges.zoned.app.ZonedApp;
 import io.hedges.zoned.core.DnsServer;
+import io.hedges.zoned.test.integration.UnboundContainer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

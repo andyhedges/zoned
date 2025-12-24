@@ -1,4 +1,4 @@
-package io.hedges.zoned.test.integration;
+package io.hedges.zoned.test.integration.simple;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

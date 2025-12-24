@@ -1,8 +1,8 @@
-package io.hedges.zoned.test.integration;
+package io.hedges.zoned.test.integration.simple;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.xbill.DNS.AAAARecord;
+import org.xbill.DNS.CNAMERecord;
 import org.xbill.DNS.Lookup;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.Type;
@@ -13,31 +13,31 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DnsSimpleAaaaRecordIT extends DnsSimpleBaseIT {
+class DnsSimpleCnameRecordIT extends DnsSimpleBaseIT {
 
     @BeforeAll
     static void setUpRecords() throws IOException {
         resetLocalData(List.of(
-                "\"aaaa.example.test. 300 AAAA 2001:db8::1\""));
+                "\"cname.example.test. 300 CNAME example.test.\""));
     }
 
     @Test
-    void resolvesAaaaRecordFromUnbound() throws Exception {
-        Lookup lookup = new Lookup("aaaa.example.test.", Type.AAAA);
+    void resolvesCnameRecordFromUnbound() throws Exception {
+        Lookup lookup = new Lookup("cname.example.test.", Type.CNAME);
         lookup.setResolver(resolver);
         Record[] records = lookup.run();
-        assertNotNull(records, "expected DNS AAAA records from zoned");
+        assertNotNull(records, "expected DNS CNAME records from zoned");
 
         boolean found = false;
         for (Record record : records) {
-            if (record instanceof AAAARecord aaaaRecord) {
-                if ("2001:db8:0:0:0:0:0:1".equals(aaaaRecord.getAddress().getHostAddress())) {
+            if (record instanceof CNAMERecord cRecord) {
+                if ("example.test.".equals(cRecord.getTarget().toString())) {
                     found = true;
                     break;
                 }
             }
         }
 
-        assertTrue(found, "Expected AAAA address not found in DNS response");
+        assertTrue(found, "Expected address not found in DNS response");
     }
 }
