@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DnsSanityCnameRecordIT extends DnsSanityBaseIT {
+class DnsSimpleCnameRecordIT extends DnsSimpleBaseIT {
 
     @BeforeAll
     static void setUpRecords() throws IOException {

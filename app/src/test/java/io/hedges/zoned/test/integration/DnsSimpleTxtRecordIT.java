@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class DnsSanityTxtRecordIT extends DnsSanityBaseIT {
+class DnsSimpleTxtRecordIT extends DnsSimpleBaseIT {
 
     @BeforeAll
     static void setUpRecords() throws IOException {

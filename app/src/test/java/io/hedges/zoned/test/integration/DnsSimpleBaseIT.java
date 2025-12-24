@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-abstract class DnsSanityBaseIT {
+abstract class DnsSimpleBaseIT {
 
     private static DnsServer server;
     private static int appPort;
