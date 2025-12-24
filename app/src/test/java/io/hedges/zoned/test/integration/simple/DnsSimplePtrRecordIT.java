@@ -19,12 +19,12 @@ class DnsSimplePtrRecordIT extends DnsSimpleBaseIT {
     @BeforeAll
     static void setUpRecords() throws IOException {
         resetLocalData(List.of(
-                "\"1.0.0.127.in-addr.arpa. 300 PTR ptr.example.test.\""));
+                "\"1.2.0.192.in-addr.arpa. 300 PTR ptr.example.test.\""));
     }
 
     @Test
     void resolvesPtrRecordFromUnbound() throws Exception {
-        Lookup lookup = new Lookup("1.0.0.127.in-addr.arpa.", Type.PTR);
+        Lookup lookup = new Lookup("1.2.0.192.in-addr.arpa.", Type.PTR);
         lookup.setResolver(resolver);
         Record[] records = lookup.run();
         assertNotNull(records, "expected DNS PTR records from zoned");
