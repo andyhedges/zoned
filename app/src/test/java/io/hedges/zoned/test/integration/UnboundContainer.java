@@ -14,10 +14,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-final class UnboundContainer {
+final public class UnboundContainer {
 
-    static final int UPSTREAM_PORT = 9457;
-    static final String UPSTREAM_HOST = "127.0.0.1";
+    public static final int UPSTREAM_PORT = 9457;
+    public static final String UPSTREAM_HOST = "127.0.0.1";
 
     private static final String LOCAL_DATA_FILE = "local-data.conf";
     private static final String CONTAINER_LOCAL_DATA_PATH = "/etc/unbound/" + LOCAL_DATA_FILE;
@@ -30,12 +30,12 @@ final class UnboundContainer {
     private UnboundContainer() {
     }
 
-    static GenericContainer<?> getContainer() {
+    public static GenericContainer<?> getContainer() {
         ensureStarted();
         return CONTAINER;
     }
 
-    static synchronized void addLocalData(List<String> records) throws IOException {
+    public static synchronized void addLocalData(List<String> records) throws IOException {
         ensureStarted();
         Path file = writeLocalDataFile(records);
         CONTAINER.copyFileToContainer(
@@ -44,7 +44,7 @@ final class UnboundContainer {
         reload();
     }
 
-    static synchronized void clearLocalData() throws IOException {
+    public static synchronized void clearLocalData() throws IOException {
         ensureStarted();
         Path file = writeLocalDataFile(List.of());
         CONTAINER.copyFileToContainer(
