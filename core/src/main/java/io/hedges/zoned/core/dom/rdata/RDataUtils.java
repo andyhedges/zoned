@@ -111,7 +111,7 @@ public class RDataUtils {
                     throw new IllegalArgumentException("Truncated compression pointer");
                 }
                 if (resolver == null) {
-                    throw new UnsupportedOperationException("Compressed RDATA is not yet supported");
+                    throw new UnsupportedOperationException("Compressed name encountered but no NameResolver provided");
                 }
                 int pointer = ((len & 0x3F) << 8) | (rdata[idx + 1] & 0xFF);
                 DnsNameDom resolved = resolver.resolve(pointer);
