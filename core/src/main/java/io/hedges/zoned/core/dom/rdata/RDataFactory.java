@@ -14,7 +14,7 @@ public class RDataFactory {
         return switch (type) {
             case A -> ARecordDataDom.from(bytes);
             case AAAA -> AAAARecordDataDom.from(bytes);
-            case AFSDB -> AfsdbRecordDataDom.from(bytes);
+            case AFSDB -> AfsDbRecordDataDom.from(bytes, resolver);
             case ANY -> AnyRecordDataDom.from(bytes);
             case APL -> AplRecordDataDom.from(bytes);
             case AXFR -> AxfrRecordDataDom.from(bytes);
