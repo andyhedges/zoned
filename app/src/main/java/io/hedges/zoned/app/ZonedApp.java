@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.app;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

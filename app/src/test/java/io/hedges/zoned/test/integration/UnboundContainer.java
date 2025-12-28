@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.test.integration;
 
 import com.github.dockerjava.api.model.ExposedPort;
