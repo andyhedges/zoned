@@ -26,6 +26,16 @@ public class RDataUtils {
         return ((rdata[offset] & 0xFF) << 8) | (rdata[offset + 1] & 0xFF);
     }
 
+    protected static int readU8(byte[] rdata, int offset) {
+        if (rdata == null) {
+            throw new IllegalArgumentException("RDATA is null");
+        }
+        if (offset < 0 || offset >= rdata.length) {
+            throw new IllegalArgumentException("RDATA offset out of bounds");
+        }
+        return rdata[offset] & 0xFF;
+    }
+
     protected static Inet6Address toInet6Address(byte[] rdata) {
         if (rdata == null || rdata.length != 16) {
             throw new IllegalArgumentException("AAAA RDATA must be exactly 16 bytes");
