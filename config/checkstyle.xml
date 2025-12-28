@@ -6,29 +6,23 @@
   <!-- File-level hygiene -->
   <module name="NewlineAtEndOfFile" />
   <module name="FileTabCharacter" />
+  <module name="RegexpHeader">
+    <property name="header" value="^// SPDX-License-Identifier: Apache-2.0$"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
 
   <module name="TreeWalker">
-
-    <!-- Imports -->
     <module name="UnusedImports" />
-
-    <!-- Basic correctness -->
+    <module name="MissingOverride"/>
     <module name="EmptyBlock">
       <property name="option" value="text" />
     </module>
-
-    <!-- Readability -->
     <module name="NeedBraces" />
-
-    <!-- Safety -->
     <module name="AvoidNestedBlocks" />
-
-    <module name="IllegalType" />
     <module name="MatchXpath">
       <property name="query"
             value="//VARIABLE_DEF[./TYPE/IDENT[@text='var']]" />
-      <message key="matchxpath.match"
-           value="Avoid 'var'; use an explicit type."/>
+      <message key="matchxpath.match" value="Avoid 'var'; use an explicit type."/>
     </module>
 
   </module>
