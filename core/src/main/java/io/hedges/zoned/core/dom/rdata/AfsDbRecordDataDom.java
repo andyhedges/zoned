@@ -14,10 +14,6 @@ public class AfsDbRecordDataDom implements RDataDom {
     private int subtype;
     private DnsNameDom hostname;
 
-    public static RDataDom from(byte[] rdata) {
-        return from(rdata, null);
-    }
-
     public static RDataDom from(byte[] rdata, NameResolver resolver) {
         if (rdata == null) {
             throw new IllegalArgumentException("AFSDB RDATA cannot be null");
