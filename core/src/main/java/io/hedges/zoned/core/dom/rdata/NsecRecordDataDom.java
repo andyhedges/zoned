@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.core.dom.rdata;
 
+import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,12 +28,38 @@ import lombok.ToString;
 @Builder
 @ToString
 public class NsecRecordDataDom implements RDataDom {
+    private DnsNameDom nextName;
+    private byte[] typeBitmaps;
+
     public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (rdata == null || rdata.length == 0) {
+            throw new IllegalArgumentException("NSEC RDATA is empty");
+        }
+        RDataUtils.DnsNameParseResult parsed = RDataUtils.parseDnsName(rdata, 0, null);
+        int idx = parsed.nextIndex();
+        if (idx >= rdata.length) {
+            throw new IllegalArgumentException("NSEC type bitmaps are missing");
+        }
+        byte[] typeBitmaps = new byte[rdata.length - idx];
+        System.arraycopy(rdata, idx, typeBitmaps, 0, typeBitmaps.length);
+        return NsecRecordDataDom.builder()
+                .nextName(parsed.name())
+                .typeBitmaps(typeBitmaps)
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (nextName == null) {
+            throw new IllegalArgumentException("NSEC next name is null");
+        }
+        byte[] nameBytes = RDataUtils.toByteArray(nextName);
+        if (typeBitmaps == null || typeBitmaps.length == 0) {
+            throw new IllegalArgumentException("NSEC type bitmaps must not be empty");
+        }
+        byte[] out = new byte[nameBytes.length + typeBitmaps.length];
+        System.arraycopy(nameBytes, 0, out, 0, nameBytes.length);
+        System.arraycopy(typeBitmaps, 0, out, nameBytes.length, typeBitmaps.length);
+        return out;
     }
 }
