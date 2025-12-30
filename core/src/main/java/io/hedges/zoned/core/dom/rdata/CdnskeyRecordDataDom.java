@@ -22,7 +22,9 @@ import lombok.ToString;
  * | PublicKey | variable     | Public key bytes.          |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes child DNSKEY records to signal the parent which keys to use for Delegation Signer (DS) synchronization.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7344">RFC 7344</a>.</p>*/
 @Getter
 @Builder
 @ToString

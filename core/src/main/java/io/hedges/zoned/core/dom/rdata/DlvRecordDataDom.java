@@ -22,7 +22,9 @@ import lombok.ToString;
  * | Digest    | variable     | Digest bytes.              |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes DNSSEC Lookaside Validation (DLV) data as a DS-like record; this mechanism is obsolete.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4431">RFC 4431</a>.</p>*/
 @Getter
 @Builder
 @ToString

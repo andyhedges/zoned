@@ -24,7 +24,9 @@ import lombok.ToString;
  * | Salt        | variable     | Salt bytes.                |
  * +-------------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes parameters (hash algorithm, iterations, salt) used for NSEC3 denial of existence.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc5155">RFC 5155</a>.</p>*/
 @Getter
 @Builder
 @ToString

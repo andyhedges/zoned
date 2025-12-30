@@ -22,7 +22,9 @@ import lombok.ToString;
  * | PublicKey | variable     | Public key bytes.          |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes DNS public keys using the legacy KEY record format (now obsolete).</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc2535">RFC 2535</a>.</p>*/
 @Getter
 @Builder
 @ToString

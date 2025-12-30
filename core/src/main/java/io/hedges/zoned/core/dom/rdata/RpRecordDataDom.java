@@ -20,7 +20,9 @@ import lombok.ToString;
  * | TxtDNAME  | variable     | Text domain name.          |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Provides Responsible Person (RP) contact information and a related text domain.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1183">RFC 1183</a>.</p>*/
 @Getter
 @Builder
 @ToString

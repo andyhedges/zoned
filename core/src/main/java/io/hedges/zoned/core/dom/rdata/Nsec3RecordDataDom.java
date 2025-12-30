@@ -28,7 +28,9 @@ import lombok.ToString;
  * | TypeMap     | variable     | Type bitmaps.              |
  * +-------------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Provides DNSSEC authenticated denial of existence using hashed names to reduce zone enumeration.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc5155">RFC 5155</a>.</p>*/
 @Getter
 @Builder
 @ToString

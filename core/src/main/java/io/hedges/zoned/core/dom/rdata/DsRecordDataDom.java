@@ -22,7 +22,9 @@ import lombok.ToString;
  * | Digest    | variable     | Digest bytes.              |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Delegation Signer (DS) record that links a parent zone to a child zone’s DNSSEC key via a digest.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4034">RFC 4034</a>.</p>*/
 @Getter
 @Builder
 @ToString

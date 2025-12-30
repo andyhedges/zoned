@@ -19,7 +19,9 @@ import lombok.ToString;
  * | RDATA  | 0            | Not used for AXFR records.   |
  * +--------+--------------+------------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Zone transfer meta-type used when requesting full zone contents; it has no defined RDATA.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc5936">RFC 5936</a>.</p>*/
 @Getter
 @Builder
 @ToString

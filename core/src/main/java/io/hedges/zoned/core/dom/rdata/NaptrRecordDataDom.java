@@ -25,7 +25,9 @@ import lombok.ToString;
  * | Replacement| variable    | Replacement name.          |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Provides Naming Authority Pointer (NAPTR) rules for rewriting names for services like SIP and ENUM.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc3403">RFC 3403</a>.</p>*/
 @Getter
 @Builder
 @ToString

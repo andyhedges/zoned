@@ -29,7 +29,9 @@ import lombok.ToString;
  * | Signature   | variable     | Signature bytes.           |
  * +-------------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Holds DNSSEC signatures in the legacy SIG format (obsolete).</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc2535">RFC 2535</a>.</p>*/
 @Getter
 @Builder
 @ToString

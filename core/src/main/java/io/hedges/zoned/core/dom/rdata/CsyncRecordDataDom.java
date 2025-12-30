@@ -30,7 +30,9 @@ import java.util.TreeMap;
  * | TypeMap   | variable     | Type bitmaps.              |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Signals which records (typically NS and related types) a parent should synchronize for a child zone, using a serial and type bitmap.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7477">RFC 7477</a>.</p>*/
 @Getter
 @Builder
 @ToString

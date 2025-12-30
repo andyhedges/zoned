@@ -19,7 +19,9 @@ import lombok.ToString;
  * | PublicKey | variable     | OpenPGP public key bytes.  |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes OpenPGP public keys in DNS for email or identity verification.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7929">RFC 7929</a>.</p>*/
 @Getter
 @Builder
 @ToString

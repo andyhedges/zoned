@@ -22,7 +22,9 @@ import lombok.ToString;
  * | CertData  | variable     | Certificate data.          |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes certificates or related public key material in DNS, including the certificate type and associated data.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4398">RFC 4398</a>.</p>*/
 @Getter
 @Builder
 @ToString

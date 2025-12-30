@@ -27,7 +27,9 @@ import lombok.ToString;
  * | Minimum     | 4            | Minimum TTL.               |
  * +-------------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Defines the Start of Authority (SOA) for a zone, including serial and timing parameters.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder
 @ToString

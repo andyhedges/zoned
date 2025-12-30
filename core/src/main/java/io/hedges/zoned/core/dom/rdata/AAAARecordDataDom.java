@@ -21,7 +21,9 @@ import java.net.Inet6Address;
  * | Address  | 16           | IPv6 address.          |
  * +----------+--------------+------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Maps a host name to an IPv6 address.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc3596">RFC 3596</a>.</p>*/
 @Getter
 @Builder
 @ToString
