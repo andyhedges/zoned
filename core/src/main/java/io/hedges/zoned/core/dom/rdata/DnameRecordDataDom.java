@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.core.dom.rdata;
 
+import io.hedges.zoned.core.NameResolver;
+import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,13 +12,16 @@ import lombok.ToString;
 @Builder
 @ToString
 public class DnameRecordDataDom implements RDataDom {
+    private DnsNameDom dname;
 
-    public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+    public static RDataDom from(byte[] rdata, NameResolver resolver) {
+        return DnameRecordDataDom.builder()
+                .dname(RDataUtils.toDnsNameDom(rdata, resolver))
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        return RDataUtils.toByteArray(dname);
     }
 }

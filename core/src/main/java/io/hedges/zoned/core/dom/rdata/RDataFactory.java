@@ -27,7 +27,7 @@ public class RDataFactory {
             case CSYNC -> CsyncRecordDataDom.from(bytes);
             case DHCID -> DhcidRecordDataDom.from(bytes);
             case DLV -> DlvRecordDataDom.from(bytes);
-            case DNAME -> DnameRecordDataDom.from(bytes);
+            case DNAME -> DnameRecordDataDom.from(bytes, resolver);
             case DNSKEY -> DnskeyRecordDataDom.from(bytes);
             case DS -> DsRecordDataDom.from(bytes);
             case EUI48 -> Eui48RecordDataDom.from(bytes);
