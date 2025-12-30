@@ -37,6 +37,26 @@ public class RDataUtils {
         return rdata[offset] & 0xFF;
     }
 
+    protected static long readU32(byte[] rdata, int offset) {
+        if (rdata == null) {
+            throw new IllegalArgumentException("RDATA is null");
+        }
+        if (offset < 0 || offset + 3 >= rdata.length) {
+            throw new IllegalArgumentException("RDATA offset out of bounds");
+        }
+        return ((rdata[offset] & 0xFFL) << 24)
+                | ((rdata[offset + 1] & 0xFFL) << 16)
+                | ((rdata[offset + 2] & 0xFFL) << 8)
+                | (rdata[offset + 3] & 0xFFL);
+    }
+
+    protected static void writeU32(byte[] out, int offset, long value) {
+        out[offset] = (byte) ((value >> 24) & 0xFF);
+        out[offset + 1] = (byte) ((value >> 16) & 0xFF);
+        out[offset + 2] = (byte) ((value >> 8) & 0xFF);
+        out[offset + 3] = (byte) (value & 0xFF);
+    }
+
     protected static Inet6Address toInet6Address(byte[] rdata) {
         if (rdata == null || rdata.length != 16) {
             throw new IllegalArgumentException("AAAA RDATA must be exactly 16 bytes");

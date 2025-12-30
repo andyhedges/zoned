@@ -83,6 +83,37 @@ class RDataUtilsTest {
     }
 
     @Test
+    void readU32RejectsInvalidOffsets() {
+        byte[] rdata = new byte[] {0, 1, 2, 3};
+        assertThrows(IllegalArgumentException.class, () -> RDataUtils.readU32(null, 0));
+        assertThrows(IllegalArgumentException.class, () -> RDataUtils.readU32(rdata, -1));
+        assertThrows(IllegalArgumentException.class, () -> RDataUtils.readU32(rdata, 1));
+    }
+
+    @Test
+    void readU8RejectsInvalidOffsets() {
+        byte[] rdata = new byte[] {0};
+        assertThrows(IllegalArgumentException.class, () -> RDataUtils.readU8(null, 0));
+        assertThrows(IllegalArgumentException.class, () -> RDataUtils.readU8(rdata, -1));
+        assertThrows(IllegalArgumentException.class, () -> RDataUtils.readU8(rdata, 1));
+    }
+
+    @Test
+    void readU16RejectsInvalidOffsets() {
+        byte[] rdata = new byte[] {0, 1};
+        assertThrows(IllegalArgumentException.class, () -> RDataUtils.readU16(null, 0));
+        assertThrows(IllegalArgumentException.class, () -> RDataUtils.readU16(rdata, -1));
+        assertThrows(IllegalArgumentException.class, () -> RDataUtils.readU16(rdata, 1));
+    }
+
+    @Test
+    void parseDnsNameRejectsOffsetOutOfBounds() {
+        byte[] rdata = new byte[] {1, 'a', 0};
+        assertThrows(IllegalArgumentException.class, () -> RDataUtils.parseDnsName(rdata, -1, null));
+        assertThrows(IllegalArgumentException.class, () -> RDataUtils.parseDnsName(rdata, 3, null));
+    }
+
+    @Test
     void toDnsNameDomRejectsEmptyInput() {
         assertThrows(IllegalArgumentException.class, () -> RDataUtils.toDnsNameDom(null));
         assertThrows(IllegalArgumentException.class, () -> RDataUtils.toDnsNameDom(new byte[0]));
