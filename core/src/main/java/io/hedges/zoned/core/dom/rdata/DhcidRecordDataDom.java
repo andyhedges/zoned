@@ -10,13 +10,26 @@ import lombok.ToString;
 @Builder
 @ToString
 public class DhcidRecordDataDom implements RDataDom {
+    private byte[] identifier;
 
     public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (rdata == null || rdata.length == 0) {
+            throw new IllegalArgumentException("DHCID RDATA must not be empty");
+        }
+        byte[] identifier = new byte[rdata.length];
+        System.arraycopy(rdata, 0, identifier, 0, rdata.length);
+        return DhcidRecordDataDom.builder()
+                .identifier(identifier)
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (identifier == null || identifier.length == 0) {
+            throw new IllegalArgumentException("DHCID identifier must not be empty");
+        }
+        byte[] out = new byte[identifier.length];
+        System.arraycopy(identifier, 0, out, 0, identifier.length);
+        return out;
     }
 }
