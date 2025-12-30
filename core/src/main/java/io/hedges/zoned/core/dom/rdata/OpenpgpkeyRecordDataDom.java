@@ -25,14 +25,27 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class OpenpgpkeyRecordDataDom implements RDataDom {
+public class OpenPgpKeyRecordDataDom implements RDataDom {
+    private byte[] publicKey;
 
     public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (rdata == null || rdata.length == 0) {
+            throw new IllegalArgumentException("OPENPGPKEY RDATA must not be empty");
+        }
+        byte[] publicKey = new byte[rdata.length];
+        System.arraycopy(rdata, 0, publicKey, 0, rdata.length);
+        return OpenPgpKeyRecordDataDom.builder()
+                .publicKey(publicKey)
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (publicKey == null || publicKey.length == 0) {
+            throw new IllegalArgumentException("OPENPGPKEY public key must not be empty");
+        }
+        byte[] out = new byte[publicKey.length];
+        System.arraycopy(publicKey, 0, out, 0, publicKey.length);
+        return out;
     }
 }
