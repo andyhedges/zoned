@@ -28,6 +28,23 @@ class CsyncRecordDataDomTest {
     }
 
     @Test
+    void fromRejectsTruncatedWindowHeader() {
+        byte[] rdata = new byte[] {0, 0, 0, 1, 0, 0, 0};
+        assertThrows(IllegalArgumentException.class, () -> CsyncRecordDataDom.from(rdata));
+    }
+
+    @Test
+    void fromRejectsEmptyTypeBitmap() {
+        byte[] rdata = new byte[] {
+                0, 0, 0, 1,
+                0, 0,
+                0, 1,
+                0x00
+        };
+        assertThrows(IllegalArgumentException.class, () -> CsyncRecordDataDom.from(rdata));
+    }
+
+    @Test
     void fromParsesFields() {
         byte[] rdata = new byte[] {
                 0, 0, 0, 1,
@@ -75,6 +92,11 @@ class CsyncRecordDataDomTest {
                 .flags(0)
                 .types(java.util.Arrays.asList((DnsRecordTypeDom) null))
                 .build();
+        CsyncRecordDataDom duplicateTypes = CsyncRecordDataDom.builder()
+                .serial(1)
+                .flags(0)
+                .types(List.of(DnsRecordTypeDom.A, DnsRecordTypeDom.A))
+                .build();
 
         assertThrows(IllegalArgumentException.class, missingTypes::to);
         assertThrows(IllegalArgumentException.class, emptyTypes::to);
@@ -82,6 +104,7 @@ class CsyncRecordDataDomTest {
         assertThrows(IllegalArgumentException.class, tooLargeSerial::to);
         assertThrows(IllegalArgumentException.class, badFlags::to);
         assertThrows(IllegalArgumentException.class, nullType::to);
+        assertThrows(IllegalArgumentException.class, duplicateTypes::to);
     }
 
     @Test
