@@ -31,7 +31,7 @@ jobs:
 
       - name: Generate aggregated Javadoc (multi-module)
         run: |
-          mvn -B -ntp -DskipTests -Dmaven.javadoc.failOnError=false javadoc:aggregate
+          mvn -B -ntp -DskipTests javadoc:aggregate
           test -d target/site/apidocs
 
       - name: Configure Pages
