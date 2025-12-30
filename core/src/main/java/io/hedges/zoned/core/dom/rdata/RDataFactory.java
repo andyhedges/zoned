@@ -36,7 +36,7 @@ public class RDataFactory {
             case HTTPS -> HttpsRecordDataDom.from(bytes);
             case IPSECKEY -> IpseckeyRecordDataDom.from(bytes);
             case KEY -> KeyRecordDataDom.from(bytes);
-            case KX -> KxRecordDataDom.from(bytes);
+            case KX -> KxRecordDataDom.from(bytes, resolver);
             case LOC -> LocRecordDataDom.from(bytes);
             case MX -> MxRecordDataDom.from(bytes, resolver);
             case NAPTR -> NaptrRecordDataDom.from(bytes);
