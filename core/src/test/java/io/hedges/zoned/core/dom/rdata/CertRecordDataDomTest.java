@@ -75,6 +75,12 @@ class CertRecordDataDomTest {
                 .algorithm(256)
                 .certificate(new byte[] {1})
                 .build();
+        CertRecordDataDom negativeAlgorithm = CertRecordDataDom.builder()
+                .certificateType(1)
+                .keyTag(12345)
+                .algorithm(-1)
+                .certificate(new byte[] {1})
+                .build();
 
         assertThrows(IllegalArgumentException.class, missingCert::to);
         assertThrows(IllegalArgumentException.class, emptyCert::to);
@@ -83,6 +89,7 @@ class CertRecordDataDomTest {
         assertThrows(IllegalArgumentException.class, negativeKeyTag::to);
         assertThrows(IllegalArgumentException.class, tooLargeKeyTag::to);
         assertThrows(IllegalArgumentException.class, badAlgorithm::to);
+        assertThrows(IllegalArgumentException.class, negativeAlgorithm::to);
     }
 
     @Test
