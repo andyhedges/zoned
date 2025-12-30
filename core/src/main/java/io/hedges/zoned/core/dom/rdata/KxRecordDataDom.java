@@ -32,10 +32,6 @@ public class KxRecordDataDom implements RDataDom {
     private int preference;
     private DnsNameDom exchanger;
 
-    public static RDataDom from(byte[] rdata) {
-        return from(rdata, null);
-    }
-
     public static RDataDom from(byte[] rdata, NameResolver resolver) {
         if (rdata == null || rdata.length <= 2) {
             throw new IllegalArgumentException("KX RDATA requires a 2-byte preference and exchanger name");
