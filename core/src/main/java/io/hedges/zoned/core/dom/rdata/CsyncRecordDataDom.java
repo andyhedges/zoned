@@ -27,7 +27,7 @@ public class CsyncRecordDataDom implements RDataDom {
         if (rdata == null || rdata.length <= 6) {
             throw new IllegalArgumentException("CSYNC RDATA requires serial, flags, and a type bitmap");
         }
-        long serial = readU32(rdata, 0);
+        long serial = RDataUtils.readU32(rdata, 0);
         int flags = RDataUtils.readU16(rdata, 4);
         int idx = 6;
         int previousWindow = -1;
@@ -131,7 +131,7 @@ public class CsyncRecordDataDom implements RDataDom {
 
         byte[] out = new byte[size];
         int idx = 0;
-        writeU32(out, idx, serial);
+        RDataUtils.writeU32(out, idx, serial);
         idx += 4;
         out[idx++] = (byte) ((flags >> 8) & 0xFF);
         out[idx++] = (byte) (flags & 0xFF);
@@ -156,26 +156,6 @@ public class CsyncRecordDataDom implements RDataDom {
             throw new IllegalStateException("Bug: CSYNC RDATA encoded length mismatch");
         }
         return out;
-    }
-
-    private static long readU32(byte[] rdata, int offset) {
-        if (rdata == null) {
-            throw new IllegalArgumentException("RDATA is null");
-        }
-        if (offset < 0 || offset + 3 >= rdata.length) {
-            throw new IllegalArgumentException("RDATA offset out of bounds");
-        }
-        return ((rdata[offset] & 0xFFL) << 24)
-                | ((rdata[offset + 1] & 0xFFL) << 16)
-                | ((rdata[offset + 2] & 0xFFL) << 8)
-                | (rdata[offset + 3] & 0xFFL);
-    }
-
-    private static void writeU32(byte[] out, int offset, long value) {
-        out[offset] = (byte) ((value >> 24) & 0xFF);
-        out[offset + 1] = (byte) ((value >> 16) & 0xFF);
-        out[offset + 2] = (byte) ((value >> 8) & 0xFF);
-        out[offset + 3] = (byte) (value & 0xFF);
     }
 
     private static void validateU32(long value, String field) {

@@ -45,6 +45,19 @@ class CsyncRecordDataDomTest {
     }
 
     @Test
+    void fromRejectsNonIncreasingWindows() {
+        byte[] rdata = new byte[] {
+                0, 0, 0, 1,
+                0, 0,
+                1, 1,
+                0x40,
+                0, 1,
+                0x40
+        };
+        assertThrows(IllegalArgumentException.class, () -> CsyncRecordDataDom.from(rdata));
+    }
+
+    @Test
     void fromParsesFields() {
         byte[] rdata = new byte[] {
                 0, 0, 0, 1,
