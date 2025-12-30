@@ -6,6 +6,22 @@ import io.hedges.zoned.core.dom.RDataDom;
 
 import java.util.SortedMap;
 
+/**
+ * Shared base for SVCB-like RDATA encodings.
+ *
+ * <p>RDATA is SvcPriority (16-bit), target name, and a set of service parameters.</p>
+ 
+ *
+ * <pre>
+ * +-------------+--------------+----------------------------+
+ * | Field       | Size (octets)| Description                |
+ * +-------------+--------------+----------------------------+
+ * | SvcPriority | 2            | Service priority.          |
+ * | TargetName  | variable     | Target name.               |
+ * | SvcParams   | variable     | Service parameters.        |
+ * +-------------+--------------+----------------------------+
+ * </pre>
+*/
 abstract class SvcbLikeRecordDataDom implements RDataDom {
 
     @Override

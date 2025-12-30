@@ -6,6 +6,27 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS LOC record RDATA.
+ *
+ * <p>RDATA is version, size, horizontal precision, vertical precision,
+ * latitude, longitude, and altitude (RFC 1876).</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | Version   | 1            | LOC version.               |
+ * | Size      | 1            | Diameter of sphere.        |
+ * | HorizPre  | 1            | Horizontal precision.      |
+ * | VertPre   | 1            | Vertical precision.        |
+ * | Latitude  | 4            | Latitude value.            |
+ * | Longitude | 4            | Longitude value.           |
+ * | Altitude  | 4            | Altitude value.            |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

@@ -6,6 +6,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS TA record RDATA.
+ *
+ * <p>RDATA is key tag (16-bit), algorithm (8-bit), digest type (8-bit), and digest.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | KeyTag    | 2            | Key tag.                   |
+ * | Algorithm | 1            | DNSSEC algorithm.          |
+ * | DigestType| 1            | Digest type.               |
+ * | Digest    | variable     | Digest bytes.              |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

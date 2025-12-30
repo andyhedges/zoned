@@ -8,6 +8,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS MX record RDATA.
+ *
+ * <p>RDATA is preference (16-bit) and exchange domain name.</p>
+ *
+ * <pre>
+ * +-------------+--------------+----------------------------+
+ * | Field       | Size (octets)| Description                |
+ * +-------------+--------------+----------------------------+
+ * | Preference  | 2            | Mail server priority.      |
+ * | Exchange    | variable     | Domain name (wire format). |
+ * +-------------+--------------+----------------------------+
+ * </pre>
+ */
 @Getter
 @Builder
 @ToString

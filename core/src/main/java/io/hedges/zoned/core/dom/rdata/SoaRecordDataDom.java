@@ -8,6 +8,26 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS SOA record RDATA.
+ *
+ * <p>RDATA is mname, rname, serial, refresh, retry, expire, and minimum TTL.</p>
+ 
+ *
+ * <pre>
+ * +-------------+--------------+----------------------------+
+ * | Field       | Size (octets)| Description                |
+ * +-------------+--------------+----------------------------+
+ * | MNAME       | variable     | Primary name server.       |
+ * | RNAME       | variable     | Responsible mailbox.       |
+ * | Serial      | 4            | Zone serial number.        |
+ * | Refresh     | 4            | Refresh interval.          |
+ * | Retry       | 4            | Retry interval.            |
+ * | Expire      | 4            | Expire interval.           |
+ * | Minimum     | 4            | Minimum TTL.               |
+ * +-------------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

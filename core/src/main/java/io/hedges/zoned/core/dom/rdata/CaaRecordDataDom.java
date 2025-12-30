@@ -9,6 +9,23 @@ import lombok.ToString;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+/**
+ * Domain model for DNS CAA record RDATA.
+ *
+ * <p>RDATA is flags (8-bit), tag length (8-bit), tag (ASCII), and value bytes.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | Flags     | 1            | Property flags.            |
+ * | TagLength | 1            | Length of tag.             |
+ * | Tag       | variable     | ASCII tag.                 |
+ * | Value     | variable     | Value bytes.               |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

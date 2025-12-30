@@ -6,6 +6,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS ZONEMD record RDATA.
+ *
+ * <p>RDATA is serial (32-bit), scheme (8-bit), hash algorithm (8-bit), and digest.</p>
+ *
+ * <pre>
+ * +---------------+--------------+----------------------------+
+ * | Field         | Size (octets)| Description                |
+ * +---------------+--------------+----------------------------+
+ * | Serial        | 4            | SOA serial at calculation. |
+ * | Scheme        | 1            | Digest scheme.             |
+ * | HashAlgorithm | 1            | Digest algorithm.          |
+ * | Digest        | variable     | Zone digest bytes.         |
+ * +---------------+--------------+----------------------------+
+ * </pre>
+ */
 @Getter
 @Builder
 @ToString

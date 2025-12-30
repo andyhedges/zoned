@@ -11,6 +11,25 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Domain model for DNS HIP record RDATA.
+ *
+ * <p>RDATA is HIT length (8-bit), algorithm (8-bit), key length (16-bit),
+ * HIT, public key, and optional rendezvous server names.</p>
+ *
+ * <pre>
+ * +---------------+--------------+----------------------------------------------+
+ * | Field         | Size (octets)| Description                                  |
+ * +---------------+--------------+----------------------------------------------+
+ * | HITLength     | 1            | Length of HIT in octets.                     |
+ * | Algorithm     | 1            | Public key algorithm.                        |
+ * | KeyLength     | 2            | Length of public key in octets.              |
+ * | HIT           | variable     | Host Identity Tag bytes.                     |
+ * | PublicKey     | variable     | Public key bytes.                            |
+ * | Rendezvous    | variable     | Zero or more domain names (wire format).     |
+ * +---------------+--------------+----------------------------------------------+
+ * </pre>
+ */
 @Getter
 @Builder
 @ToString

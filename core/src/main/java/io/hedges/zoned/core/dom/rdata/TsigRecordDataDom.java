@@ -6,6 +6,29 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS TSIG record RDATA.
+ *
+ * <p>RDATA is algorithm name, time signed, fudge, MAC, original ID,
+ * error, and other data.</p>
+ 
+ *
+ * <pre>
+ * +-------------+--------------+----------------------------+
+ * | Field       | Size (octets)| Description                |
+ * +-------------+--------------+----------------------------+
+ * | Algorithm   | variable     | Algorithm name.            |
+ * | TimeSigned  | 6            | Time signed.               |
+ * | Fudge       | 2            | Fudge time.                |
+ * | MACSize     | 2            | MAC length.                |
+ * | MAC         | variable     | MAC bytes.                 |
+ * | OrigID      | 2            | Original message ID.       |
+ * | Error       | 2            | Error code.                |
+ * | OtherLength | 2            | Other data length.         |
+ * | OtherData   | variable     | Other data bytes.          |
+ * +-------------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

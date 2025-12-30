@@ -6,6 +6,21 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS NSEC record RDATA.
+ *
+ * <p>RDATA is next domain name followed by type bitmaps.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | NextName  | variable     | Next domain name.          |
+ * | TypeMap   | variable     | Type bitmaps.              |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

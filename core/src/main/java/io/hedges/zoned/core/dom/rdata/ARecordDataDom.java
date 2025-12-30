@@ -8,6 +8,20 @@ import lombok.ToString;
 
 import java.net.Inet4Address;
 
+/**
+ * Domain model for DNS A record RDATA.
+ *
+ * <p>RDATA is a 4-octet IPv4 address.</p>
+ 
+ *
+ * <pre>
+ * +----------+--------------+------------------------+
+ * | Field    | Size (octets)| Description            |
+ * +----------+--------------+------------------------+
+ * | Address  | 4            | IPv4 address.          |
+ * +----------+--------------+------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

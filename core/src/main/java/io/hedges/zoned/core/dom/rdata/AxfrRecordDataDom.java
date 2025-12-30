@@ -6,6 +6,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for AXFR meta-type RDATA.
+ *
+ * <p>AXFR has no defined RDATA; it is used for zone transfers.</p>
+ 
+ *
+ * <pre>
+ * +--------+--------------+------------------------------+
+ * | Field  | Size (octets)| Description                  |
+ * +--------+--------------+------------------------------+
+ * | RDATA  | 0            | Not used for AXFR records.   |
+ * +--------+--------------+------------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

@@ -6,6 +6,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS CERT record RDATA.
+ *
+ * <p>RDATA is certificate type (16-bit), key tag (16-bit), algorithm (8-bit), and certificate bytes.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | CertType  | 2            | Certificate type.          |
+ * | KeyTag    | 2            | Key tag.                   |
+ * | Algorithm | 1            | Public key algorithm.      |
+ * | CertData  | variable     | Certificate data.          |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

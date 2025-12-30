@@ -15,6 +15,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+/**
+ * Domain model for DNS CSYNC record RDATA.
+ *
+ * <p>RDATA is serial (32-bit), flags (16-bit), and type bitmaps.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | Serial    | 4            | SOA serial at publication. |
+ * | Flags     | 2            | CSYNC flags.               |
+ * | TypeMap   | variable     | Type bitmaps.              |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString
