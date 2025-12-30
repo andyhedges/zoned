@@ -40,52 +40,52 @@ class Nsec3ParamRecordDataDomTest {
     @Test
     void toRejectsInvalidFields() {
         Nsec3ParamRecordDataDom negativeHash = Nsec3ParamRecordDataDom.builder()
-                .hashAlgorithm(-1)
-                .flags(0)
-                .iterations(0)
-                .salt(new byte[0])
-                .build();
+                                                                      .hashAlgorithm(-1)
+                                                                      .flags(0)
+                                                                      .iterations(0)
+                                                                      .salt(new byte[0])
+                                                                      .build();
         Nsec3ParamRecordDataDom tooLargeHash = Nsec3ParamRecordDataDom.builder()
-                .hashAlgorithm(256)
-                .flags(0)
-                .iterations(0)
-                .salt(new byte[0])
-                .build();
+                                                                      .hashAlgorithm(256)
+                                                                      .flags(0)
+                                                                      .iterations(0)
+                                                                      .salt(new byte[0])
+                                                                      .build();
         Nsec3ParamRecordDataDom negativeFlags = Nsec3ParamRecordDataDom.builder()
-                .hashAlgorithm(1)
-                .flags(-1)
-                .iterations(0)
-                .salt(new byte[0])
-                .build();
+                                                                       .hashAlgorithm(1)
+                                                                       .flags(-1)
+                                                                       .iterations(0)
+                                                                       .salt(new byte[0])
+                                                                       .build();
         Nsec3ParamRecordDataDom tooLargeFlags = Nsec3ParamRecordDataDom.builder()
-                .hashAlgorithm(1)
-                .flags(256)
-                .iterations(0)
-                .salt(new byte[0])
-                .build();
+                                                                       .hashAlgorithm(1)
+                                                                       .flags(256)
+                                                                       .iterations(0)
+                                                                       .salt(new byte[0])
+                                                                       .build();
         Nsec3ParamRecordDataDom negativeIterations = Nsec3ParamRecordDataDom.builder()
-                .hashAlgorithm(1)
-                .flags(0)
-                .iterations(-1)
-                .salt(new byte[0])
-                .build();
+                                                                            .hashAlgorithm(1)
+                                                                            .flags(0)
+                                                                            .iterations(-1)
+                                                                            .salt(new byte[0])
+                                                                            .build();
         Nsec3ParamRecordDataDom tooLargeIterations = Nsec3ParamRecordDataDom.builder()
-                .hashAlgorithm(1)
-                .flags(0)
-                .iterations(0x1_0000)
-                .salt(new byte[0])
-                .build();
+                                                                            .hashAlgorithm(1)
+                                                                            .flags(0)
+                                                                            .iterations(0x1_0000)
+                                                                            .salt(new byte[0])
+                                                                            .build();
         Nsec3ParamRecordDataDom nullSalt = Nsec3ParamRecordDataDom.builder()
-                .hashAlgorithm(1)
-                .flags(0)
-                .iterations(0)
-                .build();
+                                                                  .hashAlgorithm(1)
+                                                                  .flags(0)
+                                                                  .iterations(0)
+                                                                  .build();
         Nsec3ParamRecordDataDom tooLongSalt = Nsec3ParamRecordDataDom.builder()
-                .hashAlgorithm(1)
-                .flags(0)
-                .iterations(0)
-                .salt(new byte[256])
-                .build();
+                                                                     .hashAlgorithm(1)
+                                                                     .flags(0)
+                                                                     .iterations(0)
+                                                                     .salt(new byte[256])
+                                                                     .build();
 
         assertThrows(IllegalArgumentException.class, negativeHash::to);
         assertThrows(IllegalArgumentException.class, tooLargeHash::to);
@@ -100,11 +100,11 @@ class Nsec3ParamRecordDataDomTest {
     @Test
     void toSerializesRdata() {
         Nsec3ParamRecordDataDom dom = Nsec3ParamRecordDataDom.builder()
-                .hashAlgorithm(1)
-                .flags(2)
-                .iterations(10)
-                .salt(new byte[] {1, 2, 3})
-                .build();
+                                                             .hashAlgorithm(1)
+                                                             .flags(2)
+                                                             .iterations(10)
+                                                             .salt(new byte[] {1, 2, 3})
+                                                             .build();
 
         byte[] expected = new byte[] {1, 2, 0, 10, 3, 1, 2, 3};
         assertArrayEquals(expected, dom.to());
@@ -113,11 +113,11 @@ class Nsec3ParamRecordDataDomTest {
     @Test
     void roundTripPreservesFields() {
         Nsec3ParamRecordDataDom original = Nsec3ParamRecordDataDom.builder()
-                .hashAlgorithm(1)
-                .flags(0)
-                .iterations(5)
-                .salt(new byte[] {9, 8})
-                .build();
+                                                                  .hashAlgorithm(1)
+                                                                  .flags(0)
+                                                                  .iterations(5)
+                                                                  .salt(new byte[] {9, 8})
+                                                                  .build();
 
         RDataDom decoded = Nsec3ParamRecordDataDom.from(original.to());
         Nsec3ParamRecordDataDom parsed = assertInstanceOf(Nsec3ParamRecordDataDom.class, decoded);

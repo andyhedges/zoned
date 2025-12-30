@@ -53,11 +53,11 @@ public class Nsec3ParamRecordDataDom implements RDataDom {
             System.arraycopy(rdata, 5, salt, 0, saltLength);
         }
         return Nsec3ParamRecordDataDom.builder()
-                .hashAlgorithm(hashAlgorithm)
-                .flags(flags)
-                .iterations(iterations)
-                .salt(salt)
-                .build();
+                                      .hashAlgorithm(hashAlgorithm)
+                                      .flags(flags)
+                                      .iterations(iterations)
+                                      .salt(salt)
+                                      .build();
     }
 
     @Override
