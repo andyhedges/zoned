@@ -36,7 +36,7 @@ public final class UdpNettyDnsServer implements DnsServer {
                  @Override
                  protected void initChannel(DatagramChannel ch) {
                      ChannelPipeline p = ch.pipeline();
-                     p.addLast("wireLogger", new LoggingHandler(LogLevel.INFO));
+                     p.addLast("wireLogger", new LoggingHandler(LogLevel.DEBUG));
                      p.addLast(new DnsDatagramDecoder());
                      p.addLast(new DnsDatagramEncoder());
                      p.addLast(new UdpDnsHandler(requestHandler));
