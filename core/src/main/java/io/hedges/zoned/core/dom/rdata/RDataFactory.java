@@ -32,7 +32,7 @@ public class RDataFactory {
             case DS -> DsRecordDataDom.from(bytes);
             case EUI48 -> Eui48RecordDataDom.from(bytes);
             case EUI64 -> Eui64RecordDataDom.from(bytes);
-            case HIP -> HipRecordDataDom.from(bytes);
+            case HIP -> HipRecordDataDom.from(bytes, resolver);
             case HTTPS -> HttpsRecordDataDom.from(bytes);
             case IPSECKEY -> IpseckeyRecordDataDom.from(bytes);
             case KEY -> KeyRecordDataDom.from(bytes);
