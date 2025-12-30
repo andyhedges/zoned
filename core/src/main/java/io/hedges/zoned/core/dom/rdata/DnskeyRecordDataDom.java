@@ -10,13 +10,52 @@ import lombok.ToString;
 @Builder
 @ToString
 public class DnskeyRecordDataDom implements RDataDom {
+    private int flags;
+    private int protocol;
+    private int algorithm;
+    private byte[] publicKey;
 
     public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (rdata == null || rdata.length < 4) {
+            throw new IllegalArgumentException("DNSKEY RDATA requires flags, protocol, and algorithm");
+        }
+        int flags = RDataUtils.readU16(rdata, 0);
+        int protocol = RDataUtils.readU8(rdata, 2);
+        int algorithm = RDataUtils.readU8(rdata, 3);
+        int keyLength = rdata.length - 4;
+        if (keyLength <= 0) {
+            throw new IllegalArgumentException("DNSKEY public key must not be empty");
+        }
+        byte[] publicKey = new byte[keyLength];
+        System.arraycopy(rdata, 4, publicKey, 0, keyLength);
+        return DnskeyRecordDataDom.builder()
+                .flags(flags)
+                .protocol(protocol)
+                .algorithm(algorithm)
+                .publicKey(publicKey)
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (flags < 0 || flags > 0xFFFF) {
+            throw new IllegalArgumentException("DNSKEY flags must be between 0 and 65535");
+        }
+        if (protocol < 0 || protocol > 0xFF) {
+            throw new IllegalArgumentException("DNSKEY protocol must be between 0 and 255");
+        }
+        if (algorithm < 0 || algorithm > 0xFF) {
+            throw new IllegalArgumentException("DNSKEY algorithm must be between 0 and 255");
+        }
+        if (publicKey == null || publicKey.length == 0) {
+            throw new IllegalArgumentException("DNSKEY public key must not be empty");
+        }
+        byte[] out = new byte[4 + publicKey.length];
+        out[0] = (byte) ((flags >> 8) & 0xFF);
+        out[1] = (byte) (flags & 0xFF);
+        out[2] = (byte) (protocol & 0xFF);
+        out[3] = (byte) (algorithm & 0xFF);
+        System.arraycopy(publicKey, 0, out, 4, publicKey.length);
+        return out;
     }
 }
