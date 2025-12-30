@@ -10,13 +10,52 @@ import lombok.ToString;
 @Builder
 @ToString
 public class DlvRecordDataDom implements RDataDom {
+    private int keyTag;
+    private int algorithm;
+    private int digestType;
+    private byte[] digest;
 
     public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (rdata == null || rdata.length < 5) {
+            throw new IllegalArgumentException("DLV RDATA requires key tag, algorithm, digest type, and digest");
+        }
+        int keyTag = RDataUtils.readU16(rdata, 0);
+        int algorithm = RDataUtils.readU8(rdata, 2);
+        int digestType = RDataUtils.readU8(rdata, 3);
+        int digestLength = rdata.length - 4;
+        if (digestLength <= 0) {
+            throw new IllegalArgumentException("DLV digest must not be empty");
+        }
+        byte[] digest = new byte[digestLength];
+        System.arraycopy(rdata, 4, digest, 0, digestLength);
+        return DlvRecordDataDom.builder()
+                .keyTag(keyTag)
+                .algorithm(algorithm)
+                .digestType(digestType)
+                .digest(digest)
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (keyTag < 0 || keyTag > 0xFFFF) {
+            throw new IllegalArgumentException("DLV key tag must be between 0 and 65535");
+        }
+        if (algorithm < 0 || algorithm > 0xFF) {
+            throw new IllegalArgumentException("DLV algorithm must be between 0 and 255");
+        }
+        if (digestType < 0 || digestType > 0xFF) {
+            throw new IllegalArgumentException("DLV digest type must be between 0 and 255");
+        }
+        if (digest == null || digest.length == 0) {
+            throw new IllegalArgumentException("DLV digest must not be empty");
+        }
+        byte[] out = new byte[4 + digest.length];
+        out[0] = (byte) ((keyTag >> 8) & 0xFF);
+        out[1] = (byte) (keyTag & 0xFF);
+        out[2] = (byte) (algorithm & 0xFF);
+        out[3] = (byte) (digestType & 0xFF);
+        System.arraycopy(digest, 0, out, 4, digest.length);
+        return out;
     }
 }
