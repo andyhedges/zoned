@@ -14,10 +14,6 @@ import lombok.ToString;
 public class DnameRecordDataDom implements RDataDom {
     private DnsNameDom dname;
 
-    public static RDataDom from(byte[] rdata) {
-        return from(rdata, null);
-    }
-
     public static RDataDom from(byte[] rdata, NameResolver resolver) {
         return DnameRecordDataDom.builder()
                 .dname(RDataUtils.toDnsNameDom(rdata, resolver))
