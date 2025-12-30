@@ -21,7 +21,9 @@ import lombok.ToString;
  * | Target    | variable     | URI bytes.                 |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes Uniform Resource Identifier (URI) data for a domain name.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7553">RFC 7553</a>.</p>*/
 @Getter
 @Builder
 @ToString

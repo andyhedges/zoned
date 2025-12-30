@@ -21,7 +21,9 @@ import lombok.ToString;
  * | Digest        | variable     | Zone digest bytes.         |
  * +---------------+--------------+----------------------------+
  * </pre>
- */
+ 
+ * <p>Purpose: Publishes zone content digests so consumers can verify zone integrity.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc8976">RFC 8976</a>.</p>*/
 @Getter
 @Builder
 @ToString

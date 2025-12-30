@@ -21,7 +21,9 @@ import lombok.ToString;
  * | Fingerprint | variable     | Fingerprint bytes.         |
  * +-------------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes Secure Shell (SSH) public key fingerprints for SSH host verification.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4255">RFC 4255</a>.</p>*/
 @Getter
 @Builder
 @ToString

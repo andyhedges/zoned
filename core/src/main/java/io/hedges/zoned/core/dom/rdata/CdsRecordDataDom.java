@@ -22,7 +22,9 @@ import lombok.ToString;
  * | Digest    | variable     | Digest bytes.              |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes child DS records to signal the parent which DS values to publish for DNSSEC delegation.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7344">RFC 7344</a>.</p>*/
 @Getter
 @Builder
 @ToString

@@ -23,7 +23,9 @@ import lombok.ToString;
  * | AssocData   | variable     | Association data.          |
  * +-------------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes S/MIME certificate association data for secure email (S/MIMEA).</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc8162">RFC 8162</a>.</p>*/
 @Getter
 @Builder
 @ToString

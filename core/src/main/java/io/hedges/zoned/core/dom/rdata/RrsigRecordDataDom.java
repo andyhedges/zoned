@@ -29,7 +29,9 @@ import lombok.ToString;
  * | Signature   | variable     | Signature bytes.           |
  * +-------------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Holds DNSSEC signatures (RRSIG) that cover an RRset for validation.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4034">RFC 4034</a>.</p>*/
 @Getter
 @Builder
 @ToString

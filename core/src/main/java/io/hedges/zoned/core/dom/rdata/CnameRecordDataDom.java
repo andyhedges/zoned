@@ -21,7 +21,9 @@ import lombok.ToString;
  * | Target    | variable     | Domain name (wire format). |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Creates an alias from one domain name to another so queries are redirected to the canonical name.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder
 @ToString

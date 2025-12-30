@@ -24,7 +24,9 @@ import lombok.ToString;
  * | PublicKey | variable     | Public key bytes.          |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes IP Security (IPsec) keying material along with gateway information for establishing IPsec connections.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4025">RFC 4025</a>.</p>*/
 @Getter
 @Builder
 @ToString

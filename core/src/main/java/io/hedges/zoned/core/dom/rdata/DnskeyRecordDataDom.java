@@ -22,7 +22,9 @@ import lombok.ToString;
  * | PublicKey | variable     | Public key bytes.          |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes DNSSEC public keys for a zone so validators can verify signatures.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4034">RFC 4034</a>.</p>*/
 @Getter
 @Builder
 @ToString

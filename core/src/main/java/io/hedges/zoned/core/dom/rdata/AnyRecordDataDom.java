@@ -19,7 +19,9 @@ import lombok.ToString;
  * | RDATA  | 0            | Not used for ANY records. |
  * +--------+--------------+---------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Meta-type used for queries to request multiple record types; it has no defined RDATA for storage.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder
 @ToString

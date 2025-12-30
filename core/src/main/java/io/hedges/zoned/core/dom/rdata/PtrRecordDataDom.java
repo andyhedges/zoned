@@ -21,7 +21,9 @@ import lombok.ToString;
  * | PTRDNAME  | variable     | Domain name (wire format). |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Maps an IP address to a domain name for reverse lookups.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder
 @ToString

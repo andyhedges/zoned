@@ -21,7 +21,9 @@ import lombok.ToString;
  * | NSDNAME   | variable     | Domain name (wire format). |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Lists authoritative Name Server (NS) hosts for a zone.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder
 @ToString

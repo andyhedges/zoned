@@ -20,7 +20,9 @@ import lombok.ToString;
  * | Exchanger | variable     | Domain name (wire format). |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Specifies a Key Exchange (KX) server for a domain, similar to MX but for key exchange services.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc2230">RFC 2230</a>.</p>*/
 @Getter
 @Builder
 @ToString

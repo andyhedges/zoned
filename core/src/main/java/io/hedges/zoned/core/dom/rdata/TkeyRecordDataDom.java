@@ -27,7 +27,9 @@ import lombok.ToString;
  * | OtherData    | variable     | Other data bytes.                         |
  * +--------------+--------------+-------------------------------------------+
  * </pre>
- */
+ 
+ * <p>Purpose: Provides Transaction Key (TKEY) material for establishing TSIG keys.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc2930">RFC 2930</a>.</p>*/
 @Getter
 @Builder
 @ToString

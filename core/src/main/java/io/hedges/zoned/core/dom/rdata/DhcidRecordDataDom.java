@@ -19,7 +19,9 @@ import lombok.ToString;
  * | Identifier| variable     | DHCID identifier bytes.    |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Stores a Dynamic Host Configuration Protocol (DHCP) identifier to support secure Dynamic DNS updates.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4701">RFC 4701</a>.</p>*/
 @Getter
 @Builder
 @ToString

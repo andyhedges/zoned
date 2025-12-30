@@ -26,7 +26,9 @@ import lombok.ToString;
  * | Altitude  | 4            | Altitude value.            |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes geographic location information such as latitude, longitude, and altitude.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1876">RFC 1876</a>.</p>*/
 @Getter
 @Builder
 @ToString

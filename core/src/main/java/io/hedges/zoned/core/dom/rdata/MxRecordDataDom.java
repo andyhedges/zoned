@@ -21,7 +21,9 @@ import lombok.ToString;
  * | Exchange    | variable     | Domain name (wire format). |
  * +-------------+--------------+----------------------------+
  * </pre>
- */
+ 
+ * <p>Purpose: Specifies Mail Exchange (MX) servers that accept email for a domain, with preference values.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder
 @ToString

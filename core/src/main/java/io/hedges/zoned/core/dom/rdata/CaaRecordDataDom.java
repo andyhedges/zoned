@@ -25,7 +25,9 @@ import java.util.Arrays;
  * | Value     | variable     | Value bytes.               |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Specifies Certification Authority Authorization (CAA) policy, telling which certificate authorities may issue certificates for a domain.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc6844">RFC 6844</a>.</p>*/
 @Getter
 @Builder
 @ToString

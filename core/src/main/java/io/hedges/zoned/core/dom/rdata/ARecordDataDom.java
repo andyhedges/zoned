@@ -21,7 +21,9 @@ import java.net.Inet4Address;
  * | Address  | 4            | IPv4 address.          |
  * +----------+--------------+------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Maps a host name to an IPv4 address.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder
 @ToString

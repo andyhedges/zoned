@@ -19,7 +19,9 @@ import lombok.ToString;
  * | Identifier| 8            | EUI-64 bytes.              |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes an IEEE Extended Unique Identifier 64-bit (EUI-64) value, often derived from a MAC address.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7043">RFC 7043</a>.</p>*/
 @Getter
 @Builder
 @ToString

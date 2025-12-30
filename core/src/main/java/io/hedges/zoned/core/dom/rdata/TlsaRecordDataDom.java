@@ -23,7 +23,9 @@ import lombok.ToString;
  * | AssocData   | variable     | Association data.          |
  * +-------------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes TLSA data that binds TLS certificates or public keys to a domain (DANE).</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc6698">RFC 6698</a>.</p>*/
 @Getter
 @Builder
 @ToString

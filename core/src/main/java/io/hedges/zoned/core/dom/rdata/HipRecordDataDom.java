@@ -29,7 +29,9 @@ import java.util.List;
  * | Rendezvous    | variable     | Zero or more domain names (wire format).     |
  * +---------------+--------------+----------------------------------------------+
  * </pre>
- */
+ 
+ * <p>Purpose: Publishes Host Identity Protocol (HIP) data including the Host Identity Tag (HIT), public key, and optional rendezvous servers.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc8005">RFC 8005</a>.</p>*/
 @Getter
 @Builder
 @ToString

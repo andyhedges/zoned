@@ -26,7 +26,9 @@ import java.util.List;
  * | OptData   | variable     | Option data bytes.         |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Encodes Extension Mechanisms for DNS (EDNS) options used to extend DNS protocol features.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc6891">RFC 6891</a>.</p>*/
 @Getter
 @Builder
 @ToString

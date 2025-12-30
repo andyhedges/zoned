@@ -22,7 +22,9 @@ import lombok.ToString;
  * | Hostname  | variable     | Domain name (wire format). |
  * +-----------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes Andrew File System (AFS) database server information so clients can locate AFS services.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1183">RFC 1183</a>.</p>*/
 @Getter
 @Builder
 @ToString

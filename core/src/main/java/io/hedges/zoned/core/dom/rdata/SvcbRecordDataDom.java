@@ -25,7 +25,9 @@ import java.util.SortedMap;
  * | SvcParams   | variable     | Service parameters.        |
  * +-------------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Publishes Service Binding (SVCB) data describing alternative endpoints and parameters.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc9460">RFC 9460</a>.</p>*/
 @Getter
 @Builder
 @ToString

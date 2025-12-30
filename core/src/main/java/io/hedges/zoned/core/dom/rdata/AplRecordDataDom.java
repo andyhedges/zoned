@@ -27,7 +27,9 @@ import java.util.List;
  * | Address       | variable     | Address bytes (per item).        |
  * +---------------+--------------+----------------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Describes Address Prefix List (APL) entries that specify network ranges and negations for policy use.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc3123">RFC 3123</a>.</p>*/
 @Getter
 @Builder
 @ToString

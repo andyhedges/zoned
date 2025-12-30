@@ -28,7 +28,9 @@ import lombok.ToString;
  * | OtherData   | variable     | Other data bytes.          |
  * +-------------+--------------+----------------------------+
  * </pre>
-*/
+
+ * <p>Purpose: Carries Transaction SIGnature (TSIG) data used to authenticate DNS messages.</p>
+ * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc8945">RFC 8945</a>.</p>*/
 @Getter
 @Builder
 @ToString
