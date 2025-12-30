@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.core.dom.rdata;
 
+import io.hedges.zoned.core.NameResolver;
+import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,13 +29,45 @@ import lombok.ToString;
 @Builder
 @ToString
 public class RpRecordDataDom implements RDataDom {
+    private DnsNameDom mailbox;
+    private DnsNameDom textDomain;
 
     public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        return from(rdata, null);
+    }
+
+    public static RDataDom from(byte[] rdata, NameResolver resolver) {
+        if (rdata == null || rdata.length == 0) {
+            throw new IllegalArgumentException("RP RDATA cannot be empty");
+        }
+        RDataUtils.DnsNameParseResult mailboxResult = RDataUtils.parseDnsName(rdata, 0, resolver);
+        int idx = mailboxResult.nextIndex();
+        if (idx >= rdata.length) {
+            throw new IllegalArgumentException("RP RDATA missing text domain name");
+        }
+        RDataUtils.DnsNameParseResult textResult = RDataUtils.parseDnsName(rdata, idx, resolver);
+        if (textResult.nextIndex() != rdata.length) {
+            throw new IllegalArgumentException("Extra bytes after RP text domain name");
+        }
+        return RpRecordDataDom.builder()
+                .mailbox(mailboxResult.name())
+                .textDomain(textResult.name())
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (mailbox == null) {
+            throw new IllegalArgumentException("RP mailbox is null");
+        }
+        if (textDomain == null) {
+            throw new IllegalArgumentException("RP text domain is null");
+        }
+        byte[] mailboxBytes = RDataUtils.toByteArray(mailbox);
+        byte[] textBytes = RDataUtils.toByteArray(textDomain);
+        byte[] out = new byte[mailboxBytes.length + textBytes.length];
+        System.arraycopy(mailboxBytes, 0, out, 0, mailboxBytes.length);
+        System.arraycopy(textBytes, 0, out, mailboxBytes.length, textBytes.length);
+        return out;
     }
 }
