@@ -31,8 +31,8 @@ jobs:
 
       - name: Generate aggregated Javadoc (multi-module)
         run: |
-          mvn -B -ntp -DskipTests -Dmaven.javadoc.failOnError=false javadoc:aggregate
-          test -d target/site/apidocs
+          mvn -B -ntp -DskipTests javadoc:aggregate
+          test -d target/reports/apidocs
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -40,7 +40,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: target/site/apidocs
+          path: target/reports/apidocs
 
   deploy:
     needs: build
