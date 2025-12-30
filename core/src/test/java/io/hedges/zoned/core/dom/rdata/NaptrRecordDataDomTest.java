@@ -28,8 +28,38 @@ class NaptrRecordDataDomTest {
     }
 
     @Test
+    void fromRejectsMissingServices() {
+        byte[] rdata = new byte[] {0, 1, 0, 2, 0};
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+    }
+
+    @Test
+    void fromRejectsMissingRegexp() {
+        byte[] rdata = new byte[] {0, 1, 0, 2, 0, 0};
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+    }
+
+    @Test
+    void fromRejectsTruncatedServices() {
+        byte[] rdata = new byte[] {0, 1, 0, 2, 0, 3, 's'};
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+    }
+
+    @Test
+    void fromRejectsTruncatedRegexp() {
+        byte[] rdata = new byte[] {0, 1, 0, 2, 0, 0, 2, 'r'};
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+    }
+
+    @Test
     void fromRejectsMissingReplacement() {
         byte[] rdata = new byte[] {0, 1, 0, 2, 0, 0, 0};
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+    }
+
+    @Test
+    void fromRejectsInvalidReplacementName() {
+        byte[] rdata = new byte[] {0, 1, 0, 2, 0, 0, 0, 0};
         assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
     }
 
@@ -135,6 +165,14 @@ class NaptrRecordDataDomTest {
                 .services("")
                 .regexp("")
                 .build();
+        NaptrRecordDataDom invalidReplacement = NaptrRecordDataDom.builder()
+                .order(1)
+                .preference(2)
+                .flags("")
+                .services("")
+                .regexp("")
+                .replacement(DnsNameDom.builder().labels(List.of()).build())
+                .build();
 
         assertThrows(IllegalArgumentException.class, missingStrings::to);
         assertThrows(IllegalArgumentException.class, negativeOrder::to);
@@ -145,6 +183,7 @@ class NaptrRecordDataDomTest {
         assertThrows(IllegalArgumentException.class, badServices::to);
         assertThrows(IllegalArgumentException.class, badRegexp::to);
         assertThrows(IllegalArgumentException.class, missingReplacement::to);
+        assertThrows(IllegalArgumentException.class, invalidReplacement::to);
     }
 
     @Test
