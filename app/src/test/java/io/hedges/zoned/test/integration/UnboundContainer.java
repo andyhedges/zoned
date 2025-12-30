@@ -115,7 +115,7 @@ final public class UnboundContainer {
                     .append('\n');
         }
         Files.writeString(file, contents.toString(), StandardCharsets.UTF_8);
-        System.out.println("Unbound local-data.conf contents:\n" + contents);
+        //System.out.println("Unbound local-data.conf contents:\n" + contents);
         return file;
     }
 }
