@@ -18,6 +18,12 @@ class DlvRecordDataDomTest {
     }
 
     @Test
+    void fromRejectsEmptyDigest() {
+        byte[] rdata = new byte[] {0x30, 0x39, 0x08, 0x01};
+        assertThrows(IllegalArgumentException.class, () -> DlvRecordDataDom.from(rdata));
+    }
+
+    @Test
     void fromParsesFields() {
         byte[] digest = new byte[] {1, 2, 3, 4};
         byte[] rdata = new byte[] {0x30, 0x39, 0x08, 0x01, 1, 2, 3, 4};
@@ -62,10 +68,22 @@ class DlvRecordDataDomTest {
                 .digestType(1)
                 .digest(new byte[] {1})
                 .build();
+        DlvRecordDataDom negativeAlgorithm = DlvRecordDataDom.builder()
+                .keyTag(12345)
+                .algorithm(-1)
+                .digestType(1)
+                .digest(new byte[] {1})
+                .build();
         DlvRecordDataDom badDigestType = DlvRecordDataDom.builder()
                 .keyTag(12345)
                 .algorithm(8)
                 .digestType(256)
+                .digest(new byte[] {1})
+                .build();
+        DlvRecordDataDom negativeDigestType = DlvRecordDataDom.builder()
+                .keyTag(12345)
+                .algorithm(8)
+                .digestType(-1)
                 .digest(new byte[] {1})
                 .build();
 
@@ -74,7 +92,9 @@ class DlvRecordDataDomTest {
         assertThrows(IllegalArgumentException.class, negativeKeyTag::to);
         assertThrows(IllegalArgumentException.class, tooLargeKeyTag::to);
         assertThrows(IllegalArgumentException.class, badAlgorithm::to);
+        assertThrows(IllegalArgumentException.class, negativeAlgorithm::to);
         assertThrows(IllegalArgumentException.class, badDigestType::to);
+        assertThrows(IllegalArgumentException.class, negativeDigestType::to);
     }
 
     @Test
