@@ -76,11 +76,29 @@ class LocRecordDataDomTest {
                 .longitude(0)
                 .altitude(0)
                 .build();
+        LocRecordDataDom negativeHorizontal = LocRecordDataDom.builder()
+                .version(0)
+                .size(0)
+                .horizontalPrecision(-1)
+                .verticalPrecision(0)
+                .latitude(0)
+                .longitude(0)
+                .altitude(0)
+                .build();
         LocRecordDataDom badVertical = LocRecordDataDom.builder()
                 .version(0)
                 .size(0)
                 .horizontalPrecision(0)
                 .verticalPrecision(256)
+                .latitude(0)
+                .longitude(0)
+                .altitude(0)
+                .build();
+        LocRecordDataDom negativeVertical = LocRecordDataDom.builder()
+                .version(0)
+                .size(0)
+                .horizontalPrecision(0)
+                .verticalPrecision(-1)
                 .latitude(0)
                 .longitude(0)
                 .altitude(0)
@@ -116,7 +134,9 @@ class LocRecordDataDomTest {
         assertThrows(IllegalArgumentException.class, badVersion::to);
         assertThrows(IllegalArgumentException.class, badSize::to);
         assertThrows(IllegalArgumentException.class, badHorizontal::to);
+        assertThrows(IllegalArgumentException.class, negativeHorizontal::to);
         assertThrows(IllegalArgumentException.class, badVertical::to);
+        assertThrows(IllegalArgumentException.class, negativeVertical::to);
         assertThrows(IllegalArgumentException.class, badLatitude::to);
         assertThrows(IllegalArgumentException.class, badLongitude::to);
         assertThrows(IllegalArgumentException.class, badAltitude::to);
