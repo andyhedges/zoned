@@ -10,13 +10,27 @@ import lombok.ToString;
 @Builder
 @ToString
 public class Eui64RecordDataDom implements RDataDom {
+    private static final int EUI64_LENGTH = 8;
+    private byte[] address;
 
     public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (rdata == null || rdata.length != EUI64_LENGTH) {
+            throw new IllegalArgumentException("EUI64 RDATA must be exactly 8 bytes");
+        }
+        byte[] address = new byte[EUI64_LENGTH];
+        System.arraycopy(rdata, 0, address, 0, EUI64_LENGTH);
+        return Eui64RecordDataDom.builder()
+                .address(address)
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (address == null || address.length != EUI64_LENGTH) {
+            throw new IllegalArgumentException("EUI64 address must be exactly 8 bytes");
+        }
+        byte[] out = new byte[EUI64_LENGTH];
+        System.arraycopy(address, 0, out, 0, EUI64_LENGTH);
+        return out;
     }
 }
