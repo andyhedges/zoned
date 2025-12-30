@@ -6,6 +6,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for the ANY meta-type.
+ *
+ * <p>ANY has no defined RDATA; it is used for queries rather than data storage.</p>
+ 
+ *
+ * <pre>
+ * +--------+--------------+---------------------------+
+ * | Field  | Size (octets)| Description               |
+ * +--------+--------------+---------------------------+
+ * | RDATA  | 0            | Not used for ANY records. |
+ * +--------+--------------+---------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

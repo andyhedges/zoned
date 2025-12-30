@@ -6,6 +6,21 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS RP record RDATA.
+ *
+ * <p>RDATA is mailbox domain name and text domain name.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | MboxDNAME | variable     | Mailbox domain name.       |
+ * | TxtDNAME  | variable     | Text domain name.          |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

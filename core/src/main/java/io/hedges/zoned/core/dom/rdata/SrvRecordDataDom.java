@@ -7,6 +7,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS SRV record RDATA.
+ *
+ * <p>RDATA is priority (16-bit), weight (16-bit), port (16-bit), and target name.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | Priority  | 2            | Service priority.          |
+ * | Weight    | 2            | Load balancing weight.     |
+ * | Port      | 2            | Service port.              |
+ * | Target    | variable     | Target name.               |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

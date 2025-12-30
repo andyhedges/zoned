@@ -6,6 +6,25 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS NSEC3PARAM record RDATA.
+ *
+ * <p>RDATA is hash algorithm (8-bit), flags (8-bit), iterations (16-bit),
+ * salt length (8-bit), and salt.</p>
+ 
+ *
+ * <pre>
+ * +-------------+--------------+----------------------------+
+ * | Field       | Size (octets)| Description                |
+ * +-------------+--------------+----------------------------+
+ * | HashAlg     | 1            | Hash algorithm.            |
+ * | Flags       | 1            | NSEC3 flags.               |
+ * | Iterations  | 2            | Iteration count.           |
+ * | SaltLength  | 1            | Salt length.               |
+ * | Salt        | variable     | Salt bytes.                |
+ * +-------------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

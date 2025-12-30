@@ -8,6 +8,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS CNAME record RDATA.
+ *
+ * <p>RDATA is a target domain name.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | Target    | variable     | Domain name (wire format). |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

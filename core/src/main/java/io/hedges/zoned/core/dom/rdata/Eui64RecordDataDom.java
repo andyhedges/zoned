@@ -6,6 +6,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS EUI64 record RDATA.
+ *
+ * <p>RDATA is an 8-octet EUI-64 identifier.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | Identifier| 8            | EUI-64 bytes.              |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

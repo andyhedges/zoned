@@ -6,6 +6,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS URI record RDATA.
+ *
+ * <p>RDATA is priority (16-bit), weight (16-bit), and target URI bytes.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | Priority  | 2            | URI priority.              |
+ * | Weight    | 2            | URI weight.                |
+ * | Target    | variable     | URI bytes.                 |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

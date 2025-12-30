@@ -10,6 +10,22 @@ import lombok.ToString;
 
 import java.util.SortedMap;
 
+/**
+ * Domain model for DNS SVCB record RDATA.
+ *
+ * <p>RDATA is SvcPriority (16-bit), target name, and service parameters.</p>
+ 
+ *
+ * <pre>
+ * +-------------+--------------+----------------------------+
+ * | Field       | Size (octets)| Description                |
+ * +-------------+--------------+----------------------------+
+ * | SvcPriority | 2            | Service priority.          |
+ * | TargetName  | variable     | Target name.               |
+ * | SvcParams   | variable     | Service parameters.        |
+ * +-------------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

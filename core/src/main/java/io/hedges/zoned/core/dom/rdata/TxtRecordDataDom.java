@@ -36,7 +36,16 @@ import java.util.List;
  * RFC&nbsp;1035&nbsp;§3.3.14 (TXT RDATA format)
  * </a>
  * for the normative definitions.</p>
- */
+ 
+ *
+ * <pre>
+ * +----------------+--------------+----------------------------+
+ * | Field          | Size (octets)| Description                |
+ * +----------------+--------------+----------------------------+
+ * | CharacterString| variable     | Length-prefixed bytes.     |
+ * +----------------+--------------+----------------------------+
+ * </pre>
+*/
 public class TxtRecordDataDom implements RDataDom {
 
     private List<byte[]> characterStrings;

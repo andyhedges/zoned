@@ -10,6 +10,23 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * Domain model for DNS OPT (EDNS) record RDATA.
+ *
+ * <p>RDATA is a sequence of EDNS options, each encoded as
+ * option code (16-bit), option length (16-bit), and option data.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | OptCode   | 2            | Option code.               |
+ * | OptLength | 2            | Option length.             |
+ * | OptData   | variable     | Option data bytes.         |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

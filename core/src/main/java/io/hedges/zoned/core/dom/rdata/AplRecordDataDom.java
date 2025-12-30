@@ -9,6 +9,25 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Domain model for DNS APL record RDATA.
+ *
+ * <p>RDATA is a sequence of address-prefix items:
+ * address family (16-bit), prefix length (8-bit), length/negation (8-bit),
+ * followed by address bytes.</p>
+ 
+ *
+ * <pre>
+ * +---------------+--------------+----------------------------------+
+ * | Field         | Size (octets)| Description                      |
+ * +---------------+--------------+----------------------------------+
+ * | Family        | 2            | Address family.                  |
+ * | PrefixLength  | 1            | Prefix length.                   |
+ * | Length/Neg    | 1            | Negation flag and address length.|
+ * | Address       | variable     | Address bytes (per item).        |
+ * +---------------+--------------+----------------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

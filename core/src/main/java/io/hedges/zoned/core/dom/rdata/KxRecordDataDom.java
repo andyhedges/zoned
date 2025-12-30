@@ -6,6 +6,21 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Domain model for DNS KX record RDATA.
+ *
+ * <p>RDATA is preference (16-bit) and exchanger domain name.</p>
+ 
+ *
+ * <pre>
+ * +-----------+--------------+----------------------------+
+ * | Field     | Size (octets)| Description                |
+ * +-----------+--------------+----------------------------+
+ * | Preference| 2            | Key exchange preference.   |
+ * | Exchanger | variable     | Domain name (wire format). |
+ * +-----------+--------------+----------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString

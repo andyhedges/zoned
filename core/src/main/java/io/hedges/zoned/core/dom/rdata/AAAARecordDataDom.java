@@ -8,6 +8,20 @@ import lombok.ToString;
 
 import java.net.Inet6Address;
 
+/**
+ * Domain model for DNS AAAA record RDATA.
+ *
+ * <p>RDATA is a 16-octet IPv6 address.</p>
+ 
+ *
+ * <pre>
+ * +----------+--------------+------------------------+
+ * | Field    | Size (octets)| Description            |
+ * +----------+--------------+------------------------+
+ * | Address  | 16           | IPv6 address.          |
+ * +----------+--------------+------------------------+
+ * </pre>
+*/
 @Getter
 @Builder
 @ToString
