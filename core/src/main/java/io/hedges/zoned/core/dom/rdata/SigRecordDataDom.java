@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.core.dom.rdata;
 
+import io.hedges.zoned.core.NameResolver;
+import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,13 +38,48 @@ import lombok.ToString;
 @Builder
 @ToString
 public class SigRecordDataDom implements RDataDom {
+    private int typeCovered;
+    private int algorithm;
+    private int labels;
+    private long originalTtl;
+    private long signatureExpiration;
+    private long signatureInception;
+    private int keyTag;
+    private DnsNameDom signerName;
+    private byte[] signature;
 
     public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        return from(rdata, null);
+    }
+
+    public static RDataDom from(byte[] rdata, NameResolver resolver) {
+        RrsigRdataCodec.SigFields fields = RrsigRdataCodec.parse(rdata, resolver, "SIG");
+        return SigRecordDataDom.builder()
+                .typeCovered(fields.typeCovered())
+                .algorithm(fields.algorithm())
+                .labels(fields.labels())
+                .originalTtl(fields.originalTtl())
+                .signatureExpiration(fields.signatureExpiration())
+                .signatureInception(fields.signatureInception())
+                .keyTag(fields.keyTag())
+                .signerName(fields.signerName())
+                .signature(fields.signature())
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        return RrsigRdataCodec.encode(
+                typeCovered,
+                algorithm,
+                labels,
+                originalTtl,
+                signatureExpiration,
+                signatureInception,
+                keyTag,
+                signerName,
+                signature,
+                "SIG"
+        );
     }
 }
