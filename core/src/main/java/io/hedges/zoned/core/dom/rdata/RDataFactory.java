@@ -48,8 +48,8 @@ public class RDataFactory {
             case OPT -> OptRecordDataDom.from(bytes);
             case PTR -> PtrRecordDataDom.from(bytes, resolver);
             case RP -> RpRecordDataDom.from(bytes, resolver);
-            case RRSIG -> RrsigRecordDataDom.from(bytes);
-            case SIG -> SigRecordDataDom.from(bytes);
+            case RRSIG -> RrsigRecordDataDom.from(bytes, resolver);
+            case SIG -> SigRecordDataDom.from(bytes, resolver);
             case SMIMEA -> SmimeaRecordDataDom.from(bytes);
             case SOA -> SoaRecordDataDom.from(bytes, resolver);
             case SSHFP -> SshfpRecordDataDom.from(bytes);

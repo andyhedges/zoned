@@ -7,6 +7,8 @@ import io.hedges.zoned.test.integration.UnboundContainer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.xbill.DNS.DClass;
+import org.xbill.DNS.Lookup;
 import org.xbill.DNS.SimpleResolver;
 
 import java.io.IOException;
@@ -26,6 +28,7 @@ abstract class DnsSimpleBaseIT {
     static void startZoned() throws Exception {
         UnboundContainer.getContainer();
         appPort = findFreePort();
+        System.out.println("Starting zoned for integration tests on port " + appPort);
         configPath = writeConfig(appPort);
         server = ZonedApp.start(configPath, null).server();
     }
