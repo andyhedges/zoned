@@ -1,19 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.test.integration.simple;
 
-import io.hedges.zoned.test.integration.UnboundContainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.xbill.DNS.DClass;
 import org.xbill.DNS.Message;
 import org.xbill.DNS.Name;
-import org.xbill.DNS.OPTRecord;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.SIGRecord;
-import org.xbill.DNS.SimpleResolver;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
-import org.xbill.DNS.ExtendedFlags;
 
 import java.io.IOException;
 import java.time.Instant;

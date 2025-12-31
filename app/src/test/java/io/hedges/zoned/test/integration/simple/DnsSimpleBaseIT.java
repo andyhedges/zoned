@@ -7,8 +7,6 @@ import io.hedges.zoned.test.integration.UnboundContainer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.xbill.DNS.DClass;
-import org.xbill.DNS.Lookup;
 import org.xbill.DNS.SimpleResolver;
 
 import java.io.IOException;
