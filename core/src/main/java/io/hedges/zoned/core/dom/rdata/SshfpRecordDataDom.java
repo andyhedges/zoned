@@ -28,13 +28,44 @@ import lombok.ToString;
 @Builder
 @ToString
 public class SshfpRecordDataDom implements RDataDom {
+    private int algorithm;
+    private int fingerprintType;
+    private byte[] fingerprint;
 
     public static RDataDom from(byte[] rdata) {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (rdata == null || rdata.length < 3) {
+            throw new IllegalArgumentException("SSHFP RDATA requires algorithm, fingerprint type, and data");
+        }
+        int algorithm = RDataUtils.readU8(rdata, 0);
+        int fingerprintType = RDataUtils.readU8(rdata, 1);
+        int fingerprintLength = rdata.length - 2;
+        if (fingerprintLength <= 0) {
+            throw new IllegalArgumentException("SSHFP fingerprint must not be empty");
+        }
+        byte[] fingerprint = new byte[fingerprintLength];
+        System.arraycopy(rdata, 2, fingerprint, 0, fingerprintLength);
+        return SshfpRecordDataDom.builder()
+                .algorithm(algorithm)
+                .fingerprintType(fingerprintType)
+                .fingerprint(fingerprint)
+                .build();
     }
 
     @Override
     public byte[] to() {
-        throw new UnsupportedOperationException("Not Implemented"); //TODO
+        if (algorithm < 0 || algorithm > 0xFF) {
+            throw new IllegalArgumentException("SSHFP algorithm must be between 0 and 255");
+        }
+        if (fingerprintType < 0 || fingerprintType > 0xFF) {
+            throw new IllegalArgumentException("SSHFP fingerprint type must be between 0 and 255");
+        }
+        if (fingerprint == null || fingerprint.length == 0) {
+            throw new IllegalArgumentException("SSHFP fingerprint must not be empty");
+        }
+        byte[] out = new byte[2 + fingerprint.length];
+        out[0] = (byte) (algorithm & 0xFF);
+        out[1] = (byte) (fingerprintType & 0xFF);
+        System.arraycopy(fingerprint, 0, out, 2, fingerprint.length);
+        return out;
     }
 }
