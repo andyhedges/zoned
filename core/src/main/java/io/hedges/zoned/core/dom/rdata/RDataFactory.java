@@ -56,7 +56,7 @@ public class RDataFactory {
             case SRV -> SrvRecordDataDom.from(bytes, resolver);
             case SVCB -> SvcbRecordDataDom.from(bytes);
             case TA -> TaRecordDataDom.from(bytes);
-            case TKEY -> TkeyRecordDataDom.from(bytes);
+            case TKEY -> TkeyRecordDataDom.from(bytes, resolver);
             case TLSA -> TlsaRecordDataDom.from(bytes);
             case TSIG -> TsigRecordDataDom.from(bytes);
             case TXT -> TxtRecordDataDom.from(bytes);
