@@ -124,7 +124,8 @@
         <configuration>
           <configLocation>config/checkstyle.xml</configLocation>
           <consoleOutput>true</consoleOutput>
-          <failsOnError>true</failsOnError>
+          <failOnViolation>true</failOnViolation>
+          <logViolationsToConsole>true</logViolationsToConsole>
           <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
         </configuration>
         <executions>
@@ -146,6 +147,14 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <failOnViolation>true</failOnViolation>
+          <printFailingErrors>true</printFailingErrors>
+          <rulesets>
+            <ruleset>${session.topLevelProject.basedir}/config/pmd.xml</ruleset>
+          </rulesets>
+          <includeTests>true</includeTests>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

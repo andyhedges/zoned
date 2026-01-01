@@ -28,8 +28,8 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<UdpDnsInbou
 
         requestHandler.handle(drc).whenComplete((response, t) -> {
 
-            if(t != null) {
-                t.printStackTrace(); //TODO return appropriate protocol error
+            if (t != null) {
+                log.error("Error processing DNS request", t); // TODO return appropriate protocol error
             }
 
             if (response == null) {
@@ -39,6 +39,5 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<UdpDnsInbou
             ctx.writeAndFlush(new UdpDnsOutbound(response, inbound.sender()));
         });
     }
-
 
 }

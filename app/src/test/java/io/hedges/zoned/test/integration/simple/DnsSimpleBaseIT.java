@@ -26,7 +26,6 @@ abstract class DnsSimpleBaseIT {
     static void startZoned() throws Exception {
         UnboundContainer.getContainer();
         appPort = findFreePort();
-        System.out.println("Starting zoned for integration tests on port " + appPort);
         configPath = writeConfig(appPort);
         server = ZonedApp.start(configPath, null).server();
     }

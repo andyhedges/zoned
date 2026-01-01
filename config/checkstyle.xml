@@ -10,14 +10,6 @@
     <property name="header" value="^// SPDX-License-Identifier: Apache-2.0$"/>
     <property name="fileExtensions" value="java"/>
   </module>
-  <module name="RegexpSinglelineJava">
-    <property name="format" value="\bnew\s+Print(?:Writer|Stream)\b.*System\.(out|err)\b"/>
-    <message key="regexp.singlelinejava" value="Avoid wrapping System.out/System.err in PrintWriter/PrintStream; use a logger."/>
-  </module>
-  <module name="RegexpSinglelineJava">
-    <property name="format" value="\bSystem\.console\(\)\.(printf|format|append)\b"/>
-    <message key="regexp.singlelinejava" value="Avoid System.console() output; use a logger."/>
-  </module>
   <module name="TreeWalker">
     <module name="UnusedImports" />
     <module name="MissingOverride"/>
@@ -31,15 +23,21 @@
             value="//VARIABLE_DEF[./TYPE/IDENT[@text='var']]" />
       <message key="matchxpath.match" value="Avoid 'var'; use an explicit type."/>
     </module>
-    <module name="IllegalTokenText">
-      <property name="tokens" value="METHOD_CALL"/>
-      <property name="format" value="System\.(out|err)\.(print|println|printf|format|append|write)"/>
-      <message key="illegal.token.text" value="Avoid System.out.println/System.err.println/print/printf/format/append/write; use a logger."/>
+    <module name="RegexpSinglelineJava">
+      <property name="format" value="\bSystem\.(out|err)\.(print|println|printf|format|append|write)\b"/>
+      <message key="regexp.singlelinejava" value="Avoid System.out/System.err output; use a logger."/>
     </module>
-    <module name="IllegalTokenText">
-      <property name="tokens" value="METHOD_CALL"/>
-      <property name="format" value="printStackTrace"/>
-      <message key="illegal.token.text" value="Avoid printStackTrace; use a logger."/>
+    <module name="RegexpSinglelineJava">
+      <property name="format" value="\bprintStackTrace\s*\("/>
+      <message key="regexp.singlelinejava" value="Avoid printStackTrace; use a logger."/>
+    </module>
+    <module name="RegexpSinglelineJava">
+      <property name="format" value="\bnew\s+Print(?:Writer|Stream)\b.*System\.(out|err)\b"/>
+      <message key="regexp.singlelinejava" value="Avoid wrapping System.out/System.err in PrintWriter/PrintStream; use a logger."/>
+    </module>
+    <module name="RegexpSinglelineJava">
+      <property name="format" value="\bSystem\.console\(\)\.(printf|format|append)\b"/>
+      <message key="regexp.singlelinejava" value="Avoid System.console() output; use a logger."/>
     </module>
 
   </module>
