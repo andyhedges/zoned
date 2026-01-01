@@ -1,4 +1,4 @@
-name: "🌐 ZONED: Dependency Checks"
+name: "🌐 ZONED 🌐 : Dependency Checks"
 
 on:
   workflow_dispatch:
