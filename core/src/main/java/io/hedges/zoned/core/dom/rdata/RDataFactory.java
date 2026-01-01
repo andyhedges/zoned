@@ -53,7 +53,7 @@ public class RDataFactory {
             case SMIMEA -> SmimeaRecordDataDom.from(bytes);
             case SOA -> SoaRecordDataDom.from(bytes, resolver);
             case SSHFP -> SshfpRecordDataDom.from(bytes);
-            case SRV -> SrvRecordDataDom.from(bytes);
+            case SRV -> SrvRecordDataDom.from(bytes, resolver);
             case SVCB -> SvcbRecordDataDom.from(bytes);
             case TA -> TaRecordDataDom.from(bytes);
             case TKEY -> TkeyRecordDataDom.from(bytes);
