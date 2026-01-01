@@ -32,6 +32,7 @@ import java.util.List;
 @Getter
 @Builder
 @ToString
+@MetaRDataType
 public class OptRecordDataDom implements RDataDom {
     private int udpPayloadSize;
     private int extendedRCode;
