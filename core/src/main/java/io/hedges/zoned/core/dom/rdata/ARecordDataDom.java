@@ -22,7 +22,9 @@ import java.net.Inet4Address;
  * +----------+--------------+------------------------+
  * </pre>
 
- * <p>Purpose: Maps a host name to an IPv4 address.</p>
+ * <p>Purpose: Maps a host name to an IPv4 address so clients can reach a specific interface.</p>
+ * <p>This is the most common forward-lookup record and is frequently published in sets to provide
+ * redundancy, load distribution, or multi-homing.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder

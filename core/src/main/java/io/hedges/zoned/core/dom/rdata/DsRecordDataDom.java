@@ -23,7 +23,9 @@ import lombok.ToString;
  * +-----------+--------------+----------------------------+
  * </pre>
 
- * <p>Purpose: Delegation Signer (DS) record that links a parent zone to a child zone’s DNSSEC key via a digest.</p>
+ * <p>Purpose: Delegation Signer (DS) record that links a parent zone to a child's DNSSEC key via a digest.</p>
+ * <p>Published in the parent zone, it contains a hash of the child's DNSKEY and lets validators chain
+ * trust from the parent into the child zone.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4034">RFC 4034</a>.</p>*/
 @Getter
 @Builder

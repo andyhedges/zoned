@@ -33,6 +33,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Holds DNSSEC signatures in the legacy SIG format (obsolete).</p>
+ * <p>It predates RRSIG and is retained for historical compatibility; modern DNSSEC deployments use
+ * RRSIG with DNSKEY instead.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc2535">RFC 2535</a>.</p>*/
 @Getter
 @Builder

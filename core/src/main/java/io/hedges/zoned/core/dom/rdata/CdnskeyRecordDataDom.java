@@ -24,6 +24,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes child DNSKEY records to signal the parent which keys to use for Delegation Signer (DS) synchronization.</p>
+ * <p>It allows a child zone to convey DNSKEY material directly, enabling automated DS management by the parent
+ * without out-of-band key exchange.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7344">RFC 7344</a>.</p>*/
 @Getter
 @Builder

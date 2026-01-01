@@ -23,6 +23,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Creates an alias from one domain name to another so queries are redirected to the canonical name.</p>
+ * <p>It is useful for branding or service moves, but a CNAME cannot coexist with other data at the same owner
+ * name (aside from DNSSEC-related records).</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder

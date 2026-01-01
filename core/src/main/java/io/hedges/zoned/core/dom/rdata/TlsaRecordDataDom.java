@@ -25,6 +25,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes TLSA data that binds TLS certificates or public keys to a domain (DANE).</p>
+ * <p>TLSA records are used with service endpoints (such as _port._proto names) to specify which
+ * certificate or public key is acceptable, reducing reliance on external certificate authorities.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc6698">RFC 6698</a>.</p>*/
 @Getter
 @Builder

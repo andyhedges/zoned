@@ -22,7 +22,9 @@ import java.net.Inet6Address;
  * +----------+--------------+------------------------+
  * </pre>
 
- * <p>Purpose: Maps a host name to an IPv6 address.</p>
+ * <p>Purpose: Maps a host name to an IPv6 address so clients can reach a specific interface.</p>
+ * <p>It serves the same role as A records for modern networks and is commonly published alongside
+ * A records for dual-stack connectivity and failover.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc3596">RFC 3596</a>.</p>*/
 @Getter
 @Builder

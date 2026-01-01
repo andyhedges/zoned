@@ -24,6 +24,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Specifies a Key Exchange (KX) server for a domain, similar to MX but for key exchange services.</p>
+ * <p>The preference value orders candidate servers, allowing fallback and load distribution for
+ * key exchange endpoints.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc2230">RFC 2230</a>.</p>*/
 @Getter
 @Builder

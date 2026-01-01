@@ -24,6 +24,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes Andrew File System (AFS) database server information so clients can locate AFS services.</p>
+ * <p>The subtype indicates the specific AFS-related service, and the hostname points clients to the
+ * appropriate server for that service.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1183">RFC 1183</a>.</p>*/
 @Getter
 @Builder

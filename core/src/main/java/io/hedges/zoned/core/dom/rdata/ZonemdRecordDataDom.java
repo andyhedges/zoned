@@ -23,6 +23,8 @@ import lombok.ToString;
  * </pre>
  
  * <p>Purpose: Publishes zone content digests so consumers can verify zone integrity.</p>
+ * <p>It allows offline or secondary consumers to validate that a zone's contents match the published
+ * digest for a given serial and hashing scheme.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc8976">RFC 8976</a>.</p>*/
 @Getter
 @Builder

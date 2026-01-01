@@ -30,6 +30,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Provides DNSSEC authenticated denial of existence using hashed names to reduce zone enumeration.</p>
+ * <p>NSEC3 uses hashing, salt, and iterations to obscure owner names while still proving non-existence,
+ * and can optionally use opt-out to reduce signed data for unsigned delegations.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc5155">RFC 5155</a>.</p>*/
 @Getter
 @Builder

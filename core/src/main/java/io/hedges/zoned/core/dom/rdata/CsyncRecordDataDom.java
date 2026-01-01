@@ -32,6 +32,8 @@ import java.util.TreeMap;
  * </pre>
 
  * <p>Purpose: Signals which records (typically NS and related types) a parent should synchronize for a child zone, using a serial and type bitmap.</p>
+ * <p>CSYNC helps align parent and child data (such as NS or DS) without manual coordination, and the
+ * serial allows parents to ignore stale updates.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7477">RFC 7477</a>.</p>*/
 @Getter
 @Builder

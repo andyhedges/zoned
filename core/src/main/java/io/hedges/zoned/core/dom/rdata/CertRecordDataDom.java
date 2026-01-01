@@ -24,6 +24,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes certificates or related public key material in DNS, including the certificate type and associated data.</p>
+ * <p>It can carry multiple certificate formats (such as PKIX or OpenPGP) and was intended to simplify key
+ * discovery, though it is less commonly used in modern deployments.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4398">RFC 4398</a>.</p>*/
 @Getter
 @Builder

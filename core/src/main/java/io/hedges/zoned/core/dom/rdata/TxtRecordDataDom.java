@@ -47,6 +47,8 @@ import java.util.List;
  * </pre>
 
  * <p>Purpose: Carries arbitrary text or binary data in one or more character strings.</p>
+ * <p>TXT is widely used for policy and verification records (for example, sender policies and domain
+ * control proofs), but DNS itself treats the content as opaque bytes.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 public class TxtRecordDataDom implements RDataDom {
 

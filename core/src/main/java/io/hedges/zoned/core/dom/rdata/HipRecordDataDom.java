@@ -31,6 +31,8 @@ import java.util.List;
  * </pre>
  
  * <p>Purpose: Publishes Host Identity Protocol (HIP) data including the Host Identity Tag (HIT), public key, and optional rendezvous servers.</p>
+ * <p>HIP separates identity from location, and these records let clients discover the cryptographic identity
+ * and any rendezvous servers used to reach a mobile or multi-homed host.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc8005">RFC 8005</a>.</p>*/
 @Getter
 @Builder

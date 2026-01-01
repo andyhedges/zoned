@@ -23,6 +23,8 @@ import java.util.SortedMap;
  * </pre>
 
  * <p>Purpose: Base representation for Service Binding (SVCB) and HTTPS records.</p>
+ * <p>This class exists to share the common wire format and parameter handling for both types, which
+ * differ only in record type semantics.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc9460">RFC 9460</a>.</p>*/
 abstract class SvcbLikeRecordDataDom implements RDataDom {
 

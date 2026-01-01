@@ -25,6 +25,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes S/MIME certificate association data for secure email (S/MIMEA).</p>
+ * <p>It binds an email address to a certificate or public key using usage, selector, and matching type
+ * fields, enabling secure email validation without relying solely on external certificate authorities.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc8162">RFC 8162</a>.</p>*/
 @Getter
 @Builder

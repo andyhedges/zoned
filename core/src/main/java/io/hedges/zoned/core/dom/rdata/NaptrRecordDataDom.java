@@ -30,6 +30,8 @@ import java.nio.charset.StandardCharsets;
  * </pre>
 
  * <p>Purpose: Provides Naming Authority Pointer (NAPTR) rules for rewriting names for services like SIP and ENUM.</p>
+ * <p>NAPTR is often used in multi-step resolution workflows, where order and preference guide which
+ * rewrite or service rule to apply first.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc3403">RFC 3403</a>.</p>*/
 @Getter
 @Builder

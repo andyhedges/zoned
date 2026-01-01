@@ -24,6 +24,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes DNS public keys using the legacy KEY record format (now obsolete).</p>
+ * <p>It was used by early DNS security extensions and other protocols, but modern DNSSEC uses DNSKEY
+ * and RRSIG instead.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc2535">RFC 2535</a>.</p>*/
 @Getter
 @Builder

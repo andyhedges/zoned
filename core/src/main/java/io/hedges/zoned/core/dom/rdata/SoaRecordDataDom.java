@@ -29,6 +29,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Defines the Start of Authority (SOA) for a zone, including serial and timing parameters.</p>
+ * <p>It drives zone transfers and negative caching behavior by publishing the authoritative serial number
+ * and refresh/retry/expire/minimum timers used by secondaries and resolvers.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder

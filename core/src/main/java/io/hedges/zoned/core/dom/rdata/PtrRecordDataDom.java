@@ -23,6 +23,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Maps an IP address to a domain name for reverse lookups.</p>
+ * <p>PTR records live under reverse zones (such as in-addr.arpa and ip6.arpa) and are commonly used
+ * for diagnostics, logging, and service validation.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder

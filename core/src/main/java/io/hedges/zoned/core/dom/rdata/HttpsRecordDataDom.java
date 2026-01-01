@@ -30,6 +30,8 @@ import java.util.SortedMap;
  * </pre>
  
  * <p>Purpose: Publishes HTTPS Service Binding (SVCB) data that informs clients how to reach HTTPS services.</p>
+ * <p>It can advertise alternative endpoints, protocols, and configuration hints for HTTPS connections,
+ * enabling clients to optimize connection establishment.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc9460">RFC 9460</a>.</p>*/
 @Getter
 @Builder

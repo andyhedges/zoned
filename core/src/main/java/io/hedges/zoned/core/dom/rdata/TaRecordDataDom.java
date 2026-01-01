@@ -24,6 +24,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes DNSSEC trust anchors in the legacy TA record format (obsolete).</p>
+ * <p>TA records were used for distributing trust anchors but are superseded by modern DNSSEC practices
+ * such as managed DNSKEY/DS trust anchors.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4431">RFC 4431</a>.</p>*/
 @Getter
 @Builder

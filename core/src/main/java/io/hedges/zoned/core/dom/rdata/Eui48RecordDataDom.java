@@ -21,6 +21,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes an IEEE Extended Unique Identifier 48-bit (EUI-48) value, commonly a MAC address.</p>
+ * <p>It provides a standardized way to associate hardware identifiers with DNS names for inventory,
+ * management, or lookup purposes.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7043">RFC 7043</a>.</p>*/
 @Getter
 @Builder

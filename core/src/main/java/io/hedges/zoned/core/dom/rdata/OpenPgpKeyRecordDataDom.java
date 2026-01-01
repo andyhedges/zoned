@@ -21,6 +21,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes OpenPGP public keys in DNS for email or identity verification.</p>
+ * <p>Keys are typically published under a hashed name derived from the local part of an email address,
+ * allowing clients to discover and validate the correct public key via DNS.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7929">RFC 7929</a>.</p>*/
 @Getter
 @Builder

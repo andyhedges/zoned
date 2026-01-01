@@ -23,6 +23,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes Uniform Resource Identifier (URI) data for a domain name.</p>
+ * <p>Priority and weight enable selection among multiple URIs, similar to SRV, and allow clients
+ * to discover application-specific endpoints via DNS.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7553">RFC 7553</a>.</p>*/
 @Getter
 @Builder

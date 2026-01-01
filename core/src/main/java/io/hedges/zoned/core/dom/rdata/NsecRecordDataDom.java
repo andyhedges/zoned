@@ -23,6 +23,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Provides DNSSEC authenticated denial of existence by indicating the next name and present types.</p>
+ * <p>NSEC records form a chain through the zone and can be used to prove that a name or type does not exist,
+ * but they also enable zone enumeration.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4034">RFC 4034</a>.</p>*/
 @Getter
 @Builder

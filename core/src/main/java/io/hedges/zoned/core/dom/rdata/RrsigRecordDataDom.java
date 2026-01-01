@@ -33,6 +33,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Holds DNSSEC signatures (RRSIG) that cover an RRset for validation.</p>
+ * <p>Validators check the signature with the referenced DNSKEY and the inception/expiration times to
+ * ensure the data is authentic and current.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4034">RFC 4034</a>.</p>*/
 @Getter
 @Builder

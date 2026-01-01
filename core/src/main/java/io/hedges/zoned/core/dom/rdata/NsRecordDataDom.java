@@ -23,6 +23,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Lists authoritative Name Server (NS) hosts for a zone.</p>
+ * <p>These records appear at a zone's apex and at delegation points, guiding resolvers to the servers
+ * that can answer for that zone's data.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder
