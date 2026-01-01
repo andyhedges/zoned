@@ -26,10 +26,10 @@ class SvcbAndHttpsRecordDataDomTest {
     @ParameterizedTest
     @MethodSource("recordTypes")
     void fromRejectsShortInput(RecordType type) {
-        assertThrows(IllegalArgumentException.class, () -> type.from(null));
-        assertThrows(IllegalArgumentException.class, () -> type.from(new byte[0]));
-        assertThrows(IllegalArgumentException.class, () -> type.from(new byte[1]));
-        assertThrows(IllegalArgumentException.class, () -> type.from(new byte[2]));
+        assertThrows(IllegalArgumentException.class, () -> type.from(null, null));
+        assertThrows(IllegalArgumentException.class, () -> type.from(new byte[0], null));
+        assertThrows(IllegalArgumentException.class, () -> type.from(new byte[1], null));
+        assertThrows(IllegalArgumentException.class, () -> type.from(new byte[2], null));
     }
 
     @ParameterizedTest
@@ -42,7 +42,7 @@ class SvcbAndHttpsRecordDataDomTest {
         byte[] paramKey5 = new byte[] {0, 5, 0, 3, 1, 2, 3};
         byte[] rdata = TestBytes.concat(priorityBytes, nameBytes, paramKey3, paramKey5);
 
-        RDataDom dom = type.from(rdata);
+        RDataDom dom = type.from(rdata, null);
 
         assertEquals(1, type.svcPriority(dom));
         assertEquals(List.of("svc", "example"), type.targetName(dom).labels());
@@ -121,7 +121,7 @@ class SvcbAndHttpsRecordDataDomTest {
         params.put(10, new byte[] {9, 8, 7});
         RDataDom original = type.build(12, name, params);
 
-        RDataDom decoded = type.from(original.to());
+        RDataDom decoded = type.from(original.to(), null);
 
         assertEquals(12, type.svcPriority(decoded));
         assertEquals(List.of("svc", "example"), type.targetName(decoded).labels());
@@ -132,11 +132,6 @@ class SvcbAndHttpsRecordDataDomTest {
 
     private enum RecordType {
         HTTPS {
-            @Override
-            RDataDom from(byte[] rdata) {
-                return HttpsRecordDataDom.from(rdata);
-            }
-
             @Override
             RDataDom from(byte[] rdata, NameResolver resolver) {
                 return HttpsRecordDataDom.from(rdata, resolver);
@@ -168,11 +163,6 @@ class SvcbAndHttpsRecordDataDomTest {
         },
         SVCB {
             @Override
-            RDataDom from(byte[] rdata) {
-                return SvcbRecordDataDom.from(rdata);
-            }
-
-            @Override
             RDataDom from(byte[] rdata, NameResolver resolver) {
                 return SvcbRecordDataDom.from(rdata, resolver);
             }
@@ -201,8 +191,6 @@ class SvcbAndHttpsRecordDataDomTest {
                 return assertInstanceOf(SvcbRecordDataDom.class, dom).svcParams();
             }
         };
-
-        abstract RDataDom from(byte[] rdata);
 
         abstract RDataDom from(byte[] rdata, NameResolver resolver);
 

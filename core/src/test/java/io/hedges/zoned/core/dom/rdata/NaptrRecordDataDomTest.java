@@ -17,50 +17,50 @@ class NaptrRecordDataDomTest {
 
     @Test
     void fromRejectsInvalidLength() {
-        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(null));
-        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(new byte[6]));
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(null, null));
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(new byte[6], null));
     }
 
     @Test
     void fromRejectsTruncatedStrings() {
         byte[] rdata = new byte[] {0, 1, 0, 2, 5, 'f'};
-        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata, null));
     }
 
     @Test
     void fromRejectsMissingServices() {
         byte[] rdata = new byte[] {0, 1, 0, 2, 0};
-        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata, null));
     }
 
     @Test
     void fromRejectsMissingRegexp() {
         byte[] rdata = new byte[] {0, 1, 0, 2, 0, 0};
-        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata, null));
     }
 
     @Test
     void fromRejectsTruncatedServices() {
         byte[] rdata = new byte[] {0, 1, 0, 2, 0, 3, 's'};
-        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata, null));
     }
 
     @Test
     void fromRejectsTruncatedRegexp() {
         byte[] rdata = new byte[] {0, 1, 0, 2, 0, 0, 2, 'r'};
-        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata, null));
     }
 
     @Test
     void fromRejectsMissingReplacement() {
         byte[] rdata = new byte[] {0, 1, 0, 2, 0, 0, 0};
-        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata, null));
     }
 
     @Test
     void fromRejectsInvalidReplacementName() {
         byte[] rdata = new byte[] {0, 1, 0, 2, 0, 0, 0, 0};
-        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata));
+        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata, null));
     }
 
     @Test
@@ -84,7 +84,7 @@ class NaptrRecordDataDomTest {
         idx += regexp.length;
         System.arraycopy(nameBytes, 0, rdata, idx, nameBytes.length);
 
-        RDataDom dom = NaptrRecordDataDom.from(rdata);
+        RDataDom dom = NaptrRecordDataDom.from(rdata, null);
         NaptrRecordDataDom naptr = assertInstanceOf(NaptrRecordDataDom.class, dom);
 
         assertEquals(10, naptr.order());
@@ -234,7 +234,7 @@ class NaptrRecordDataDomTest {
                 .replacement(replacement)
                 .build();
 
-        RDataDom decoded = NaptrRecordDataDom.from(original.to());
+        RDataDom decoded = NaptrRecordDataDom.from(original.to(), null);
         NaptrRecordDataDom parsed = assertInstanceOf(NaptrRecordDataDom.class, decoded);
 
         assertEquals(100, parsed.order());

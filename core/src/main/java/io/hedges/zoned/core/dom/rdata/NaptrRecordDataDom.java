@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.core.dom.rdata;
 
+import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
@@ -36,6 +37,7 @@ import java.nio.charset.StandardCharsets;
 @Getter
 @Builder
 @ToString
+@CompressableRData
 public class NaptrRecordDataDom implements RDataDom {
     private int order;
     private int preference;
@@ -44,7 +46,7 @@ public class NaptrRecordDataDom implements RDataDom {
     private String regexp;
     private DnsNameDom replacement;
 
-    public static RDataDom from(byte[] rdata) {
+    public static RDataDom from(byte[] rdata, NameResolver resolver) {
         if (rdata == null || rdata.length < 7) {
             throw new IllegalArgumentException("NAPTR RDATA requires order, preference, and fields");
         }
@@ -62,7 +64,7 @@ public class NaptrRecordDataDom implements RDataDom {
         }
         byte[] nameBytes = new byte[rdata.length - idx];
         System.arraycopy(rdata, idx, nameBytes, 0, nameBytes.length);
-        DnsNameDom replacement = RDataUtils.toDnsNameDom(nameBytes);
+        DnsNameDom replacement = RDataUtils.toDnsNameDom(nameBytes, resolver);
         return NaptrRecordDataDom.builder()
                 .order(order)
                 .preference(preference)

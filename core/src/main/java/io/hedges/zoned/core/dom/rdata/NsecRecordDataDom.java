@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.core.dom.rdata;
 
+import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
@@ -29,15 +30,16 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@CompressableRData
 public class NsecRecordDataDom implements RDataDom {
     private DnsNameDom nextName;
     private byte[] typeBitmaps;
 
-    public static RDataDom from(byte[] rdata) {
+    public static RDataDom from(byte[] rdata, NameResolver resolver) {
         if (rdata == null || rdata.length == 0) {
             throw new IllegalArgumentException("NSEC RDATA is empty");
         }
-        RDataUtils.DnsNameParseResult parsed = RDataUtils.parseDnsName(rdata, 0, null);
+        RDataUtils.DnsNameParseResult parsed = RDataUtils.parseDnsName(rdata, 0, resolver);
         int idx = parsed.nextIndex();
         if (idx >= rdata.length) {
             throw new IllegalArgumentException("NSEC type bitmaps are missing");

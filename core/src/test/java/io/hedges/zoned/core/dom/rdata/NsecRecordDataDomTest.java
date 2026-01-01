@@ -16,14 +16,14 @@ class NsecRecordDataDomTest {
 
     @Test
     void fromRejectsEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> NsecRecordDataDom.from(null));
-        assertThrows(IllegalArgumentException.class, () -> NsecRecordDataDom.from(new byte[0]));
+        assertThrows(IllegalArgumentException.class, () -> NsecRecordDataDom.from(null, null));
+        assertThrows(IllegalArgumentException.class, () -> NsecRecordDataDom.from(new byte[0], null));
     }
 
     @Test
     void fromRejectsMissingTypeBitmaps() {
         byte[] rdata = new byte[] {1, 'a', 0};
-        assertThrows(IllegalArgumentException.class, () -> NsecRecordDataDom.from(rdata));
+        assertThrows(IllegalArgumentException.class, () -> NsecRecordDataDom.from(rdata, null));
     }
 
     @Test
@@ -35,7 +35,7 @@ class NsecRecordDataDomTest {
         System.arraycopy(nameBytes, 0, rdata, 0, nameBytes.length);
         System.arraycopy(typeBitmaps, 0, rdata, nameBytes.length, typeBitmaps.length);
 
-        RDataDom dom = NsecRecordDataDom.from(rdata);
+        RDataDom dom = NsecRecordDataDom.from(rdata, null);
         NsecRecordDataDom nsec = assertInstanceOf(NsecRecordDataDom.class, dom);
 
         assertEquals(List.of("next", "example", "test"), nsec.nextName().labels());
@@ -86,7 +86,7 @@ class NsecRecordDataDomTest {
                 .typeBitmaps(typeBitmaps)
                 .build();
 
-        RDataDom decoded = NsecRecordDataDom.from(original.to());
+        RDataDom decoded = NsecRecordDataDom.from(original.to(), null);
         NsecRecordDataDom parsed = assertInstanceOf(NsecRecordDataDom.class, decoded);
 
         assertEquals(List.of("next", "example", "test"), parsed.nextName().labels());

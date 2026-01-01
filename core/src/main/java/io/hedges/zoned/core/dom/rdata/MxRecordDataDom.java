@@ -29,6 +29,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@CompressableRData
 public class MxRecordDataDom implements RDataDom {
     private int preference;
     private DnsNameDom exchange;

@@ -16,26 +16,26 @@ class IpseckeyRecordDataDomTest {
 
     @Test
     void fromRejectsInvalidLength() {
-        assertThrows(IllegalArgumentException.class, () -> IpseckeyRecordDataDom.from(null));
-        assertThrows(IllegalArgumentException.class, () -> IpseckeyRecordDataDom.from(new byte[2]));
+        assertThrows(IllegalArgumentException.class, () -> IpseckeyRecordDataDom.from(null, null));
+        assertThrows(IllegalArgumentException.class, () -> IpseckeyRecordDataDom.from(new byte[2], null));
     }
 
     @Test
     void fromRejectsUnsupportedGatewayType() {
         byte[] rdata = new byte[] {0, 4, 1};
-        assertThrows(IllegalArgumentException.class, () -> IpseckeyRecordDataDom.from(rdata));
+        assertThrows(IllegalArgumentException.class, () -> IpseckeyRecordDataDom.from(rdata, null));
     }
 
     @Test
     void fromRejectsTruncatedGateway() {
-        assertThrows(IllegalArgumentException.class, () -> IpseckeyRecordDataDom.from(new byte[] {0, 1, 1, 1}));
-        assertThrows(IllegalArgumentException.class, () -> IpseckeyRecordDataDom.from(new byte[] {0, 2, 1, 1, 2, 3}));
+        assertThrows(IllegalArgumentException.class, () -> IpseckeyRecordDataDom.from(new byte[] {0, 1, 1, 1}, null));
+        assertThrows(IllegalArgumentException.class, () -> IpseckeyRecordDataDom.from(new byte[] {0, 2, 1, 1, 2, 3}, null));
     }
 
     @Test
     void fromParsesIpv4Gateway() {
         byte[] rdata = new byte[] {10, 1, 1, 1, 2, 3, 4, 9, 8};
-        RDataDom dom = IpseckeyRecordDataDom.from(rdata);
+        RDataDom dom = IpseckeyRecordDataDom.from(rdata, null);
         IpseckeyRecordDataDom ipseckey = assertInstanceOf(IpseckeyRecordDataDom.class, dom);
 
         assertEquals(10, ipseckey.precedence());
@@ -59,7 +59,7 @@ class IpseckeyRecordDataDomTest {
         rdata[idx++] = 7;
         rdata[idx] = 6;
 
-        RDataDom dom = IpseckeyRecordDataDom.from(rdata);
+        RDataDom dom = IpseckeyRecordDataDom.from(rdata, null);
         IpseckeyRecordDataDom ipseckey = assertInstanceOf(IpseckeyRecordDataDom.class, dom);
 
         assertEquals(5, ipseckey.precedence());
@@ -145,7 +145,7 @@ class IpseckeyRecordDataDomTest {
                 .publicKey(new byte[] {5, 6})
                 .build();
 
-        RDataDom decoded = IpseckeyRecordDataDom.from(original.to());
+        RDataDom decoded = IpseckeyRecordDataDom.from(original.to(), null);
         IpseckeyRecordDataDom parsed = assertInstanceOf(IpseckeyRecordDataDom.class, decoded);
 
         assertEquals(3, parsed.precedence());

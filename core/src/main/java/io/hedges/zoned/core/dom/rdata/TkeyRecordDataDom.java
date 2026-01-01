@@ -37,7 +37,8 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-@MetaRDataType
+@MetaTypeRData
+@CompressableRData
 public class TkeyRecordDataDom implements RDataDom {
     private DnsNameDom algorithm;
     private long inception;
@@ -46,10 +47,6 @@ public class TkeyRecordDataDom implements RDataDom {
     private int error;
     private byte[] keyData;
     private byte[] otherData;
-
-    public static RDataDom from(byte[] rdata) {
-        return from(rdata, null);
-    }
 
     public static RDataDom from(byte[] rdata, NameResolver resolver) {
         if (rdata == null) {

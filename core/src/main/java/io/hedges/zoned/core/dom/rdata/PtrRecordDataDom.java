@@ -29,6 +29,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@CompressableRData
 public class PtrRecordDataDom implements RDataDom {
 
     private DnsNameDom ptrName;

@@ -19,8 +19,8 @@ class HipRecordDataDomTest {
 
     @Test
     void fromRejectsInvalidLength() {
-        assertThrows(IllegalArgumentException.class, () -> HipRecordDataDom.from(null));
-        assertThrows(IllegalArgumentException.class, () -> HipRecordDataDom.from(new byte[4]));
+        assertThrows(IllegalArgumentException.class, () -> HipRecordDataDom.from(null, null));
+        assertThrows(IllegalArgumentException.class, () -> HipRecordDataDom.from(new byte[4], null));
     }
 
     @Test
@@ -28,15 +28,15 @@ class HipRecordDataDomTest {
         byte[] zeroHit = new byte[] {0, 1, 0, 1, 0};
         byte[] zeroKey = new byte[] {1, 1, 0, 0, 0};
         byte[] tooShort = new byte[] {1, 1, 0, 2, 1};
-        assertThrows(IllegalArgumentException.class, () -> HipRecordDataDom.from(zeroHit));
-        assertThrows(IllegalArgumentException.class, () -> HipRecordDataDom.from(zeroKey));
-        assertThrows(IllegalArgumentException.class, () -> HipRecordDataDom.from(tooShort));
+        assertThrows(IllegalArgumentException.class, () -> HipRecordDataDom.from(zeroHit, null));
+        assertThrows(IllegalArgumentException.class, () -> HipRecordDataDom.from(zeroKey, null));
+        assertThrows(IllegalArgumentException.class, () -> HipRecordDataDom.from(tooShort, null));
     }
 
     @Test
     void fromParsesFieldsWithoutRendezvousServers() {
         byte[] rdata = new byte[] {4, 1, 0, 3, 1, 2, 3, 4, 9, 8, 7};
-        RDataDom dom = HipRecordDataDom.from(rdata);
+        RDataDom dom = HipRecordDataDom.from(rdata, null);
         HipRecordDataDom hip = assertInstanceOf(HipRecordDataDom.class, dom);
 
         assertArrayEquals(new byte[] {1, 2, 3, 4}, hip.hit());
@@ -61,7 +61,7 @@ class HipRecordDataDomTest {
         idx += 3;
         System.arraycopy(nameBytes, 0, rdata, idx, nameBytes.length);
 
-        RDataDom dom = HipRecordDataDom.from(rdata);
+        RDataDom dom = HipRecordDataDom.from(rdata, null);
         HipRecordDataDom hip = assertInstanceOf(HipRecordDataDom.class, dom);
 
         assertEquals(List.of("rvs", "example", "test"), hip.rendezvousServers().get(0).labels());
@@ -184,7 +184,7 @@ class HipRecordDataDomTest {
                 .rendezvousServers(List.of(name))
                 .build();
 
-        RDataDom decoded = HipRecordDataDom.from(original.to());
+        RDataDom decoded = HipRecordDataDom.from(original.to(), null);
         HipRecordDataDom parsed = assertInstanceOf(HipRecordDataDom.class, decoded);
 
         assertArrayEquals(new byte[] {10, 11, 12, 13}, parsed.hit());

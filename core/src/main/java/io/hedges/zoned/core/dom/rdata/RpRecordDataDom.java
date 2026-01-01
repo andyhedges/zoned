@@ -30,13 +30,10 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@CompressableRData
 public class RpRecordDataDom implements RDataDom {
     private DnsNameDom mailbox;
     private DnsNameDom textDomain;
-
-    public static RDataDom from(byte[] rdata) {
-        return from(rdata, null);
-    }
 
     public static RDataDom from(byte[] rdata, NameResolver resolver) {
         if (rdata == null || rdata.length == 0) {
