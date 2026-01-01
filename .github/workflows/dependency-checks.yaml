@@ -1,4 +1,4 @@
-name: Check Dependencies
+name: "ZONED: Dependency Checks"
 
 on:
   workflow_dispatch:
