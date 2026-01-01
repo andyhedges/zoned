@@ -28,6 +28,8 @@ import java.util.List;
  * </pre>
 
  * <p>Purpose: Encodes Extension Mechanisms for DNS (EDNS) options used to extend DNS protocol features.</p>
+ * <p>OPT is a pseudo-record carried in the additional section to advertise capabilities (such as UDP size
+ * or DNSSEC support) and is not stored in zone data.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc6891">RFC 6891</a>.</p>*/
 @Getter
 @Builder

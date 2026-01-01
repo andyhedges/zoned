@@ -24,6 +24,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes DNSSEC public keys for a zone so validators can verify signatures.</p>
+ * <p>Flags distinguish key roles (such as key-signing vs. zone-signing), and these records are linked
+ * to parent zones via DS records to build the DNSSEC chain of trust.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4034">RFC 4034</a>.</p>*/
 @Getter
 @Builder

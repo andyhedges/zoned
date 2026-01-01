@@ -29,6 +29,8 @@ import java.util.List;
  * </pre>
 
  * <p>Purpose: Describes Address Prefix List (APL) entries that specify network ranges and negations for policy use.</p>
+ * <p>APL enables expressing allow/deny lists or routing policies directly in DNS, including address
+ * families beyond IPv4/IPv6 where supported.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc3123">RFC 3123</a>.</p>*/
 @Getter
 @Builder

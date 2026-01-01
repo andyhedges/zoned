@@ -26,6 +26,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Locates services by name, providing priority, weight, port, and target host.</p>
+ * <p>Priority controls failover order while weight influences load distribution among targets of
+ * equal priority.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc2782">RFC 2782</a>.</p>*/
 @Getter
 @Builder

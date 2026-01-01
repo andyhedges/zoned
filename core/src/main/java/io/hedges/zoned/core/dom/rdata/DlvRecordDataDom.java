@@ -24,6 +24,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes DNSSEC Lookaside Validation (DLV) data as a DS-like record; this mechanism is obsolete.</p>
+ * <p>DLV was intended to provide an alternate trust anchor path when DS records were not widely deployed,
+ * but it has been retired in favor of standard DNSSEC delegation.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4431">RFC 4431</a>.</p>*/
 @Getter
 @Builder

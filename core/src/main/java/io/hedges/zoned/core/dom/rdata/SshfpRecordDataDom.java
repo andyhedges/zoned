@@ -23,6 +23,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes Secure Shell (SSH) public key fingerprints for SSH host verification.</p>
+ * <p>Clients can compare the advertised fingerprint against the host key presented during SSH connection
+ * setup to detect key changes or man-in-the-middle attacks.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4255">RFC 4255</a>.</p>*/
 @Getter
 @Builder

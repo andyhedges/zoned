@@ -28,6 +28,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes geographic location information such as latitude, longitude, and altitude.</p>
+ * <p>Precision and size fields describe the accuracy and extent of the location, making LOC useful for
+ * geospatial metadata where approximate coordinates are acceptable.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1876">RFC 1876</a>.</p>*/
 @Getter
 @Builder

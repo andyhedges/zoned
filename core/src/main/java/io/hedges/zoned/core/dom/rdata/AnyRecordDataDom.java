@@ -21,6 +21,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Meta-type used for queries to request multiple record types; it has no defined RDATA for storage.</p>
+ * <p>ANY is a query-only construct and should not appear as a stored record; responses are implementation
+ * dependent and often minimized for performance or privacy.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder

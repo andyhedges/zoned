@@ -24,6 +24,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes child DS records to signal the parent which DS values to publish for DNSSEC delegation.</p>
+ * <p>By publishing CDS in the child zone, operators can automate DS updates in the parent and
+ * coordinate DNSSEC key rollovers with minimal manual intervention.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc7344">RFC 7344</a>.</p>*/
 @Getter
 @Builder

@@ -21,6 +21,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Zone transfer meta-type used when requesting full zone contents; it has no defined RDATA.</p>
+ * <p>AXFR is used at the message level to initiate a full zone transfer between servers and is not a
+ * record stored in the zone itself.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc5936">RFC 5936</a>.</p>*/
 @Getter
 @Builder

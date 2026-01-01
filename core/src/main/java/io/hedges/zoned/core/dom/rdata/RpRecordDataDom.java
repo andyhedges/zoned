@@ -24,6 +24,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Provides Responsible Person (RP) contact information and a related text domain.</p>
+ * <p>The mailbox name encodes an email address, while the text domain can point to additional
+ * descriptive information (often via a TXT record).</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1183">RFC 1183</a>.</p>*/
 @Getter
 @Builder

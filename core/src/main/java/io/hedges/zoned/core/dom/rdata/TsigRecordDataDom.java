@@ -30,6 +30,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Carries Transaction SIGnature (TSIG) data used to authenticate DNS messages.</p>
+ * <p>TSIG provides message-level integrity and authentication for DNS operations (such as dynamic updates),
+ * and is not stored in zone data.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc8945">RFC 8945</a>.</p>*/
 @Getter
 @Builder

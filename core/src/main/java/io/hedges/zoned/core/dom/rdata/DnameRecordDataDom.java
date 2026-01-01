@@ -23,6 +23,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Redirects an entire subtree of the DNS namespace to another domain, effectively aliasing all names under a node.</p>
+ * <p>Unlike CNAME, DNAME applies to all names beneath the owner name while allowing the owner itself to
+ * have other record types.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc6672">RFC 6672</a>.</p>*/
 @Getter
 @Builder

@@ -27,6 +27,8 @@ import java.util.SortedMap;
  * </pre>
 
  * <p>Purpose: Publishes Service Binding (SVCB) data describing alternative endpoints and parameters.</p>
+ * <p>It enables clients to discover service configuration (such as protocols, ports, or keys) via DNS,
+ * often improving connection setup and performance.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc9460">RFC 9460</a>.</p>*/
 @Getter
 @Builder

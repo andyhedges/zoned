@@ -23,6 +23,8 @@ import lombok.ToString;
  * </pre>
  
  * <p>Purpose: Specifies Mail Exchange (MX) servers that accept email for a domain, with preference values.</p>
+ * <p>Lower preference values are tried first, and multiple MX records provide fallback or load sharing
+ * across mail servers for the same domain.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035</a>.</p>*/
 @Getter
 @Builder

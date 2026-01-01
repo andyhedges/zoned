@@ -26,6 +26,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Publishes parameters (hash algorithm, iterations, salt) used for NSEC3 denial of existence.</p>
+ * <p>This record signals how NSEC3 records are generated so validators can compute and verify hashed
+ * owner names consistently across the zone.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc5155">RFC 5155</a>.</p>*/
 @Getter
 @Builder

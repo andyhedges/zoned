@@ -31,6 +31,8 @@ import lombok.ToString;
  * </pre>
  
  * <p>Purpose: Provides Transaction Key (TKEY) material for establishing TSIG keys.</p>
+ * <p>TKEY is used during key establishment and management exchanges, not as ordinary zone data,
+ * and is typically carried in dynamic update or request/response workflows.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc2930">RFC 2930</a>.</p>*/
 @Getter
 @Builder

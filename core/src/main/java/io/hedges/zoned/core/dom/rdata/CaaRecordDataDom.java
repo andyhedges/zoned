@@ -27,6 +27,8 @@ import java.util.Arrays;
  * </pre>
 
  * <p>Purpose: Specifies Certification Authority Authorization (CAA) policy, telling which certificate authorities may issue certificates for a domain.</p>
+ * <p>CAA records are consulted by certificate authorities during issuance and can also set reporting
+ * addresses or criticality flags to enforce stricter policy.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc6844">RFC 6844</a>.</p>*/
 @Getter
 @Builder

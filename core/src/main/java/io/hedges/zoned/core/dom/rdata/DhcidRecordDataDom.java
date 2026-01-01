@@ -21,6 +21,8 @@ import lombok.ToString;
  * </pre>
 
  * <p>Purpose: Stores a Dynamic Host Configuration Protocol (DHCP) identifier to support secure Dynamic DNS updates.</p>
+ * <p>It allows a client or DHCP server to assert ownership of a name during updates, helping prevent
+ * unauthorized modifications to DHCP-assigned DNS entries.</p>
  * <p>RFC: <a href="https://www.rfc-editor.org/rfc/rfc4701">RFC 4701</a>.</p>*/
 @Getter
 @Builder
