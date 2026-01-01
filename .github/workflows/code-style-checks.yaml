@@ -1,4 +1,4 @@
-name: "ZONED 🌐: Check Code Style"
+name: "🌐 ZONED 🌐 : Check Code Style"
 
 on:
   workflow_dispatch:
