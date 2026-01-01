@@ -35,6 +35,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@MetaRDataType
 public class TkeyRecordDataDom implements RDataDom {
     private DnsNameDom algorithm;
     private long inception;

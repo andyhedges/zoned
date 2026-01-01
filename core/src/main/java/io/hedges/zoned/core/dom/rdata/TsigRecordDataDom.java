@@ -34,6 +34,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@MetaRDataType
 public class TsigRecordDataDom implements RDataDom {
 
     public static RDataDom from(byte[] rdata) {
