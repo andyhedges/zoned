@@ -1,5 +1,4 @@
-# .github/workflows/javadoc-pages.yml
-name: "ZONED: Publish Javadoc (GitHub Pages)"
+name: "🌐 ZONED: Publish Javadoc (GitHub Pages)"
 
 on:
   push:
