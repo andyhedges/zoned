@@ -30,6 +30,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@CompressableRData
 public class KxRecordDataDom implements RDataDom {
     private int preference;
     private DnsNameDom exchanger;

@@ -30,6 +30,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@CompressableRData
 public class AfsDbRecordDataDom implements RDataDom {
     private int subtype;
     private DnsNameDom hostname;

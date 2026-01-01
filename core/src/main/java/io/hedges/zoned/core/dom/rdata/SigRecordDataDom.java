@@ -39,6 +39,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@CompressableRData
 public class SigRecordDataDom implements RDataDom {
     private int typeCovered;
     private int algorithm;
@@ -49,10 +50,6 @@ public class SigRecordDataDom implements RDataDom {
     private int keyTag;
     private DnsNameDom signerName;
     private byte[] signature;
-
-    public static RDataDom from(byte[] rdata) {
-        return from(rdata, null);
-    }
 
     public static RDataDom from(byte[] rdata, NameResolver resolver) {
         RrsigRdataCodec.SigFields fields = RrsigRdataCodec.parse(rdata, resolver, "SIG");

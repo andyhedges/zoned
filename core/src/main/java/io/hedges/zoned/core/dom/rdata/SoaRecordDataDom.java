@@ -35,6 +35,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@CompressableRData
 public class SoaRecordDataDom implements RDataDom {
     private DnsNameDom mname;
     private DnsNameDom rname;

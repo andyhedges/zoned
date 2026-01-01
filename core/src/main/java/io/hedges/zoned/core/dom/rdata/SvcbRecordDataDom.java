@@ -33,15 +33,12 @@ import java.util.SortedMap;
 @Getter
 @Builder
 @ToString
+@CompressableRData
 public class SvcbRecordDataDom extends SvcbLikeRecordDataDom {
 
     private int svcPriority;
     private DnsNameDom targetName;
     private SortedMap<Integer, byte[]> svcParams;
-
-    public static RDataDom from(byte[] rdata) {
-        return from(rdata, null);
-    }
 
     public static RDataDom from(byte[] rdata, NameResolver resolver) {
         SvcbRdataCodec.SvcbRdataFields parsed = SvcbRdataCodec.parse(rdata, resolver, "SVCB");

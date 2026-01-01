@@ -27,7 +27,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-@MetaRDataType
+@MetaTypeRData
 public class AnyRecordDataDom implements RDataDom {
 
     public static RDataDom from(byte[] rdata) {

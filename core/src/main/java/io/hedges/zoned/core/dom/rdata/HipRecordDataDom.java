@@ -37,15 +37,12 @@ import java.util.List;
 @Getter
 @Builder
 @ToString
+@CompressableRData
 public class HipRecordDataDom implements RDataDom {
     private byte[] hit;
     private int algorithm;
     private byte[] publicKey;
     private List<DnsNameDom> rendezvousServers;
-
-    public static RDataDom from(byte[] rdata) {
-        return from(rdata, null);
-    }
 
     public static RDataDom from(byte[] rdata, NameResolver resolver) {
         if (rdata == null || rdata.length < 5) {
