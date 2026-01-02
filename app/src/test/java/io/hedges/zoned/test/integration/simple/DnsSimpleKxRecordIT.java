@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.test.integration.simple;
 
+import io.hedges.zoned.test.integration.DnsIntegrationBaseIT;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.xbill.DNS.KXRecord;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DnsSimpleKxRecordIT extends DnsSimpleBaseIT {
+class DnsSimpleKxRecordIT extends DnsIntegrationBaseIT {
 
     @BeforeAll
     static void setUpRecords() throws IOException {
