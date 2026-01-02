@@ -20,7 +20,7 @@ public class DefaultDnsRequestRouter implements DnsRequestRouter {
     @Override
     public CompletionStage<DnsMessageDom> handle(DnsRequestContext ctx) {
         DnsMessageDom query = ctx.query();
-        return client.send(query).whenComplete((response, t) -> {
+        return client.send(query, ctx.transport()).whenComplete((response, t) -> {
             String questionSummary = formatQuestions(query);
             if (t != null) {
                 log.error("dns_request route=forward question={} error=failed", questionSummary, t);
