@@ -22,7 +22,7 @@ public class NettyDnsImplementationProvider implements DnsImplementationProvider
         this.group = new MultiThreadIoEventLoopGroup(
                 Runtime.getRuntime().availableProcessors(),
                 NioIoHandler.newFactory());
-        this.server = new UdpNettyDnsServer(group, serverPort);
+        this.server = new NettyDnsServer(group, serverPort);
         this.client = new NettyDnsClient(group, upstream);
 
     }

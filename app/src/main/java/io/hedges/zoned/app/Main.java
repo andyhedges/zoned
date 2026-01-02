@@ -35,7 +35,7 @@ public final class Main implements Callable<Integer> {
             server.stop();
             shutdown.countDown();
         }));
-        log.info("zoned DNS server listening on UDP {}", started.port());
+        log.info("zoned DNS server listening on UDP/TCP {}", started.port());
         shutdown.await();
         return 0;
     }

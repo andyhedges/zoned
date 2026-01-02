@@ -4,16 +4,19 @@ package io.hedges.zoned.netty;
 import io.hedges.zoned.core.DnsRequestHandler;
 import io.hedges.zoned.core.DnsServer;
 import io.hedges.zoned.core.DnsServerStartException;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
-import io.netty.channel.socket.DatagramChannel;
-import io.netty.channel.socket.nio.NioDatagramChannel;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.Setter;
 
-
-public final class UdpNettyDnsServer implements DnsServer {
+public final class TcpNettyDnsServer implements DnsServer {
 
     private final EventLoopGroup group;
     private final int listenPort;
@@ -22,33 +25,39 @@ public final class UdpNettyDnsServer implements DnsServer {
     @Setter
     private DnsRequestHandler requestHandler;
 
-    public UdpNettyDnsServer(EventLoopGroup group, int listenPort) {
+    public TcpNettyDnsServer(EventLoopGroup group, int listenPort) {
         this(group, listenPort, true);
     }
 
-    public UdpNettyDnsServer(EventLoopGroup group, int listenPort, boolean manageGroupLifecycle) {
-        this.listenPort = listenPort;
+    public TcpNettyDnsServer(EventLoopGroup group, int listenPort, boolean manageGroupLifecycle) {
         this.group = group;
+        this.listenPort = listenPort;
         this.manageGroupLifecycle = manageGroupLifecycle;
     }
 
+    @Override
+    public DnsServer requestHandler(DnsRequestHandler handler) {
+        this.requestHandler = handler;
+        return this;
+    }
+
+    @Override
     public void start() throws DnsServerStartException {
         try {
-            Bootstrap b = new Bootstrap();
+            ServerBootstrap b = new ServerBootstrap();
             b.group(group)
-             .channel(NioDatagramChannel.class)
+             .channel(NioServerSocketChannel.class)
              .option(ChannelOption.SO_REUSEADDR, true)
-             .handler(new ChannelInitializer<DatagramChannel>() {
+             .childHandler(new ChannelInitializer<SocketChannel>() {
                  @Override
-                 protected void initChannel(DatagramChannel ch) {
+                 protected void initChannel(SocketChannel ch) {
                      ChannelPipeline p = ch.pipeline();
                      p.addLast("wireLogger", new LoggingHandler(LogLevel.DEBUG));
-                     p.addLast(new DnsDatagramDecoder());
-                     p.addLast(new DnsDatagramEncoder());
-                     p.addLast(new UdpDnsHandler(requestHandler));
+                     p.addLast(new DnsTcpDecoder());
+                     p.addLast(new DnsTcpEncoder());
+                     p.addLast(new TcpDnsHandler(requestHandler));
                  }
              });
-
             this.channel = b.bind(listenPort).sync().channel();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -58,6 +67,7 @@ public final class UdpNettyDnsServer implements DnsServer {
         }
     }
 
+    @Override
     public void stop() {
         if (channel != null) {
             channel.close();
