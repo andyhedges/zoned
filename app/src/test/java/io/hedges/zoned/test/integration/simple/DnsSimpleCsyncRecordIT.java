@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.test.integration.simple;
 
+import io.hedges.zoned.test.integration.DnsIntegrationBaseIT;
 import io.hedges.zoned.core.dom.DnsRecordTypeDom;
 import io.hedges.zoned.core.dom.RDataDom;
 import io.hedges.zoned.core.dom.rdata.CsyncRecordDataDom;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DnsSimpleCsyncRecordIT extends DnsSimpleBaseIT {
+class DnsSimpleCsyncRecordIT extends DnsIntegrationBaseIT {
 
     @BeforeAll
     static void setUpRecords() throws IOException {

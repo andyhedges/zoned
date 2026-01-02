@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.hedges.zoned.test.integration.simple;
 
+import io.hedges.zoned.test.integration.DnsIntegrationBaseIT;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.xbill.DNS.DClass;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DnsSimpleSigRecordIT extends DnsSimpleBaseIT {
+class DnsSimpleSigRecordIT extends DnsIntegrationBaseIT {
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
     @BeforeAll

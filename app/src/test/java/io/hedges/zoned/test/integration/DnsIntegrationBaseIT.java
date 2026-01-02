@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
-package io.hedges.zoned.test.integration.simple;
+package io.hedges.zoned.test.integration;
 
 import io.hedges.zoned.app.ZonedApp;
 import io.hedges.zoned.core.DnsServer;
-import io.hedges.zoned.test.integration.UnboundContainer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-abstract class DnsSimpleBaseIT {
+public abstract class DnsIntegrationBaseIT {
 
     private static DnsServer server;
     private static int appPort;
