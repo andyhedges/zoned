@@ -53,6 +53,18 @@ class SvcbAndHttpsRecordDataDomTest {
 
     @ParameterizedTest
     @MethodSource("recordTypes")
+    void fromAcceptsRootTargetName(RecordType type) {
+        byte[] rdata = new byte[] {0, 1, 0};
+
+        RDataDom dom = type.from(rdata, null);
+
+        assertEquals(1, type.svcPriority(dom));
+        assertEquals(List.of(), type.targetName(dom).labels());
+        assertEquals(0, type.svcParams(dom).size());
+    }
+
+    @ParameterizedTest
+    @MethodSource("recordTypes")
     void fromUsesResolverForCompressedName(RecordType type) {
         byte[] rdata = new byte[] {0, 5, (byte) 0xC0, 0x10};
         NameResolver resolver = offset -> DnsNameDom.builder().labels(List.of("svc", "example")).build();

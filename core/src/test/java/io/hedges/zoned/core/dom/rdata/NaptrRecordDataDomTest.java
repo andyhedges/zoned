@@ -58,9 +58,17 @@ class NaptrRecordDataDomTest {
     }
 
     @Test
-    void fromRejectsInvalidReplacementName() {
+    void fromAcceptsRootReplacementName() {
         byte[] rdata = new byte[] {0, 1, 0, 2, 0, 0, 0, 0};
-        assertThrows(IllegalArgumentException.class, () -> NaptrRecordDataDom.from(rdata, null));
+        RDataDom dom = NaptrRecordDataDom.from(rdata, null);
+        NaptrRecordDataDom naptr = assertInstanceOf(NaptrRecordDataDom.class, dom);
+
+        assertEquals(1, naptr.order());
+        assertEquals(2, naptr.preference());
+        assertEquals("", naptr.flags());
+        assertEquals("", naptr.services());
+        assertEquals("", naptr.regexp());
+        assertEquals(List.of(), naptr.replacement().labels());
     }
 
     @Test
@@ -165,14 +173,6 @@ class NaptrRecordDataDomTest {
                 .services("")
                 .regexp("")
                 .build();
-        NaptrRecordDataDom invalidReplacement = NaptrRecordDataDom.builder()
-                .order(1)
-                .preference(2)
-                .flags("")
-                .services("")
-                .regexp("")
-                .replacement(DnsNameDom.builder().labels(List.of()).build())
-                .build();
 
         assertThrows(IllegalArgumentException.class, missingStrings::to);
         assertThrows(IllegalArgumentException.class, negativeOrder::to);
@@ -183,7 +183,6 @@ class NaptrRecordDataDomTest {
         assertThrows(IllegalArgumentException.class, badServices::to);
         assertThrows(IllegalArgumentException.class, badRegexp::to);
         assertThrows(IllegalArgumentException.class, missingReplacement::to);
-        assertThrows(IllegalArgumentException.class, invalidReplacement::to);
     }
 
     @Test
