@@ -173,10 +173,6 @@ public class RDataUtils {
             idx += len;
         }
 
-        if (decoded.isEmpty()) {
-            throw new IllegalArgumentException("Name must have at least one label");
-        }
-
         return new DnsNameParseResult(DnsNameDom.builder().labels(decoded).build(), idx);
     }
 
@@ -188,7 +184,7 @@ public class RDataUtils {
             throw new IllegalArgumentException("Labels list is null");
         }
         if (name.labels().isEmpty()) {
-            throw new IllegalArgumentException("CNAME must have at least one label");
+            return new byte[] {0};
         }
 
         // Compute total length

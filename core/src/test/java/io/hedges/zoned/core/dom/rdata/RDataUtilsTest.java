@@ -138,9 +138,11 @@ class RDataUtilsTest {
     }
 
     @Test
-    void toDnsNameDomRejectsMissingLabels() {
+    void toDnsNameDomAcceptsRootName() {
         byte[] rdata = new byte[] {0};
-        assertThrows(IllegalArgumentException.class, () -> RDataUtils.toDnsNameDom(rdata));
+        DnsNameDom name = RDataUtils.toDnsNameDom(rdata);
+
+        assertEquals(List.of(), name.labels());
     }
 
     @Test
@@ -198,8 +200,6 @@ class RDataUtilsTest {
     void toByteArrayFromDnsNameValidatesInputs() {
         assertThrows(IllegalArgumentException.class, () -> RDataUtils.toByteArray((DnsNameDom) null));
         assertThrows(IllegalArgumentException.class, () -> RDataUtils.toByteArray(DnsNameDom.builder().build()));
-        assertThrows(IllegalArgumentException.class,
-                     () -> RDataUtils.toByteArray(DnsNameDom.builder().labels(List.of()).build()));
     }
 
     @Test
@@ -240,5 +240,16 @@ class RDataUtilsTest {
         DnsNameDom decoded = RDataUtils.toDnsNameDom(bytes);
 
         assertEquals(labels, decoded.labels());
+    }
+
+    @Test
+    void dnsNameRootRoundTripUsesSingleTerminator() {
+        DnsNameDom root = DnsNameDom.builder().labels(List.of()).build();
+
+        byte[] bytes = RDataUtils.toByteArray(root);
+        DnsNameDom decoded = RDataUtils.toDnsNameDom(bytes);
+
+        assertArrayEquals(new byte[] {0}, bytes);
+        assertEquals(List.of(), decoded.labels());
     }
 }
