@@ -6,25 +6,27 @@ import io.hedges.zoned.core.dom.DnsResourceRecordDom;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public class RRSetCache {
 
     Cache<RrsetKey, CacheEntry> store = new EvictingCache<>();
 
-    // public CacheEntry lookup(DnsQuestionDom questionDom, Instant now) {
-    //     RrsetKey key = RrsetKey.fromQuestion(questionDom);
-    //     CacheEntry entry = store.get(key);
-    //     if (entry == null || entry.expireAt().isBefore(now)) {
-    //         store.remove(key);
-    //         return null;
-    //     }
-    //     return entry;
-    // }
+    public RRSetCache(){
+        store.validityPolicy((v) -> {
+            return v.expireAt() > System.currentTimeMillis();
+        });
+    }
+
+    public Optional<CacheEntry> lookup(DnsQuestionDom questionDom, Instant now) {
+        RrsetKey key = RrsetKey.fromQuestion(questionDom);
+        return store.get(key);
+    }
 
     public void storeAnswer(RrsetKey key,
                      List<DnsResourceRecordDom> answers,
                      List<DnsResourceRecordDom> authorities,
-                     List<DnsResourceRecordDom> additionals, Instant now) {
+                     List<DnsResourceRecordDom> additionals, long now) {
 
         if (answers != null && !answers.isEmpty()) {
             //RFC says to take min ttl if the ttls in a rrset differ
@@ -38,7 +40,7 @@ public class RRSetCache {
                                     Rrset.builder().records(answers).build()
                             )
                             .trustLevel(TrustLevel.AUTHORITATIVE_ANSWER)
-                            .expireAt(now.plusSeconds(answerTtl))
+                            .expireAt(now + answerTtl)
                             .build();
 
             store.put(key, answerCacheEntry);
@@ -50,7 +52,7 @@ public class RRSetCache {
     public void storeAnswer(DnsQuestionDom questionDom,
                      List<DnsResourceRecordDom> answers,
                      List<DnsResourceRecordDom> authorities,
-                     List<DnsResourceRecordDom> additionals, Instant now) {
+                     List<DnsResourceRecordDom> additionals, long now) {
         storeAnswer(RrsetKey.fromQuestion(questionDom), answers, authorities, additionals, now);
     }
 

@@ -13,6 +13,6 @@ public class DnsResourceRecordDom {
     private DnsNameDom name;
     private DnsRecordTypeDom type;
     private DnsRecordClassDom recordClass;
-    private long ttlSeconds;
+    private int ttlSeconds;
     private RDataDom rdata;
 }

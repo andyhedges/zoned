@@ -10,7 +10,7 @@ import lombok.NonNull;
 public class EvictingCache<K, V> implements Cache<K, V> {
 
     private static final int MAX_ENTRIES = 100;
-    private volatile Predicate<V> validityPolicy = v -> true;
+    private volatile Predicate<V> validity = v -> true;
 
     private final Map<K, V> store = new LinkedHashMap<K, V>(16, 0.75f, true) {
         @Override
@@ -23,7 +23,7 @@ public class EvictingCache<K, V> implements Cache<K, V> {
         V value = store.get(key);
         if (value == null) {
             return Optional.empty();
-        } else if (validityPolicy.test(value)) {
+        } else if (validity.test(value)) {
             return Optional.of(value);
         }
         store.remove(key);
@@ -37,7 +37,7 @@ public class EvictingCache<K, V> implements Cache<K, V> {
 
     @Override
     public void validityPolicy(@NonNull Predicate<V> validityPolicy) {
-        this.validityPolicy = validityPolicy;
+        this.validity = validityPolicy;
     }
 
 }

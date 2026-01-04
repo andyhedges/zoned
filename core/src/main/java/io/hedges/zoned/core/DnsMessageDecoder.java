@@ -94,7 +94,11 @@ public final class DnsMessageDecoder {
         DnsRecordTypeDom type = DnsRecordTypeDom.fromCode(reader.readU16());
         int classCode = reader.readU16();
         DnsRecordClassDom recordClass = type == DnsRecordTypeDom.OPT ? null : DnsRecordClassDom.fromCode(classCode);
-        long ttl = reader.readU32();
+
+        // https://www.rfc-editor.org/rfc/rfc2181#section-8
+        long ttlValue = reader.readU32();
+        int ttl = (ttlValue & 0x80000000L) != 0 ? 0 : (int) ttlValue;
+        
         int rdLength = reader.readU16();
         if (rdLength > reader.remaining()) {
             throw new IllegalArgumentException("RDATA length exceeds buffer: " + rdLength);
