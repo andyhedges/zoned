@@ -4,27 +4,40 @@ package io.hedges.zoned.core.cache;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.Optional;
+import java.util.function.Predicate;
+import lombok.NonNull;
 
-public class EvictingCache<K, V> implements Cache<K, V>{
+public class EvictingCache<K, V> implements Cache<K, V> {
 
     private static final int MAX_ENTRIES = 100;
+    private volatile Predicate<V> validityPolicy = v -> true;
 
-    private Map<K, V> store = new LinkedHashMap<K, V>(16, 0.75f, true){
+    private final Map<K, V> store = new LinkedHashMap<K, V>(16, 0.75f, true) {
         @Override
-        protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
+        protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
             return size() > MAX_ENTRIES;
         }
     };
 
-    public synchronized Optional<V> get(K key) {
-        return Optional.ofNullable(store.get(key));
+    public synchronized Optional<V> get(@NonNull K key) {
+        V value = store.get(key);
+        if (value == null) {
+            return Optional.empty();
+        } else if (validityPolicy.test(value)) {
+            return Optional.of(value);
+        }
+        store.remove(key);
+        return Optional.empty();
+
     }
 
-    public synchronized void put(K key, V value) {
-        if (key == null || value == null) {
-            throw new IllegalArgumentException("key and value must not be null");
-        }
+    public synchronized void put(@NonNull K key, @NonNull V value) {
         store.put(key, value);
+    }
+
+    @Override
+    public void validityPolicy(@NonNull Predicate<V> validityPolicy) {
+        this.validityPolicy = validityPolicy;
     }
 
 }
