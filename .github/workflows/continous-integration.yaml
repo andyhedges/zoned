@@ -7,6 +7,14 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  MAVEN_OPTS: >-
+    -Dmaven.wagon.http.retryHandler.class=standard
+    -Dmaven.wagon.http.retryHandler.count=5
+    -Dmaven.wagon.http.retryHandler.requestSentEnabled=true
+    -Dmaven.wagon.http.pool=false
+    -Dmaven.wagon.httpconnectionManager.ttlSeconds=120
+
 permissions:
   contents: read
 
