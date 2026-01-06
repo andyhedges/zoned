@@ -11,8 +11,6 @@ import java.util.List;
 @Getter
 @Builder
 @ToString
-public class Rrset {
-    // TODO: Consider TTL normalization (RFC 2181) and int-based storage when cache logic is implemented.
-    // this is where the RFC stats the MSB should be ignore and if set ttl should be zero
+public class RrSet {
     private List<DnsResourceRecordDom> records;
 }

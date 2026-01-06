@@ -9,8 +9,8 @@ import lombok.ToString;
 @Builder
 @ToString
 public class CacheEntry {
-    private Rrset rrset;
-    private TrustLevel trustLevel;
+    private RrSet rrset;
     private boolean complete;
     private long expireAt;
+    private Role role;
 }
