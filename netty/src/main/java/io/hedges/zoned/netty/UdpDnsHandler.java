@@ -23,7 +23,7 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<UdpDnsInbou
                 .query(inbound.message())
                 .clientAddress(inbound.sender())
                 .transport(Transport.UDP)
-                .receivedAt(Instant.now())
+                .receivedAt(System.currentTimeMillis())
                 .build();
 
         requestHandler.handle(drc).whenComplete((response, t) -> {

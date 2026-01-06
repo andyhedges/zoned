@@ -26,7 +26,7 @@ public final class TcpDnsHandler extends SimpleChannelInboundHandler<DnsMessageD
                 .query(message)
                 .clientAddress(clientAddress)
                 .transport(Transport.TCP)
-                .receivedAt(Instant.now())
+                .receivedAt(System.currentTimeMillis())
                 .build();
 
         requestHandler.handle(drc).whenComplete((response, t) -> {
