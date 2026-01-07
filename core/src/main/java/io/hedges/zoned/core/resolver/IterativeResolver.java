@@ -17,7 +17,6 @@ import io.hedges.zoned.core.dom.rdata.ARecordDataDom;
 import io.hedges.zoned.core.dom.rdata.NsRecordDataDom;
 
 import java.net.InetSocketAddress;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
