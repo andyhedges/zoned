@@ -9,8 +9,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.Instant;
-
 @Slf4j
 @AllArgsConstructor
 public final class UdpDnsHandler extends SimpleChannelInboundHandler<UdpDnsInbound> {
@@ -23,7 +21,7 @@ public final class UdpDnsHandler extends SimpleChannelInboundHandler<UdpDnsInbou
                 .query(inbound.message())
                 .clientAddress(inbound.sender())
                 .transport(Transport.UDP)
-                .receivedAt(Instant.now())
+                .receivedAt(System.currentTimeMillis())
                 .build();
 
         requestHandler.handle(drc).whenComplete((response, t) -> {

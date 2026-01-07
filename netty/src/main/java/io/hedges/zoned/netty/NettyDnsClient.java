@@ -27,24 +27,20 @@ public class NettyDnsClient implements DnsClient {
     }
 
     @Override
-    public CompletionStage<DnsMessageDom> send(DnsMessageDom msg) {
-        return send(msg, null);
-    }
-
-    @Override
-    public CompletionStage<DnsMessageDom> send(DnsMessageDom msg, Transport transport) {
+    public CompletionStage<DnsMessageDom> send(DnsMessageDom msg, InetSocketAddress server, Transport transport) {
+        InetSocketAddress target = server == null ? upstream : server;
         if (transport == Transport.TCP) {
-            return sendTcp(msg);
+            return sendTcp(msg, target);
         }
         if (transport == Transport.UDP) {
-            return sendUdp(msg);
+            return sendUdp(msg, target);
         }
-        return sendWithRetry(msg);
+        return sendWithRetry(msg, target);
     }
 
-    private CompletionStage<DnsMessageDom> sendWithRetry(DnsMessageDom msg) {
+    private CompletionStage<DnsMessageDom> sendWithRetry(DnsMessageDom msg, InetSocketAddress target) {
         CompletableFuture<DnsMessageDom> cf = new CompletableFuture<>();
-        sendUdp(msg).whenComplete((response, t) -> {
+        sendUdp(msg, target).whenComplete((response, t) -> {
             if (t != null) {
                 cf.completeExceptionally(t);
                 return;
@@ -54,7 +50,7 @@ public class NettyDnsClient implements DnsClient {
                 return;
             }
             if (response.header() != null && response.header().truncation()) {
-                sendTcp(msg).whenComplete((tcpResponse, tcpError) -> {
+                sendTcp(msg, target).whenComplete((tcpResponse, tcpError) -> {
                     if (tcpError != null) {
                         cf.complete(response);
                         return;
@@ -68,7 +64,7 @@ public class NettyDnsClient implements DnsClient {
         return cf;
     }
 
-    private CompletionStage<DnsMessageDom> sendUdp(DnsMessageDom msg) {
+    private CompletionStage<DnsMessageDom> sendUdp(DnsMessageDom msg, InetSocketAddress target) {
         CompletableFuture<DnsMessageDom> cf = new CompletableFuture<>();
         InetSocketAddress sender = new InetSocketAddress(0);
         EventLoop loop = group.next();
@@ -77,7 +73,7 @@ public class NettyDnsClient implements DnsClient {
                 .channel(NioDatagramChannel.class)
                 .option(ChannelOption.SO_BROADCAST, false)
                 .localAddress(sender)
-                .remoteAddress(upstream)
+                .remoteAddress(target)
                 .handler(new ChannelInitializer<NioDatagramChannel>() {
                     @Override
                     protected void initChannel(NioDatagramChannel ch) {
@@ -125,7 +121,7 @@ public class NettyDnsClient implements DnsClient {
             }
 
             Channel ch = bindFuture.channel();
-            ch.writeAndFlush(new UdpDnsOutbound(msg, upstream)).addListener((ChannelFuture writeFuture) -> {
+            ch.writeAndFlush(new UdpDnsOutbound(msg, target)).addListener((ChannelFuture writeFuture) -> {
                 if (!writeFuture.isSuccess()) {
                     if (!cf.isDone()) {
                         cf.completeExceptionally(writeFuture.cause());
@@ -138,14 +134,14 @@ public class NettyDnsClient implements DnsClient {
         return cf;
     }
 
-    private CompletionStage<DnsMessageDom> sendTcp(DnsMessageDom msg) {
+    private CompletionStage<DnsMessageDom> sendTcp(DnsMessageDom msg, InetSocketAddress target) {
         CompletableFuture<DnsMessageDom> cf = new CompletableFuture<>();
         EventLoop loop = group.next();
         Bootstrap b = new Bootstrap()
                 .group(loop)
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.SO_KEEPALIVE, true)
-                .remoteAddress(upstream)
+                .remoteAddress(target)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) {

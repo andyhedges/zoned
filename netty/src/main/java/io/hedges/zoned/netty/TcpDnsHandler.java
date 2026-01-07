@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
-import java.time.Instant;
 
 @Slf4j
 @AllArgsConstructor
@@ -26,7 +25,7 @@ public final class TcpDnsHandler extends SimpleChannelInboundHandler<DnsMessageD
                 .query(message)
                 .clientAddress(clientAddress)
                 .transport(Transport.TCP)
-                .receivedAt(Instant.now())
+                .receivedAt(System.currentTimeMillis())
                 .build();
 
         requestHandler.handle(drc).whenComplete((response, t) -> {

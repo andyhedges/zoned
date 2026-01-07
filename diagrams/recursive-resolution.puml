@@ -1,0 +1,170 @@
+@startuml
+title Recursive DNS Resolution (no DNSSEC) - flow incl. caching + bailiwick
+
+skinparam shadowing false
+skinparam activity {
+  BackgroundColor white
+  BorderColor black
+  ArrowColor black
+  StartColor black
+  EndColor black
+}
+skinparam note {
+  BorderColor black
+}
+
+start
+
+:Client query (QNAME, QTYPE, QCLASS=IN);
+:Normalize name (lowercase, trailing dot);
+:Pick now;
+
+if (QTYPE unsupported?) then (yes)
+  :Return NOTIMP;
+  stop
+endif
+
+note right
+  This is a recursive resolver doing iterative queries upstream (RD=0).
+  No DNSSEC logic included.
+end note
+
+while (Resolution complete?) is (no)
+
+  partition "Cache lookup" {
+    :Lookup cache RRset (QNAME,QTYPE);
+    if (Cache hit AND TTL valid?) then (yes)
+      :Assemble response from cache;
+      :Return NOERROR + cached answer;
+      stop
+    endif
+
+    :Lookup negative cache (NXDOMAIN / NODATA);
+    if (Neg-cache hit AND TTL valid?) then (yes)
+      :Return cached NXDOMAIN or NODATA;
+      stop
+    endif
+
+    :Find best cached delegation for QNAME
+     (closest ancestor NS RRset);
+    if (Delegation NS found AND TTL valid?) then (yes)
+      :Seed candidate NS set from cache;
+    else (no)
+      :Seed candidate NS set from root hints (".");
+    endif
+  }
+
+  partition "Choose NS + ensure address" {
+
+    :Select next nameserver to query
+     (from candidate NS set);
+
+    if (No usable A/AAAA for chosen NS?) then (yes)
+      :Try cache for NS A/AAAA;
+
+      if (Found A/AAAA in cache?) then (yes)
+        :Use cached NS address;
+      else (no)
+        note right
+          Resolve the NS name (sub-query) using the same resolver.
+          Out-of-bailiwick additional data should not be cached as glue.
+        end note
+        :Resolve NS name (sub-query);
+        if (Sub-query failed?) then (yes)
+          :Mark NS unusable; 
+          :Try another NS next loop;
+          ' loop continues
+        endif
+      endif
+    endif
+  }
+
+  partition "Iterative query" {
+    :Send query to chosen NS (RD=0);
+    :Receive response;
+
+    if (Timeout / SERVFAIL / FORMERR?) then (yes)
+      :Mark this NS failed (backoff);
+      :Try another NS next loop;
+      ' loop continues
+    endif
+
+    if (Truncated over UDP?) then (yes)
+      :Retry over TCP;
+      :Receive response (TCP);
+    endif
+  }
+
+  partition "Process response" {
+
+    if (RCODE = NXDOMAIN?) then (yes)
+      :Cache negative (NXDOMAIN) using SOA MIN/TTL (RFC 2308);
+      :Return NXDOMAIN;
+      stop
+    endif
+
+    if (Answer contains RRset for (QNAME,QTYPE)?) then (yes)
+      :Cache answer RRset with TTL;
+      :Optionally cache related CNAME chain RRsets;
+      :Return NOERROR + answer;
+      stop
+    endif
+
+    if (Answer indicates CNAME or DNAME?) then (yes)
+      :Cache CNAME/DNAME RRset;
+      :Rewrite QNAME to target;
+      :Continue (treat as new query);
+      ' loop continues
+    else (no)
+
+      if (Referral present? (NS in Authority)) then (yes)
+
+        :Extract referral_zone (owner of NS RRset);
+        :Update candidate NS set from Authority NS RRset;
+
+        partition "Bailiwick + glue handling" {
+          note right
+            In-bailiwick glue: A/AAAA in Additional whose owner name
+            is within the delegated (referral) zone.
+            Out-of-bailiwick additional addresses: do not cache as glue.
+          end note
+
+          :For each A/AAAA in Additional;
+          if (RR name within referral_zone?) then (yes)
+            :Treat as in-bailiwick glue;
+            :Cache glue A/AAAA with TTL (as glue);
+          else (no)
+            :Treat as out-of-bailiwick;
+            :Do NOT cache from additional;
+            :May use as a per-transaction hint only;
+          endif
+
+          :For NS names still lacking addresses:
+           they will be resolved via sub-queries or later cache hits;
+        }
+
+        :Continue with updated NS set;
+        ' loop continues
+
+      else (no)
+
+        if (NOERROR but no answer and no referral?) then (yes)
+          :Interpret as NODATA;
+          :Cache negative (NODATA) using SOA if present;
+          :Return NOERROR with empty answer;
+          stop
+        else (no)
+          :Return SERVFAIL (unexpected response);
+          stop
+        endif
+
+      endif
+
+    endif
+
+  }
+
+endwhile (yes)
+
+stop
+@enduml
