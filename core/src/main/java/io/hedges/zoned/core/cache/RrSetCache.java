@@ -4,7 +4,6 @@ package io.hedges.zoned.core.cache;
 import io.hedges.zoned.core.dom.DnsQuestionDom;
 import io.hedges.zoned.core.dom.DnsResourceRecordDom;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +17,7 @@ public class RrSetCache {
         });
     }
 
-    public Optional<CacheEntry> lookup(DnsQuestionDom questionDom, Instant now) {
+    public Optional<CacheEntry> lookup(DnsQuestionDom questionDom, long now) {
         RrsetKey key = RrsetKey.fromQuestion(questionDom);
         return store.get(key);
     }
