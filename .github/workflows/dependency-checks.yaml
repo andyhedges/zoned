@@ -35,7 +35,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-          maven-version: '3.9.12'
           cache: maven
 
       - name: Check dependency & plugin updates
@@ -45,7 +44,7 @@ jobs:
           REPORT="dependency-report-${DATE}.txt"
           echo "REPORT=$REPORT" >> "$GITHUB_ENV"
           echo "DATE=$DATE" >> "$GITHUB_ENV"
-          mvn \
+          ./mvnw mvn \
             -B -ntp \
             -Dstyle.color=never \
             -DgenerateBackupPoms=false \

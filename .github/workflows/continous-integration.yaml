@@ -38,12 +38,11 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-          maven-version: '3.9.12'
           cache: maven
 
       - name: Build & test with Maven
         run: |
-          mvn \
+          ./mvnw \
             -B -ntp \
             -DtrimStackTrace=false \
             -Dstyle.color=never \
