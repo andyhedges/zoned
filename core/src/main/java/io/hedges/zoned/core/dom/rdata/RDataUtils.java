@@ -8,7 +8,6 @@ import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -132,7 +131,7 @@ public class RDataUtils {
             throw new IllegalArgumentException("DNS name exceeds 255 bytes");
         }
 
-        List<String> decoded = new ArrayList<>();
+        List<byte[]> decoded = new ArrayList<>();
         int idx = offset;
 
         while (idx < rdata.length) {
@@ -168,8 +167,9 @@ public class RDataUtils {
                 throw new IllegalArgumentException("Label length " + len + " exceeds RDATA bounds");
             }
 
-            String label = new String(rdata, idx, len, StandardCharsets.US_ASCII);
-            decoded.add(label);
+            byte[] labelBytes = new byte[len];
+            System.arraycopy(rdata, idx, labelBytes, 0, len);
+            decoded.add(labelBytes);
             idx += len;
         }
 
@@ -189,12 +189,11 @@ public class RDataUtils {
 
         // Compute total length
         int totalLength = 1; // final zero byte
-        for (String label : name.labels()) {
-            byte[] b = label.getBytes(StandardCharsets.US_ASCII);
-            if (b.length > 63) {
-                throw new IllegalArgumentException("Label exceeds 63 bytes: " + label);
+        for (byte[] label : name.labels()) {
+            if (label.length > 63) {
+                throw new IllegalArgumentException("Label exceeds 63 bytes: " + Arrays.toString(label));
             }
-            totalLength += 1 + b.length;
+            totalLength += 1 + label.length;
             if (totalLength > 255) {
                 throw new IllegalArgumentException("DNS Name exceeds 255 bytes");
             }
@@ -203,11 +202,10 @@ public class RDataUtils {
         byte[] rdata = new byte[totalLength];
         int idx = 0;
 
-        for (String label : name.labels()) {
-            byte[] b = label.getBytes(StandardCharsets.US_ASCII);
-            rdata[idx++] = (byte) b.length;
-            System.arraycopy(b, 0, rdata, idx, b.length);
-            idx += b.length;
+        for (byte[] label : name.labels()) {
+            rdata[idx++] = (byte) label.length;
+            System.arraycopy(label, 0, rdata, idx, label.length);
+            idx += label.length;
         }
 
         rdata[idx] = 0; // terminating root label

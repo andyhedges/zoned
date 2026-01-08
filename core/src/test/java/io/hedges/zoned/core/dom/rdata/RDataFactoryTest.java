@@ -17,36 +17,36 @@ class RDataFactoryTest {
 
     @Test
     void fromBytesUsesResolverForCname() {
-        NameResolver resolver = offset -> DnsNameDom.builder().labels(List.of("alias", "example")).build();
+        NameResolver resolver = offset -> DnsNameDom.labels(List.of("alias", "example"));
         byte[] rdata = new byte[] {(byte) 0xC0, 0x10};
 
         RDataDom dom = RDataFactory.fromBytes(DnsRecordTypeDom.CNAME, rdata, resolver);
         CnameRecordDataDom cname = assertInstanceOf(CnameRecordDataDom.class, dom);
 
-        assertEquals(List.of("alias", "example"), cname.cname().labels());
+        assertEquals(List.of("alias", "example"), cname.cname().labelStrings());
     }
 
     @Test
     void fromBytesUsesResolverForNs() {
-        NameResolver resolver = offset -> DnsNameDom.builder().labels(List.of("ns1", "example")).build();
+        NameResolver resolver = offset -> DnsNameDom.labels(List.of("ns1", "example"));
         byte[] rdata = new byte[] {(byte) 0xC0, 0x20};
 
         RDataDom dom = RDataFactory.fromBytes(DnsRecordTypeDom.NS, rdata, resolver);
         NsRecordDataDom ns = assertInstanceOf(NsRecordDataDom.class, dom);
 
-        assertEquals(List.of("ns1", "example"), ns.nsName().labels());
+        assertEquals(List.of("ns1", "example"), ns.nsName().labelStrings());
     }
 
     @Test
     void fromBytesUsesResolverForMx() {
-        NameResolver resolver = offset -> DnsNameDom.builder().labels(List.of("mail", "example")).build();
+        NameResolver resolver = offset -> DnsNameDom.labels(List.of("mail", "example"));
         byte[] rdata = new byte[] {0, 5, (byte) 0xC0, 0x10};
 
         RDataDom dom = RDataFactory.fromBytes(DnsRecordTypeDom.MX, rdata, resolver);
         MxRecordDataDom mx = assertInstanceOf(MxRecordDataDom.class, dom);
 
         assertEquals(5, mx.preference());
-        assertEquals(List.of("mail", "example"), mx.exchange().labels());
+        assertEquals(List.of("mail", "example"), mx.exchange().labelStrings());
     }
 
     @Test

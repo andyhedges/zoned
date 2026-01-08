@@ -35,7 +35,7 @@ class SvcbAndHttpsRecordDataDomTest {
     @ParameterizedTest
     @MethodSource("recordTypes")
     void fromParsesTargetNameAndParams(RecordType type) {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("svc", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("svc", "example"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         byte[] priorityBytes = new byte[] {0, 1};
         byte[] paramKey3 = new byte[] {0, 3, 0, 0};
@@ -45,7 +45,7 @@ class SvcbAndHttpsRecordDataDomTest {
         RDataDom dom = type.from(rdata, null);
 
         assertEquals(1, type.svcPriority(dom));
-        assertEquals(List.of("svc", "example"), type.targetName(dom).labels());
+        assertEquals(List.of("svc", "example"), type.targetName(dom).labelStrings());
         assertEquals(2, type.svcParams(dom).size());
         assertArrayEquals(new byte[0], type.svcParams(dom).get(3));
         assertArrayEquals(new byte[] {1, 2, 3}, type.svcParams(dom).get(5));
@@ -59,7 +59,7 @@ class SvcbAndHttpsRecordDataDomTest {
         RDataDom dom = type.from(rdata, null);
 
         assertEquals(1, type.svcPriority(dom));
-        assertEquals(List.of(), type.targetName(dom).labels());
+        assertEquals(List.of(), type.targetName(dom).labelStrings());
         assertEquals(0, type.svcParams(dom).size());
     }
 
@@ -67,12 +67,12 @@ class SvcbAndHttpsRecordDataDomTest {
     @MethodSource("recordTypes")
     void fromUsesResolverForCompressedName(RecordType type) {
         byte[] rdata = new byte[] {0, 5, (byte) 0xC0, 0x10};
-        NameResolver resolver = offset -> DnsNameDom.builder().labels(List.of("svc", "example")).build();
+        NameResolver resolver = offset -> DnsNameDom.labels(List.of("svc", "example"));
 
         RDataDom dom = type.from(rdata, resolver);
 
         assertEquals(5, type.svcPriority(dom));
-        assertEquals(List.of("svc", "example"), type.targetName(dom).labels());
+        assertEquals(List.of("svc", "example"), type.targetName(dom).labelStrings());
     }
 
     @ParameterizedTest
@@ -85,7 +85,7 @@ class SvcbAndHttpsRecordDataDomTest {
     @ParameterizedTest
     @MethodSource("recordTypes")
     void toRejectsInvalidPriority(RecordType type) {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("svc", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("svc", "example"));
         RDataDom negative = type.build(-1, name, null);
         RDataDom tooLarge = type.build(0x1_0000, name, null);
 
@@ -96,7 +96,7 @@ class SvcbAndHttpsRecordDataDomTest {
     @ParameterizedTest
     @MethodSource("recordTypes")
     void toRejectsNullParamValue(RecordType type) {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("svc", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("svc", "example"));
         SortedMap<Integer, byte[]> params = new TreeMap<>();
         params.put(1, null);
         RDataDom dom = type.build(1, name, params);
@@ -107,7 +107,7 @@ class SvcbAndHttpsRecordDataDomTest {
     @ParameterizedTest
     @MethodSource("recordTypes")
     void toSerializesPriorityNameAndParams(RecordType type) {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("svc", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("svc", "example"));
         SortedMap<Integer, byte[]> params = new TreeMap<>();
         params.put(3, new byte[0]);
         params.put(5, new byte[] {1, 2, 3});
@@ -127,7 +127,7 @@ class SvcbAndHttpsRecordDataDomTest {
     @ParameterizedTest
     @MethodSource("recordTypes")
     void roundTripPreservesFields(RecordType type) {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("svc", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("svc", "example"));
         SortedMap<Integer, byte[]> params = new TreeMap<>();
         params.put(1, new byte[0]);
         params.put(10, new byte[] {9, 8, 7});
@@ -136,7 +136,7 @@ class SvcbAndHttpsRecordDataDomTest {
         RDataDom decoded = type.from(original.to(), null);
 
         assertEquals(12, type.svcPriority(decoded));
-        assertEquals(List.of("svc", "example"), type.targetName(decoded).labels());
+        assertEquals(List.of("svc", "example"), type.targetName(decoded).labelStrings());
         assertEquals(2, type.svcParams(decoded).size());
         assertArrayEquals(new byte[0], type.svcParams(decoded).get(1));
         assertArrayEquals(new byte[] {9, 8, 7}, type.svcParams(decoded).get(10));

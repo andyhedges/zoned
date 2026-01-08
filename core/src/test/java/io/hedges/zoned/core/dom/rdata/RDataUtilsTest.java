@@ -142,7 +142,7 @@ class RDataUtilsTest {
         byte[] rdata = new byte[] {0};
         DnsNameDom name = RDataUtils.toDnsNameDom(rdata);
 
-        assertEquals(List.of(), name.labels());
+        assertEquals(List.of(), name.labelStrings());
     }
 
     @Test
@@ -170,22 +170,13 @@ class RDataUtilsTest {
     }
 
     @Test
-    void toDnsNameDomRejectsResolvedNameWithNullLabels() {
-        byte[] rdata = new byte[] {(byte) 0xC0, 0x10};
-        NameResolver resolver = offset -> DnsNameDom.builder().build();
-        assertThrows(IllegalArgumentException.class, () -> RDataUtils.toDnsNameDom(rdata, resolver));
-    }
-
-    @Test
     void toDnsNameDomResolvesCompressedName() {
         byte[] rdata = new byte[] {(byte) 0xC0, 0x10};
-        NameResolver resolver = offset -> DnsNameDom.builder()
-                .labels(List.of("alias", "example"))
-                .build();
+        NameResolver resolver = offset -> DnsNameDom.labels(List.of("alias", "example"));
 
         DnsNameDom name = RDataUtils.toDnsNameDom(rdata, resolver);
 
-        assertEquals(List.of("alias", "example"), name.labels());
+        assertEquals(List.of("alias", "example"), name.labelStrings());
     }
 
     @Test
@@ -193,19 +184,19 @@ class RDataUtilsTest {
         byte[] rdata = new byte[] {3, 'w', 'w', 'w', 7, 'e', 'x', 'a', 'm', 'p', 'l', 'e', 4, 't', 'e', 's', 't', 0};
         DnsNameDom name = RDataUtils.toDnsNameDom(rdata);
 
-        assertEquals(List.of("www", "example", "test"), name.labels());
+        assertEquals(List.of("www", "example", "test"), name.labelStrings());
     }
 
     @Test
     void toByteArrayFromDnsNameValidatesInputs() {
         assertThrows(IllegalArgumentException.class, () -> RDataUtils.toByteArray((DnsNameDom) null));
-        assertThrows(IllegalArgumentException.class, () -> RDataUtils.toByteArray(DnsNameDom.builder().build()));
+        assertArrayEquals(new byte[] {0}, RDataUtils.toByteArray(DnsNameDom.ROOT));
     }
 
     @Test
     void toByteArrayFromDnsNameRejectsLongLabel() {
         String longLabel = "a".repeat(64);
-        DnsNameDom name = DnsNameDom.builder().labels(List.of(longLabel)).build();
+        DnsNameDom name = DnsNameDom.labels(List.of(longLabel));
 
         assertThrows(IllegalArgumentException.class, () -> RDataUtils.toByteArray(name));
     }
@@ -214,14 +205,14 @@ class RDataUtilsTest {
     void toByteArrayFromDnsNameRejectsOversizedName() {
         String label = "a".repeat(63);
         List<String> labels = List.of(label, label, label, label);
-        DnsNameDom name = DnsNameDom.builder().labels(labels).build();
+        DnsNameDom name = DnsNameDom.labels(labels);
 
         assertThrows(IllegalArgumentException.class, () -> RDataUtils.toByteArray(name));
     }
 
     @Test
     void toByteArrayFromDnsNameSerializesLabels() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("www", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("www", "example", "test"));
 
         byte[] bytes = RDataUtils.toByteArray(name);
 
@@ -234,22 +225,22 @@ class RDataUtilsTest {
     @Test
     void dnsNameRoundTripPreservesLabels() {
         List<String> labels = List.of("service", "example", "test");
-        DnsNameDom name = DnsNameDom.builder().labels(labels).build();
+        DnsNameDom name = DnsNameDom.labels(labels);
 
         byte[] bytes = RDataUtils.toByteArray(name);
         DnsNameDom decoded = RDataUtils.toDnsNameDom(bytes);
 
-        assertEquals(labels, decoded.labels());
+        assertEquals(labels, decoded.labelStrings());
     }
 
     @Test
     void dnsNameRootRoundTripUsesSingleTerminator() {
-        DnsNameDom root = DnsNameDom.builder().labels(List.of()).build();
+        DnsNameDom root = DnsNameDom.labels(List.of());
 
         byte[] bytes = RDataUtils.toByteArray(root);
         DnsNameDom decoded = RDataUtils.toDnsNameDom(bytes);
 
         assertArrayEquals(new byte[] {0}, bytes);
-        assertEquals(List.of(), decoded.labels());
+        assertEquals(List.of(), decoded.labelStrings());
     }
 }

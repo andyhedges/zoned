@@ -28,7 +28,7 @@ class NsecRecordDataDomTest {
 
     @Test
     void fromParsesFields() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("next", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("next", "example", "test"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         byte[] typeBitmaps = new byte[] {0, 1, 64};
         byte[] rdata = new byte[nameBytes.length + typeBitmaps.length];
@@ -38,7 +38,7 @@ class NsecRecordDataDomTest {
         RDataDom dom = NsecRecordDataDom.from(rdata, null);
         NsecRecordDataDom nsec = assertInstanceOf(NsecRecordDataDom.class, dom);
 
-        assertEquals(List.of("next", "example", "test"), nsec.nextName().labels());
+        assertEquals(List.of("next", "example", "test"), nsec.nextName().labelStrings());
         assertArrayEquals(typeBitmaps, nsec.typeBitmaps());
     }
 
@@ -48,10 +48,10 @@ class NsecRecordDataDomTest {
                 .typeBitmaps(new byte[] {1})
                 .build();
         NsecRecordDataDom missingTypes = NsecRecordDataDom.builder()
-                .nextName(DnsNameDom.builder().labels(List.of("next", "example")).build())
+                .nextName(DnsNameDom.labels(List.of("next", "example")))
                 .build();
         NsecRecordDataDom emptyTypes = NsecRecordDataDom.builder()
-                .nextName(DnsNameDom.builder().labels(List.of("next", "example")).build())
+                .nextName(DnsNameDom.labels(List.of("next", "example")))
                 .typeBitmaps(new byte[0])
                 .build();
 
@@ -62,7 +62,7 @@ class NsecRecordDataDomTest {
 
     @Test
     void toSerializesRdata() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("next", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("next", "example", "test"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         byte[] typeBitmaps = new byte[] {0, 1, 64};
         NsecRecordDataDom dom = NsecRecordDataDom.builder()
@@ -79,7 +79,7 @@ class NsecRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("next", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("next", "example", "test"));
         byte[] typeBitmaps = new byte[] {0, 1, 64};
         NsecRecordDataDom original = NsecRecordDataDom.builder()
                 .nextName(name)
@@ -89,7 +89,7 @@ class NsecRecordDataDomTest {
         RDataDom decoded = NsecRecordDataDom.from(original.to(), null);
         NsecRecordDataDom parsed = assertInstanceOf(NsecRecordDataDom.class, decoded);
 
-        assertEquals(List.of("next", "example", "test"), parsed.nextName().labels());
+        assertEquals(List.of("next", "example", "test"), parsed.nextName().labelStrings());
         assertArrayEquals(typeBitmaps, parsed.typeBitmaps());
     }
 }

@@ -31,19 +31,19 @@ class MxRecordDataDomTest {
         MxRecordDataDom mx = assertInstanceOf(MxRecordDataDom.class, dom);
 
         assertEquals(10, mx.preference());
-        assertEquals(List.of("mx1", "example"), mx.exchange().labels());
+        assertEquals(List.of("mx1", "example"), mx.exchange().labelStrings());
     }
 
     @Test
     void fromUsesResolverForCompressedName() {
         byte[] rdata = new byte[] {0, 5, (byte) 0xC0, 0x10};
-        NameResolver resolver = offset -> DnsNameDom.builder().labels(List.of("mail", "example")).build();
+        NameResolver resolver = offset -> DnsNameDom.labels(List.of("mail", "example"));
 
         RDataDom dom = MxRecordDataDom.from(rdata, resolver);
         MxRecordDataDom mx = assertInstanceOf(MxRecordDataDom.class, dom);
 
         assertEquals(5, mx.preference());
-        assertEquals(List.of("mail", "example"), mx.exchange().labels());
+        assertEquals(List.of("mail", "example"), mx.exchange().labelStrings());
     }
 
     @Test
@@ -54,7 +54,7 @@ class MxRecordDataDomTest {
 
     @Test
     void toRejectsInvalidPreference() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("mx", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("mx", "example"));
         MxRecordDataDom negative = MxRecordDataDom.builder().preference(-1).exchange(name).build();
         MxRecordDataDom tooLarge = MxRecordDataDom.builder().preference(0x1_0000).exchange(name).build();
 
@@ -64,7 +64,7 @@ class MxRecordDataDomTest {
 
     @Test
     void toSerializesPreferenceAndExchange() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("mx1", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("mx1", "example"));
         MxRecordDataDom dom = MxRecordDataDom.builder().preference(10).exchange(name).build();
 
         byte[] encoded = dom.to();
@@ -80,13 +80,13 @@ class MxRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("mail", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("mail", "example"));
         MxRecordDataDom original = MxRecordDataDom.builder().preference(25).exchange(name).build();
 
         RDataDom decoded = MxRecordDataDom.from(original.to(), offset -> null);
         MxRecordDataDom parsed = assertInstanceOf(MxRecordDataDom.class, decoded);
 
         assertEquals(25, parsed.preference());
-        assertEquals(List.of("mail", "example"), parsed.exchange().labels());
+        assertEquals(List.of("mail", "example"), parsed.exchange().labelStrings());
     }
 }
