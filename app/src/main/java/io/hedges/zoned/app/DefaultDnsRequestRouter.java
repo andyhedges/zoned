@@ -32,7 +32,7 @@ public class DefaultDnsRequestRouter implements DnsRequestRouter {
                 return;
             }
 
-            log.info("dns_request route=forward question={} response={}", questionSummary, formatResponse(response));
+            log.debug("dns_request route=forward question={} response={}", questionSummary, formatResponse(response));
         });
     }
 

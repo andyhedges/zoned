@@ -2,7 +2,6 @@
 package io.hedges.zoned.core.resolver;
 
 import io.hedges.zoned.core.DnsClient;
-import io.hedges.zoned.core.DnsRequestContext;
 import io.hedges.zoned.core.cache.CacheEntry;
 import io.hedges.zoned.core.cache.RrSet;
 import io.hedges.zoned.core.cache.RrSetCache;
@@ -38,12 +37,11 @@ public class IterativeResolver implements Resolver {
     }
 
     @Override
-    public CompletionStage<Resolution> resolve(DnsQuestionDom question, DnsRequestContext context) {
+    public CompletionStage<Resolution> resolve(DnsQuestionDom question, long nowMillis) {
         Objects.requireNonNull(question, "question");
-        long nowMillis = context == null ? System.currentTimeMillis() : context.receivedAt();
         return cache.lookup(question, nowMillis)
-                .<CompletionStage<Resolution>>map(entry -> CompletableFuture.completedFuture(fromCache(entry)))
-                .orElseGet(() -> resolveIteratively(question, nowMillis, rootServers()));
+                    .<CompletionStage<Resolution>>map(entry -> CompletableFuture.completedFuture(fromCache(entry)))
+                    .orElseGet(() -> resolveIteratively(question, nowMillis, rootServers()));
     }
 
     private static Resolution fromCache(CacheEntry entry) {
@@ -66,34 +64,35 @@ public class IterativeResolver implements Resolver {
     }
 
     private CompletionStage<Resolution> resolveIteratively(DnsQuestionDom question,
-                                                          long nowMillis,
-                                                          List<InetSocketAddress> servers) {
+                                                           long nowMillis,
+                                                           List<InetSocketAddress> servers) {
         if (servers.isEmpty()) {
             return CompletableFuture.completedFuture(new Resolution(List.of(), List.of(), List.of(), false));
         }
         InetSocketAddress server = servers.getFirst();
         DnsMessageDom query = buildQuery(question);
         return dnsClient.send(query, server, null)
-                .thenCompose(response -> {
-                    if (response == null) {
-                        return CompletableFuture.completedFuture(
-                                new Resolution(List.of(), List.of(), List.of(), false));
-                    }
-                    List<DnsResourceRecordDom> answers = response.answers();
-                    List<DnsResourceRecordDom> authorities = response.authorities();
-                    List<DnsResourceRecordDom> additionals = response.additionals();
-                    if (!answers.isEmpty() && answerAnswersQuestion(question, answers)) {
-                        cache.storeAnswer(question, answers, authorities, additionals, nowMillis);
-                        return CompletableFuture.completedFuture(
-                                new Resolution(answers, authorities, additionals, true));
-                    }
-                    List<InetSocketAddress> nextServers = extractReferralAddresses(authorities, additionals);
-                    if (nextServers.isEmpty()) {
-                        return CompletableFuture.completedFuture(
-                                new Resolution(List.of(), authorities, additionals, false));
-                    }
-                    return resolveIteratively(question, nowMillis, nextServers);
-                });
+                        .thenCompose(response -> {
+                            if (response == null) {
+                                return CompletableFuture.completedFuture(
+                                        new Resolution(List.of(), List.of(), List.of(), false));
+                            }
+                            List<DnsResourceRecordDom> answers = response.answers();
+                            List<DnsResourceRecordDom> authorities = response.authorities();
+                            List<DnsResourceRecordDom> additionals = response.additionals();
+                            if (answerAnswersQuestion(question, answers)) {
+                                cache.storeAnswer(question, answers, authorities, additionals, nowMillis);
+                                return CompletableFuture.completedFuture(
+                                        new Resolution(answers, authorities, additionals, true));
+                            }
+                            List<InetSocketAddress> nextServers =
+                                    extractReferralAddresses(authorities, additionals);
+                            if (nextServers.isEmpty()) {
+                                return CompletableFuture.completedFuture(
+                                        new Resolution(List.of(), authorities, additionals, false));
+                            }
+                            return resolveIteratively(question, nowMillis, nextServers);
+                        });
     }
 
     private static List<InetSocketAddress> rootServers() {
@@ -101,6 +100,9 @@ public class IterativeResolver implements Resolver {
     }
 
     private static boolean answerAnswersQuestion(DnsQuestionDom question, List<DnsResourceRecordDom> answers) {
+        if (answers.isEmpty()) {
+            return false;
+        }
         return answers.stream().allMatch(
                 answer ->
                         question.recordType() == answer.type()
@@ -109,7 +111,8 @@ public class IterativeResolver implements Resolver {
         );
     }
 
-    private static List<InetSocketAddress> extractReferralAddresses(List<DnsResourceRecordDom> authorities,
+    private static List<InetSocketAddress> extractReferralAddresses(
+                                                                    List<DnsResourceRecordDom> authorities,
                                                                     List<DnsResourceRecordDom> additionals) {
         if (authorities == null || additionals == null) {
             return List.of();
@@ -120,8 +123,8 @@ public class IterativeResolver implements Resolver {
                 continue;
             }
             DnsNameDom nsName = ((NsRecordDataDom) rr.rdata()).nsName();
-            // I feel like we should ignore additional all together
-            // or perhaps just accept ones in bailiwick
+            DnsNameDom name = rr.name();
+
             for (DnsResourceRecordDom additional : additionals) {
                 if (additional == null || additional.type() != DnsRecordTypeDom.A) {
                     continue;
