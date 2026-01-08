@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AfsDbRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.builder().labels(List.of("afsdb", "example")).build();
+            offset -> DnsNameDom.labels(List.of("afsdb", "example"));
 
     @Test
     void fromRejectsShortInput() {
@@ -34,7 +34,7 @@ class AfsDbRecordDataDomTest {
         AfsDbRecordDataDom afsdb = assertInstanceOf(AfsDbRecordDataDom.class, dom);
 
         assertEquals(1, afsdb.subtype());
-        assertEquals(List.of("afsdb", "example"), afsdb.hostname().labels());
+        assertEquals(List.of("afsdb", "example"), afsdb.hostname().labelStrings());
     }
 
     @Test
@@ -45,7 +45,7 @@ class AfsDbRecordDataDomTest {
         AfsDbRecordDataDom afsdb = assertInstanceOf(AfsDbRecordDataDom.class, dom);
 
         assertEquals(2, afsdb.subtype());
-        assertEquals(List.of("afsdb", "example"), afsdb.hostname().labels());
+        assertEquals(List.of("afsdb", "example"), afsdb.hostname().labelStrings());
     }
 
     @Test
@@ -56,7 +56,7 @@ class AfsDbRecordDataDomTest {
 
     @Test
     void toRejectsInvalidSubtype() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("afsdb", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("afsdb", "example"));
         AfsDbRecordDataDom negative = AfsDbRecordDataDom.builder().subtype(-1).hostname(name).build();
         AfsDbRecordDataDom tooLarge = AfsDbRecordDataDom.builder().subtype(0x1_0000).hostname(name).build();
 
@@ -66,7 +66,7 @@ class AfsDbRecordDataDomTest {
 
     @Test
     void toSerializesSubtypeAndHostname() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("afsdb", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("afsdb", "example"));
         AfsDbRecordDataDom dom = AfsDbRecordDataDom.builder().subtype(1).hostname(name).build();
 
         byte[] encoded = dom.to();
@@ -82,13 +82,13 @@ class AfsDbRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("afsdb", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("afsdb", "example"));
         AfsDbRecordDataDom original = AfsDbRecordDataDom.builder().subtype(2).hostname(name).build();
 
         RDataDom decoded = AfsDbRecordDataDom.from(original.to(), RESOLVER);
         AfsDbRecordDataDom parsed = assertInstanceOf(AfsDbRecordDataDom.class, decoded);
 
         assertEquals(2, parsed.subtype());
-        assertEquals(List.of("afsdb", "example"), parsed.hostname().labels());
+        assertEquals(List.of("afsdb", "example"), parsed.hostname().labelStrings());
     }
 }

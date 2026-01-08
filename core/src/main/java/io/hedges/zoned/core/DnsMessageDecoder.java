@@ -13,7 +13,6 @@ import io.hedges.zoned.core.dom.DnsResponseCodeDom;
 import io.hedges.zoned.core.dom.rdata.OptRecordDataDom;
 import io.hedges.zoned.core.dom.rdata.RDataFactory;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -139,7 +138,7 @@ public final class DnsMessageDecoder {
         int endIndex = -1;
         boolean jumped = false;
         int limit = reader.limit();
-        List<String> labels = new ArrayList<>();
+        List<byte[]> labels = new ArrayList<>();
 
         while (true) {
             if (idx >= limit) {
@@ -178,7 +177,7 @@ public final class DnsMessageDecoder {
             }
             byte[] labelBytes = new byte[len];
             reader.getBytes(idx, labelBytes, 0, len);
-            labels.add(new String(labelBytes, StandardCharsets.US_ASCII));
+            labels.add(labelBytes);
             idx += len;
         }
 
@@ -189,6 +188,6 @@ public final class DnsMessageDecoder {
         return new NameParseResult(labels, endIndex);
     }
 
-    private record NameParseResult(List<String> labels, int endIndex) {
+    private record NameParseResult(List<byte[]> labels, int endIndex) {
     }
 }

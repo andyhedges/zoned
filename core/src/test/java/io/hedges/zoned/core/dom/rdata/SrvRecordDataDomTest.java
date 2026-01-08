@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SrvRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.builder().labels(List.of("srv", "example")).build();
+            offset -> DnsNameDom.labels("srv", "example");
 
     @Test
     void fromRejectsInvalidLength() {
@@ -47,7 +47,7 @@ class SrvRecordDataDomTest {
         assertEquals(10, srv.priority());
         assertEquals(20, srv.weight());
         assertEquals(30, srv.port());
-        assertEquals(List.of("srv", "example", "test"), srv.target().labels());
+        assertEquals(List.of("srv", "example", "test"), srv.target().labelStrings());
     }
 
     @Test
@@ -60,7 +60,7 @@ class SrvRecordDataDomTest {
         assertEquals(1, srv.priority());
         assertEquals(2, srv.weight());
         assertEquals(3, srv.port());
-        assertEquals(List.of("srv", "example"), srv.target().labels());
+        assertEquals(List.of("srv", "example"), srv.target().labelStrings());
     }
 
     @Test
@@ -74,37 +74,37 @@ class SrvRecordDataDomTest {
                 .priority(-1)
                 .weight(2)
                 .port(3)
-                .target(DnsNameDom.builder().labels(List.of("srv", "example")).build())
+                .target(DnsNameDom.labels(List.of("srv", "example")))
                 .build();
         SrvRecordDataDom tooLargePriority = SrvRecordDataDom.builder()
                 .priority(0x1_0000)
                 .weight(2)
                 .port(3)
-                .target(DnsNameDom.builder().labels(List.of("srv", "example")).build())
+                .target(DnsNameDom.labels(List.of("srv", "example")))
                 .build();
         SrvRecordDataDom negativeWeight = SrvRecordDataDom.builder()
                 .priority(1)
                 .weight(-1)
                 .port(3)
-                .target(DnsNameDom.builder().labels(List.of("srv", "example")).build())
+                .target(DnsNameDom.labels(List.of("srv", "example")))
                 .build();
         SrvRecordDataDom tooLargeWeight = SrvRecordDataDom.builder()
                 .priority(1)
                 .weight(0x1_0000)
                 .port(3)
-                .target(DnsNameDom.builder().labels(List.of("srv", "example")).build())
+                .target(DnsNameDom.labels(List.of("srv", "example")))
                 .build();
         SrvRecordDataDom negativePort = SrvRecordDataDom.builder()
                 .priority(1)
                 .weight(2)
                 .port(-1)
-                .target(DnsNameDom.builder().labels(List.of("srv", "example")).build())
+                .target(DnsNameDom.labels(List.of("srv", "example")))
                 .build();
         SrvRecordDataDom tooLargePort = SrvRecordDataDom.builder()
                 .priority(1)
                 .weight(2)
                 .port(0x1_0000)
-                .target(DnsNameDom.builder().labels(List.of("srv", "example")).build())
+                .target(DnsNameDom.labels(List.of("srv", "example")))
                 .build();
 
         assertThrows(IllegalArgumentException.class, missingTarget::to);
@@ -118,7 +118,7 @@ class SrvRecordDataDomTest {
 
     @Test
     void toSerializesRdata() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("srv", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("srv", "example", "test"));
         SrvRecordDataDom dom = SrvRecordDataDom.builder()
                 .priority(10)
                 .weight(20)
@@ -135,7 +135,7 @@ class SrvRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("srv", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("srv", "example", "test"));
         SrvRecordDataDom original = SrvRecordDataDom.builder()
                 .priority(1)
                 .weight(2)
@@ -149,6 +149,6 @@ class SrvRecordDataDomTest {
         assertEquals(1, parsed.priority());
         assertEquals(2, parsed.weight());
         assertEquals(3, parsed.port());
-        assertEquals(List.of("srv", "example", "test"), parsed.target().labels());
+        assertEquals(List.of("srv", "example", "test"), parsed.target().labelStrings());
     }
 }

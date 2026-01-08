@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RrsigRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.builder().labels(List.of("sig", "example")).build();
+            offset -> DnsNameDom.labels(List.of("sig", "example"));
 
     @Test
     void fromRejectsTooShort() {
@@ -74,7 +74,7 @@ class RrsigRecordDataDomTest {
         assertEquals(11, rrsig.signatureExpiration());
         assertEquals(12, rrsig.signatureInception());
         assertEquals(13, rrsig.keyTag());
-        assertEquals(List.of("sig", "example", "test"), rrsig.signerName().labels());
+        assertEquals(List.of("sig", "example", "test"), rrsig.signerName().labelStrings());
         assertArrayEquals(signature, rrsig.signature());
     }
 
@@ -94,7 +94,7 @@ class RrsigRecordDataDomTest {
         RDataDom dom = RrsigRecordDataDom.from(rdata, RESOLVER);
         RrsigRecordDataDom rrsig = assertInstanceOf(RrsigRecordDataDom.class, dom);
 
-        assertEquals(List.of("sig", "example"), rrsig.signerName().labels());
+        assertEquals(List.of("sig", "example"), rrsig.signerName().labelStrings());
         assertArrayEquals(signature, rrsig.signature());
     }
 
@@ -108,7 +108,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom tooLargeType = RrsigRecordDataDom.builder()
@@ -119,7 +119,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom negativeAlg = RrsigRecordDataDom.builder()
@@ -130,7 +130,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom tooLargeAlg = RrsigRecordDataDom.builder()
@@ -141,7 +141,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom negativeLabels = RrsigRecordDataDom.builder()
@@ -152,7 +152,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom tooLargeLabels = RrsigRecordDataDom.builder()
@@ -163,7 +163,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom negativeTtl = RrsigRecordDataDom.builder()
@@ -174,7 +174,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom tooLargeTtl = RrsigRecordDataDom.builder()
@@ -185,7 +185,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom negativeExpire = RrsigRecordDataDom.builder()
@@ -196,7 +196,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(-1)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom tooLargeExpire = RrsigRecordDataDom.builder()
@@ -207,7 +207,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0x1_0000_0000L)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom negativeIncept = RrsigRecordDataDom.builder()
@@ -218,7 +218,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(-1)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom tooLargeIncept = RrsigRecordDataDom.builder()
@@ -229,7 +229,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0x1_0000_0000L)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom negativeKeyTag = RrsigRecordDataDom.builder()
@@ -240,7 +240,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(-1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom tooLargeKeyTag = RrsigRecordDataDom.builder()
@@ -251,7 +251,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(0x1_0000)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         RrsigRecordDataDom missingSigner = RrsigRecordDataDom.builder()
@@ -272,7 +272,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .build();
         RrsigRecordDataDom emptySignature = RrsigRecordDataDom.builder()
                 .typeCovered(1)
@@ -282,7 +282,7 @@ class RrsigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.builder().labels(List.of("sig", "example")).build())
+                .signerName(DnsNameDom.labels(List.of("sig", "example")))
                 .signature(new byte[0])
                 .build();
 
@@ -307,7 +307,7 @@ class RrsigRecordDataDomTest {
 
     @Test
     void toSerializesRdata() {
-        DnsNameDom signer = DnsNameDom.builder().labels(List.of("sig", "example", "test")).build();
+        DnsNameDom signer = DnsNameDom.labels(List.of("sig", "example", "test"));
         RrsigRecordDataDom dom = RrsigRecordDataDom.builder()
                 .typeCovered(1)
                 .algorithm(2)
@@ -352,7 +352,7 @@ class RrsigRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom signer = DnsNameDom.builder().labels(List.of("sig", "example", "test")).build();
+        DnsNameDom signer = DnsNameDom.labels(List.of("sig", "example", "test"));
         RrsigRecordDataDom original = RrsigRecordDataDom.builder()
                 .typeCovered(1)
                 .algorithm(2)
@@ -375,7 +375,7 @@ class RrsigRecordDataDomTest {
         assertEquals(11, parsed.signatureExpiration());
         assertEquals(12, parsed.signatureInception());
         assertEquals(13, parsed.keyTag());
-        assertEquals(List.of("sig", "example", "test"), parsed.signerName().labels());
+        assertEquals(List.of("sig", "example", "test"), parsed.signerName().labelStrings());
         assertArrayEquals(new byte[] {9, 8, 7}, parsed.signature());
     }
 }

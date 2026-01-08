@@ -68,12 +68,12 @@ class NaptrRecordDataDomTest {
         assertEquals("", naptr.flags());
         assertEquals("", naptr.services());
         assertEquals("", naptr.regexp());
-        assertEquals(List.of(), naptr.replacement().labels());
+        assertEquals(List.of(), naptr.replacement().labelStrings());
     }
 
     @Test
     void fromParsesFields() {
-        DnsNameDom replacement = DnsNameDom.builder().labels(List.of("example", "test")).build();
+        DnsNameDom replacement = DnsNameDom.labels(List.of("example", "test"));
         byte[] nameBytes = RDataUtils.toByteArray(replacement);
         byte[] flags = new byte[] {1, 'U'};
         byte[] services = new byte[] {7, 'E', '2', 'U', '+', 's', 'i', 'p'};
@@ -100,7 +100,7 @@ class NaptrRecordDataDomTest {
         assertEquals("U", naptr.flags());
         assertEquals("E2U+sip", naptr.services());
         assertEquals("!", naptr.regexp());
-        assertEquals(List.of("example", "test"), naptr.replacement().labels());
+        assertEquals(List.of("example", "test"), naptr.replacement().labelStrings());
     }
 
     @Test
@@ -108,7 +108,7 @@ class NaptrRecordDataDomTest {
         NaptrRecordDataDom missingStrings = NaptrRecordDataDom.builder()
                 .order(1)
                 .preference(2)
-                .replacement(DnsNameDom.builder().labels(List.of("example", "test")).build())
+                .replacement(DnsNameDom.labels(List.of("example", "test")))
                 .build();
         NaptrRecordDataDom negativeOrder = NaptrRecordDataDom.builder()
                 .order(-1)
@@ -116,7 +116,7 @@ class NaptrRecordDataDomTest {
                 .flags("")
                 .services("")
                 .regexp("")
-                .replacement(DnsNameDom.builder().labels(List.of("example", "test")).build())
+                .replacement(DnsNameDom.labels(List.of("example", "test")))
                 .build();
         NaptrRecordDataDom tooLargeOrder = NaptrRecordDataDom.builder()
                 .order(0x1_0000)
@@ -124,7 +124,7 @@ class NaptrRecordDataDomTest {
                 .flags("")
                 .services("")
                 .regexp("")
-                .replacement(DnsNameDom.builder().labels(List.of("example", "test")).build())
+                .replacement(DnsNameDom.labels(List.of("example", "test")))
                 .build();
         NaptrRecordDataDom negativePreference = NaptrRecordDataDom.builder()
                 .order(1)
@@ -132,7 +132,7 @@ class NaptrRecordDataDomTest {
                 .flags("")
                 .services("")
                 .regexp("")
-                .replacement(DnsNameDom.builder().labels(List.of("example", "test")).build())
+                .replacement(DnsNameDom.labels(List.of("example", "test")))
                 .build();
         NaptrRecordDataDom tooLargePreference = NaptrRecordDataDom.builder()
                 .order(1)
@@ -140,7 +140,7 @@ class NaptrRecordDataDomTest {
                 .flags("")
                 .services("")
                 .regexp("")
-                .replacement(DnsNameDom.builder().labels(List.of("example", "test")).build())
+                .replacement(DnsNameDom.labels(List.of("example", "test")))
                 .build();
         NaptrRecordDataDom badFlags = NaptrRecordDataDom.builder()
                 .order(1)
@@ -148,7 +148,7 @@ class NaptrRecordDataDomTest {
                 .flags("a".repeat(256))
                 .services("")
                 .regexp("")
-                .replacement(DnsNameDom.builder().labels(List.of("example", "test")).build())
+                .replacement(DnsNameDom.labels(List.of("example", "test")))
                 .build();
         NaptrRecordDataDom badServices = NaptrRecordDataDom.builder()
                 .order(1)
@@ -156,7 +156,7 @@ class NaptrRecordDataDomTest {
                 .flags("")
                 .services("b".repeat(256))
                 .regexp("")
-                .replacement(DnsNameDom.builder().labels(List.of("example", "test")).build())
+                .replacement(DnsNameDom.labels(List.of("example", "test")))
                 .build();
         NaptrRecordDataDom badRegexp = NaptrRecordDataDom.builder()
                 .order(1)
@@ -164,7 +164,7 @@ class NaptrRecordDataDomTest {
                 .flags("")
                 .services("")
                 .regexp("c".repeat(256))
-                .replacement(DnsNameDom.builder().labels(List.of("example", "test")).build())
+                .replacement(DnsNameDom.labels(List.of("example", "test")))
                 .build();
         NaptrRecordDataDom missingReplacement = NaptrRecordDataDom.builder()
                 .order(1)
@@ -187,7 +187,7 @@ class NaptrRecordDataDomTest {
 
     @Test
     void toSerializesRdata() {
-        DnsNameDom replacement = DnsNameDom.builder().labels(List.of("example", "test")).build();
+        DnsNameDom replacement = DnsNameDom.labels(List.of("example", "test"));
         NaptrRecordDataDom dom = NaptrRecordDataDom.builder()
                 .order(10)
                 .preference(20)
@@ -223,7 +223,7 @@ class NaptrRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom replacement = DnsNameDom.builder().labels(List.of("example", "test")).build();
+        DnsNameDom replacement = DnsNameDom.labels(List.of("example", "test"));
         NaptrRecordDataDom original = NaptrRecordDataDom.builder()
                 .order(100)
                 .preference(200)
@@ -241,6 +241,6 @@ class NaptrRecordDataDomTest {
         assertEquals("U", parsed.flags());
         assertEquals("E2U+sip", parsed.services());
         assertEquals("!", parsed.regexp());
-        assertEquals(List.of("example", "test"), parsed.replacement().labels());
+        assertEquals(List.of("example", "test"), parsed.replacement().labelStrings());
     }
 }

@@ -112,7 +112,7 @@ class IterativeResolverTest {
     }
 
     private static DnsNameDom name(String... labels) {
-        return DnsNameDom.builder().labels(List.of(labels)).build();
+        return DnsNameDom.labels(List.of(labels));
     }
 
     private static DnsHeaderDom responseHeader() {

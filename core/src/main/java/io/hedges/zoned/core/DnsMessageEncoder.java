@@ -8,7 +8,6 @@ import io.hedges.zoned.core.dom.DnsQuestionDom;
 import io.hedges.zoned.core.dom.DnsResourceRecordDom;
 import io.hedges.zoned.core.dom.rdata.OptRecordDataDom;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public final class DnsMessageEncoder {
@@ -89,20 +88,19 @@ public final class DnsMessageEncoder {
             throw new IllegalArgumentException("name is null");
         }
         int totalLength = 1;
-        for (String label : name.labels()) {
+        for (byte[] label : name.labels()) {
             if (label == null) {
                 throw new IllegalArgumentException("label is null");
             }
-            byte[] bytes = label.getBytes(StandardCharsets.US_ASCII);
-            if (bytes.length > 63) {
-                throw new IllegalArgumentException("label exceeds 63 bytes: " + label);
+            if (label.length > 63) {
+                throw new IllegalArgumentException("label exceeds 63 bytes");
             }
-            totalLength += 1 + bytes.length;
+            totalLength += 1 + label.length;
             if (totalLength > 255) {
                 throw new IllegalArgumentException("name exceeds 255 bytes");
             }
-            writer.writeU8(bytes.length);
-            writer.writeBytes(bytes);
+            writer.writeU8(label.length);
+            writer.writeBytes(label);
         }
         writer.writeU8(0);
     }

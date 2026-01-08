@@ -47,7 +47,7 @@ class IpseckeyRecordDataDomTest {
 
     @Test
     void fromParsesNameGateway() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("gw", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("gw", "example", "test"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         byte[] rdata = new byte[3 + nameBytes.length + 2];
         int idx = 0;
@@ -135,7 +135,7 @@ class IpseckeyRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("gw", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("gw", "example", "test"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         IpseckeyRecordDataDom original = IpseckeyRecordDataDom.builder()
                 .precedence(3)

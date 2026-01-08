@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PtrRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.builder().labels(List.of("ptr", "example")).build();
+            offset -> DnsNameDom.labels(List.of("ptr", "example"));
 
     @Test
     void fromRejectsInvalidName() {
@@ -30,7 +30,7 @@ class PtrRecordDataDomTest {
         RDataDom dom = PtrRecordDataDom.from(rdata, null);
         PtrRecordDataDom ptr = assertInstanceOf(PtrRecordDataDom.class, dom);
 
-        assertEquals(List.of("ptr", "example"), ptr.ptrName().labels());
+        assertEquals(List.of("ptr", "example"), ptr.ptrName().labelStrings());
     }
 
     @Test
@@ -40,7 +40,7 @@ class PtrRecordDataDomTest {
         RDataDom dom = PtrRecordDataDom.from(rdata, RESOLVER);
         PtrRecordDataDom ptr = assertInstanceOf(PtrRecordDataDom.class, dom);
 
-        assertEquals(List.of("ptr", "example"), ptr.ptrName().labels());
+        assertEquals(List.of("ptr", "example"), ptr.ptrName().labelStrings());
     }
 
     @Test
@@ -51,7 +51,7 @@ class PtrRecordDataDomTest {
 
     @Test
     void toSerializesName() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("ptr", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("ptr", "example"));
         PtrRecordDataDom dom = PtrRecordDataDom.builder().ptrName(name).build();
 
         byte[] encoded = dom.to();
@@ -61,12 +61,12 @@ class PtrRecordDataDomTest {
 
     @Test
     void roundTripPreservesName() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("host", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("host", "example"));
         PtrRecordDataDom original = PtrRecordDataDom.builder().ptrName(name).build();
 
         RDataDom decoded = PtrRecordDataDom.from(original.to(), RESOLVER);
         PtrRecordDataDom parsed = assertInstanceOf(PtrRecordDataDom.class, decoded);
 
-        assertEquals(List.of("host", "example"), parsed.ptrName().labels());
+        assertEquals(List.of("host", "example"), parsed.ptrName().labelStrings());
     }
 }

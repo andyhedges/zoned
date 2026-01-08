@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RpRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.builder().labels(List.of("txt", "example")).build();
+            offset -> DnsNameDom.labels(List.of("txt", "example"));
 
     @Test
     void fromRejectsEmpty() {
@@ -43,8 +43,8 @@ class RpRecordDataDomTest {
         RDataDom dom = RpRecordDataDom.from(rdata, RESOLVER);
         RpRecordDataDom rp = assertInstanceOf(RpRecordDataDom.class, dom);
 
-        assertEquals(List.of("mbx", "example", "test"), rp.mailbox().labels());
-        assertEquals(List.of("txt", "example", "test"), rp.textDomain().labels());
+        assertEquals(List.of("mbx", "example", "test"), rp.mailbox().labelStrings());
+        assertEquals(List.of("txt", "example", "test"), rp.textDomain().labelStrings());
     }
 
     @Test
@@ -54,17 +54,17 @@ class RpRecordDataDomTest {
         RDataDom dom = RpRecordDataDom.from(rdata, RESOLVER);
         RpRecordDataDom rp = assertInstanceOf(RpRecordDataDom.class, dom);
 
-        assertEquals(List.of("mbx"), rp.mailbox().labels());
-        assertEquals(List.of("txt", "example"), rp.textDomain().labels());
+        assertEquals(List.of("mbx"), rp.mailbox().labelStrings());
+        assertEquals(List.of("txt", "example"), rp.textDomain().labelStrings());
     }
 
     @Test
     void toRejectsInvalidFields() {
         RpRecordDataDom missingMailbox = RpRecordDataDom.builder()
-                .textDomain(DnsNameDom.builder().labels(List.of("txt", "example")).build())
+                .textDomain(DnsNameDom.labels(List.of("txt", "example")))
                 .build();
         RpRecordDataDom missingText = RpRecordDataDom.builder()
-                .mailbox(DnsNameDom.builder().labels(List.of("mbx", "example")).build())
+                .mailbox(DnsNameDom.labels(List.of("mbx", "example")))
                 .build();
 
         assertThrows(IllegalArgumentException.class, missingMailbox::to);
@@ -73,8 +73,8 @@ class RpRecordDataDomTest {
 
     @Test
     void toSerializesRdata() {
-        DnsNameDom mailbox = DnsNameDom.builder().labels(List.of("mbx", "example", "test")).build();
-        DnsNameDom text = DnsNameDom.builder().labels(List.of("txt", "example", "test")).build();
+        DnsNameDom mailbox = DnsNameDom.labels(List.of("mbx", "example", "test"));
+        DnsNameDom text = DnsNameDom.labels(List.of("txt", "example", "test"));
         RpRecordDataDom dom = RpRecordDataDom.builder().mailbox(mailbox).textDomain(text).build();
 
         byte[] mailboxBytes = RDataUtils.toByteArray(mailbox);
@@ -88,14 +88,14 @@ class RpRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom mailbox = DnsNameDom.builder().labels(List.of("mbx", "example", "test")).build();
-        DnsNameDom text = DnsNameDom.builder().labels(List.of("txt", "example", "test")).build();
+        DnsNameDom mailbox = DnsNameDom.labels(List.of("mbx", "example", "test"));
+        DnsNameDom text = DnsNameDom.labels(List.of("txt", "example", "test"));
         RpRecordDataDom original = RpRecordDataDom.builder().mailbox(mailbox).textDomain(text).build();
 
         RDataDom decoded = RpRecordDataDom.from(original.to(), RESOLVER);
         RpRecordDataDom parsed = assertInstanceOf(RpRecordDataDom.class, decoded);
 
-        assertEquals(List.of("mbx", "example", "test"), parsed.mailbox().labels());
-        assertEquals(List.of("txt", "example", "test"), parsed.textDomain().labels());
+        assertEquals(List.of("mbx", "example", "test"), parsed.mailbox().labelStrings());
+        assertEquals(List.of("txt", "example", "test"), parsed.textDomain().labelStrings());
     }
 }

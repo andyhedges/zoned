@@ -56,10 +56,10 @@ public class DefaultDnsRequestRouter implements DnsRequestRouter {
     }
 
     private static String formatName(DnsNameDom name) {
-        if (name == null || name.labels() == null || name.labels().isEmpty()) {
+        if (name == null || name.labelStrings() == null || name.labelStrings().isEmpty()) {
             return ".";
         }
-        return String.join(".", name.labels());
+        return String.join(".", name.labelStrings());
     }
 
     private static String formatResponse(DnsMessageDom response) {

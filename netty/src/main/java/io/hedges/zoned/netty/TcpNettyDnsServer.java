@@ -14,7 +14,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import lombok.Setter;
 
 public final class TcpNettyDnsServer implements DnsServer {
 
@@ -22,7 +21,6 @@ public final class TcpNettyDnsServer implements DnsServer {
     private final int listenPort;
     private final boolean manageGroupLifecycle;
     private Channel channel;
-    @Setter
     private DnsRequestHandler requestHandler;
 
     public TcpNettyDnsServer(EventLoopGroup group, int listenPort) {

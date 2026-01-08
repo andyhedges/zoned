@@ -129,8 +129,7 @@ public class IterativeResolver implements Resolver {
                 if (!nsName.equals(additional.name())) {
                     continue;
                 }
-                if (additional.rdata() instanceof ARecordDataDom) {
-                    ARecordDataDom a = (ARecordDataDom) additional.rdata();
+                if (additional.rdata() instanceof ARecordDataDom a) {
                     if (a.address() != null) {
                         servers.add(new InetSocketAddress(a.address(), 53));
                     }

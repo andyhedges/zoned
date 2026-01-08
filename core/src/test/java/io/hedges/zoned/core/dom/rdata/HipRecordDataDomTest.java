@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class HipRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.builder().labels(List.of("rvs", "example")).build();
+            offset -> DnsNameDom.labels(List.of("rvs", "example"));
 
     @Test
     void fromRejectsInvalidLength() {
@@ -47,7 +47,7 @@ class HipRecordDataDomTest {
 
     @Test
     void fromParsesRendezvousServers() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("rvs", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("rvs", "example", "test"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         byte[] rdata = new byte[4 + 4 + 3 + nameBytes.length];
         int idx = 0;
@@ -64,7 +64,7 @@ class HipRecordDataDomTest {
         RDataDom dom = HipRecordDataDom.from(rdata, null);
         HipRecordDataDom hip = assertInstanceOf(HipRecordDataDom.class, dom);
 
-        assertEquals(List.of("rvs", "example", "test"), hip.rendezvousServers().get(0).labels());
+        assertEquals(List.of("rvs", "example", "test"), hip.rendezvousServers().get(0).labelStrings());
     }
 
     @Test
@@ -73,7 +73,7 @@ class HipRecordDataDomTest {
         RDataDom dom = HipRecordDataDom.from(rdata, RESOLVER);
         HipRecordDataDom hip = assertInstanceOf(HipRecordDataDom.class, dom);
 
-        assertEquals(List.of("rvs", "example"), hip.rendezvousServers().get(0).labels());
+        assertEquals(List.of("rvs", "example"), hip.rendezvousServers().get(0).labelStrings());
     }
 
     @Test
@@ -150,7 +150,7 @@ class HipRecordDataDomTest {
 
     @Test
     void toSerializesRdata() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("rvs", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("rvs", "example", "test"));
         HipRecordDataDom dom = HipRecordDataDom.builder()
                 .hit(new byte[] {1, 2, 3, 4})
                 .algorithm(2)
@@ -176,7 +176,7 @@ class HipRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("rvs", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("rvs", "example", "test"));
         HipRecordDataDom original = HipRecordDataDom.builder()
                 .hit(new byte[] {10, 11, 12, 13})
                 .algorithm(1)
@@ -190,6 +190,6 @@ class HipRecordDataDomTest {
         assertArrayEquals(new byte[] {10, 11, 12, 13}, parsed.hit());
         assertEquals(1, parsed.algorithm());
         assertArrayEquals(new byte[] {4, 5, 6}, parsed.publicKey());
-        assertEquals(List.of("rvs", "example", "test"), parsed.rendezvousServers().get(0).labels());
+        assertEquals(List.of("rvs", "example", "test"), parsed.rendezvousServers().get(0).labelStrings());
     }
 }

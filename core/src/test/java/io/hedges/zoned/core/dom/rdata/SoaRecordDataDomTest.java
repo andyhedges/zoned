@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SoaRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.builder().labels(List.of("ns", "example")).build();
+            offset -> DnsNameDom.labels(List.of("ns", "example"));
 
     @Test
     void fromRejectsInvalidData() {
@@ -40,8 +40,8 @@ class SoaRecordDataDomTest {
         RDataDom dom = SoaRecordDataDom.from(rdata, RESOLVER);
         SoaRecordDataDom soa = assertInstanceOf(SoaRecordDataDom.class, dom);
 
-        assertEquals(List.of("ns", "example"), soa.mname().labels());
-        assertEquals(List.of("hostmaster", "example"), soa.rname().labels());
+        assertEquals(List.of("ns", "example"), soa.mname().labelStrings());
+        assertEquals(List.of("hostmaster", "example"), soa.rname().labelStrings());
         assertEquals(1L, soa.serial());
         assertEquals(2L, soa.refreshSeconds());
         assertEquals(3L, soa.retrySeconds());
@@ -64,13 +64,13 @@ class SoaRecordDataDomTest {
         RDataDom dom = SoaRecordDataDom.from(rdata, RESOLVER);
         SoaRecordDataDom soa = assertInstanceOf(SoaRecordDataDom.class, dom);
 
-        assertEquals(List.of("ns", "example"), soa.mname().labels());
-        assertEquals(List.of("hostmaster", "example"), soa.rname().labels());
+        assertEquals(List.of("ns", "example"), soa.mname().labelStrings());
+        assertEquals(List.of("hostmaster", "example"), soa.rname().labelStrings());
     }
 
     @Test
     void toRejectsInvalidFields() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("ns", "example")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("ns", "example"));
         SoaRecordDataDom missingNames = SoaRecordDataDom.builder().build();
         SoaRecordDataDom missingRname = SoaRecordDataDom.builder().mname(name).build();
         SoaRecordDataDom negative = SoaRecordDataDom.builder()
@@ -92,8 +92,8 @@ class SoaRecordDataDomTest {
 
     @Test
     void toSerializesFields() {
-        DnsNameDom mname = DnsNameDom.builder().labels(List.of("ns", "example")).build();
-        DnsNameDom rname = DnsNameDom.builder().labels(List.of("hostmaster", "example")).build();
+        DnsNameDom mname = DnsNameDom.labels(List.of("ns", "example"));
+        DnsNameDom rname = DnsNameDom.labels(List.of("hostmaster", "example"));
         SoaRecordDataDom dom = SoaRecordDataDom.builder()
                 .mname(mname)
                 .rname(rname)
@@ -122,8 +122,8 @@ class SoaRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom mname = DnsNameDom.builder().labels(List.of("ns", "example")).build();
-        DnsNameDom rname = DnsNameDom.builder().labels(List.of("hostmaster", "example")).build();
+        DnsNameDom mname = DnsNameDom.labels(List.of("ns", "example"));
+        DnsNameDom rname = DnsNameDom.labels(List.of("hostmaster", "example"));
         SoaRecordDataDom original = SoaRecordDataDom.builder()
                 .mname(mname)
                 .rname(rname)
@@ -137,8 +137,8 @@ class SoaRecordDataDomTest {
         RDataDom decoded = SoaRecordDataDom.from(original.to(), RESOLVER);
         SoaRecordDataDom parsed = assertInstanceOf(SoaRecordDataDom.class, decoded);
 
-        assertEquals(List.of("ns", "example"), parsed.mname().labels());
-        assertEquals(List.of("hostmaster", "example"), parsed.rname().labels());
+        assertEquals(List.of("ns", "example"), parsed.mname().labelStrings());
+        assertEquals(List.of("hostmaster", "example"), parsed.rname().labelStrings());
         assertEquals(12345L, parsed.serial());
         assertEquals(7200L, parsed.refreshSeconds());
         assertEquals(3600L, parsed.retrySeconds());

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TkeyRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.builder().labels(List.of("alg", "example")).build();
+            offset -> DnsNameDom.labels(List.of("alg", "example"));
 
     @Test
     void fromRejectsInvalidLength() {
@@ -109,7 +109,7 @@ class TkeyRecordDataDomTest {
         RDataDom dom = TkeyRecordDataDom.from(rdata, RESOLVER);
         TkeyRecordDataDom tkey = assertInstanceOf(TkeyRecordDataDom.class, dom);
 
-        assertEquals(List.of("alg", "example", "test"), tkey.algorithm().labels());
+        assertEquals(List.of("alg", "example", "test"), tkey.algorithm().labelStrings());
         assertEquals(1, tkey.inception());
         assertEquals(2, tkey.expiration());
         assertEquals(3, tkey.mode());
@@ -133,7 +133,7 @@ class TkeyRecordDataDomTest {
         RDataDom dom = TkeyRecordDataDom.from(rdata, RESOLVER);
         TkeyRecordDataDom tkey = assertInstanceOf(TkeyRecordDataDom.class, dom);
 
-        assertEquals(List.of("alg", "example"), tkey.algorithm().labels());
+        assertEquals(List.of("alg", "example"), tkey.algorithm().labelStrings());
         assertEquals(1, tkey.inception());
         assertEquals(2, tkey.expiration());
         assertEquals(3, tkey.mode());
@@ -333,7 +333,7 @@ class TkeyRecordDataDomTest {
     }
 
     private static DnsNameDom nameDom() {
-        return DnsNameDom.builder().labels(List.of("alg", "example", "test")).build();
+        return DnsNameDom.labels(List.of("alg", "example", "test"));
     }
 
     private static byte[] nameBytes() {

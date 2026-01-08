@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CnameRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.builder().labels(List.of("alias", "example")).build();
+            offset -> DnsNameDom.labels(List.of("alias", "example"));
 
     @Test
     void fromRejectsInvalidName() {
@@ -30,7 +30,7 @@ class CnameRecordDataDomTest {
         RDataDom dom = CnameRecordDataDom.from(rdata, RESOLVER);
         CnameRecordDataDom cname = assertInstanceOf(CnameRecordDataDom.class, dom);
 
-        assertEquals(List.of("www", "example", "test"), cname.cname().labels());
+        assertEquals(List.of("www", "example", "test"), cname.cname().labelStrings());
     }
 
     @Test
@@ -40,7 +40,7 @@ class CnameRecordDataDomTest {
         RDataDom dom = CnameRecordDataDom.from(rdata, RESOLVER);
         CnameRecordDataDom cname = assertInstanceOf(CnameRecordDataDom.class, dom);
 
-        assertEquals(List.of("alias", "example"), cname.cname().labels());
+        assertEquals(List.of("alias", "example"), cname.cname().labelStrings());
     }
 
     @Test
@@ -51,7 +51,7 @@ class CnameRecordDataDomTest {
 
     @Test
     void toSerializesName() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("www", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("www", "example", "test"));
         CnameRecordDataDom dom = CnameRecordDataDom.builder().cname(name).build();
 
         byte[] encoded = dom.to();
@@ -64,12 +64,12 @@ class CnameRecordDataDomTest {
 
     @Test
     void roundTripPreservesName() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("service", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("service", "example", "test"));
         CnameRecordDataDom original = CnameRecordDataDom.builder().cname(name).build();
 
         RDataDom decoded = CnameRecordDataDom.from(original.to(), RESOLVER);
         CnameRecordDataDom parsed = assertInstanceOf(CnameRecordDataDom.class, decoded);
 
-        assertEquals(List.of("service", "example", "test"), parsed.cname().labels());
+        assertEquals(List.of("service", "example", "test"), parsed.cname().labelStrings());
     }
 }

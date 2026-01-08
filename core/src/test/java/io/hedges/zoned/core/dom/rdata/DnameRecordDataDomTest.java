@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DnameRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.builder().labels(List.of("alias", "example")).build();
+            offset -> DnsNameDom.labels(List.of("alias", "example"));
 
     @Test
     void fromRejectsInvalidName() {
@@ -30,7 +30,7 @@ class DnameRecordDataDomTest {
         RDataDom dom = DnameRecordDataDom.from(rdata, RESOLVER);
         DnameRecordDataDom dname = assertInstanceOf(DnameRecordDataDom.class, dom);
 
-        assertEquals(List.of("tgt", "example", "test"), dname.dname().labels());
+        assertEquals(List.of("tgt", "example", "test"), dname.dname().labelStrings());
     }
 
     @Test
@@ -40,7 +40,7 @@ class DnameRecordDataDomTest {
         RDataDom dom = DnameRecordDataDom.from(rdata, RESOLVER);
         DnameRecordDataDom dname = assertInstanceOf(DnameRecordDataDom.class, dom);
 
-        assertEquals(List.of("alias", "example"), dname.dname().labels());
+        assertEquals(List.of("alias", "example"), dname.dname().labelStrings());
     }
 
     @Test
@@ -51,7 +51,7 @@ class DnameRecordDataDomTest {
 
     @Test
     void toSerializesName() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("tgt", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("tgt", "example", "test"));
         DnameRecordDataDom dom = DnameRecordDataDom.builder().dname(name).build();
 
         byte[] encoded = dom.to();
@@ -64,12 +64,12 @@ class DnameRecordDataDomTest {
 
     @Test
     void roundTripPreservesName() {
-        DnsNameDom name = DnsNameDom.builder().labels(List.of("service", "example", "test")).build();
+        DnsNameDom name = DnsNameDom.labels(List.of("service", "example", "test"));
         DnameRecordDataDom original = DnameRecordDataDom.builder().dname(name).build();
 
         RDataDom decoded = DnameRecordDataDom.from(original.to(), RESOLVER);
         DnameRecordDataDom parsed = assertInstanceOf(DnameRecordDataDom.class, decoded);
 
-        assertEquals(List.of("service", "example", "test"), parsed.dname().labels());
+        assertEquals(List.of("service", "example", "test"), parsed.dname().labelStrings());
     }
 }
