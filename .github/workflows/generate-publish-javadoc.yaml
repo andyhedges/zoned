@@ -34,6 +34,7 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
+          maven-version: '3.9.12'
           cache: maven
 
       - name: Generate aggregated Javadoc (multi-module)
