@@ -2,7 +2,6 @@
 package io.hedges.zoned.core.resolver;
 
 import io.hedges.zoned.core.DnsClient;
-import io.hedges.zoned.core.DnsRequestContext;
 import io.hedges.zoned.core.dom.DnsMessageDom;
 import io.hedges.zoned.core.dom.DnsHeaderDom;
 import io.hedges.zoned.core.dom.DnsNameDom;
@@ -44,7 +43,7 @@ class IterativeResolverTest {
                 .build();
 
         IterativeResolver resolver = new IterativeResolver(dnsClient);
-        Resolver.Resolution resolution = resolver.resolve(question, DnsRequestContext.builder().build())
+        Resolver.Resolution resolution = resolver.resolve(question, System.currentTimeMillis())
                 .toCompletableFuture()
                 .join();
 

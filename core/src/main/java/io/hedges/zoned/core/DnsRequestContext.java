@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.net.InetSocketAddress;
-import java.util.Map;
 
 @Getter
 @Builder
@@ -18,8 +17,8 @@ public class DnsRequestContext {
     private InetSocketAddress clientAddress;
     private Transport transport;
     private DnsMessageDom query;
-    @Builder.Default private final long receivedAt = System.currentTimeMillis();
-    private Map<String, Object> data;
+    @Builder.Default
+    private final long receivedAt = System.currentTimeMillis();
     @Setter
     private DnsMessageDom response;
 }
