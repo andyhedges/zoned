@@ -16,13 +16,13 @@ COPY app/pom.xml app/pom.xml
 COPY coverage/pom.xml coverage/pom.xml
 
 RUN --mount=type=cache,target=/root/.m2 \
-    mvn -pl !coverage -B -ntp -DskipTests -am -U \
+    ./mvn -pl !coverage -B -ntp -DskipTests -am -U \
       dependency:go-offline
 
 COPY . .
 
 RUN --mount=type=cache,target=/root/.m2 \
-    mvn -B -ntp -DskipTests \
+    ./mvn -B -ntp -DskipTests \
       clean package
 
 FROM eclipse-temurin:21-jre AS runtime
