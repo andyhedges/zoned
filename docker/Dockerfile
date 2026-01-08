@@ -15,6 +15,9 @@ COPY netty/pom.xml netty/pom.xml
 COPY app/pom.xml app/pom.xml
 COPY coverage/pom.xml coverage/pom.xml
 
+COPY .mvn .mvn
+COPY mvnw mvnw
+
 RUN --mount=type=cache,target=/root/.m2 \
     ./mvnw -pl !coverage -B -ntp -DskipTests -am -U \
       dependency:go-offline
