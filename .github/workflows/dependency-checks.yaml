@@ -44,7 +44,7 @@ jobs:
           REPORT="dependency-report-${DATE}.txt"
           echo "REPORT=$REPORT" >> "$GITHUB_ENV"
           echo "DATE=$DATE" >> "$GITHUB_ENV"
-          ./mvnw mvn \
+          ./mvnw \
             -B -ntp \
             -Dstyle.color=never \
             -DgenerateBackupPoms=false \
