@@ -12,8 +12,12 @@ import java.util.Objects;
 
 @Builder
 public final class DnsNameDom {
+
     @Builder.Default
     private final List<byte[]> labels = Collections.emptyList();
+
+    @Builder.Default
+    private final DnsNameDomPolicy policy = DnsNameDomPolicy.Builtin.PROTOCOL;
 
     public static final DnsNameDom ROOT = DnsNameDom.builder().build();
 
@@ -53,24 +57,24 @@ public final class DnsNameDom {
 
     public boolean endsWith(DnsNameDom potentialSuffix) {
         Objects.requireNonNull(potentialSuffix, "potentialSuffix");
+        if (!Objects.equals(this.policy, potentialSuffix.policy)) {
+            return false;
+        }
         int suffixSize = potentialSuffix.size();
         int nameSize = this.size();
         if (suffixSize > nameSize) {
             return false;
         }
         int offset = nameSize - suffixSize;
-        for (int i = 0; i < suffixSize; i++) {
-            if (!Arrays.equals(potentialSuffix.label(i), this.label(offset + i))) {
-                return false;
-            }
-        }
-        return true;
+        List<byte[]> suffixLabels = new ArrayList<>(labels.subList(offset, nameSize));
+        DnsNameDom tail = DnsNameDom.builder()
+                .policy(this.policy)
+                .labels(suffixLabels)
+                .build();
+        return this.policy.equalNames(tail, potentialSuffix);
     }
 
-    // lombok doesn't do a deep equals on byte arrays
-    // we need that
     public boolean equals(final Object o) {
-        //same object
         if (o == this) {
             return true;
         }
@@ -78,37 +82,30 @@ public final class DnsNameDom {
             return false;
         }
         final DnsNameDom that = (DnsNameDom) o;
-        if(this.size() != that.size()){
+        if (!this.policy.equals(that.policy)) {
             return false;
         }
-        final List<byte[]> thisLabels = this.labels();
-        final List<byte[]> thatLabels = that.labels();
-
-        for(int i = 0; i < thisLabels.size(); i++){
-            byte[] a = thisLabels.get(i);
-            byte[] b = thatLabels.get(i);
-            if(!Arrays.equals(a, b)){
-                return false;
-            }
-        }
-        return true;
+        return this.policy.equalNames(this, that);
     }
 
-    // lombok doesn't do a deep hashCode on byte arrays
-    // we need that
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        for (byte[] label : labels) {
-            result = prime * result + Arrays.hashCode(label);
-        }
+        result = prime * result + policy.hashCode();
+        result = prime * result + policy.hashName(this);
         return result;
     }
 
     public static class DnsNameDomBuilder {
         public DnsNameDomBuilder labelStrings(List<String> labels) {
-            this.labels(toLabelBytes(Objects.requireNonNull(labels, "labels cannot be null")));
+            Objects.requireNonNull(labels, "labels cannot be null");
+            this.labels(toLabelBytes(labels));
             return this;
+        }
+
+        public DnsNameDomBuilder labelStrings(String... labels) {
+            Objects.requireNonNull(labels, "labels cannot be null");
+            return labelStrings(Arrays.asList(labels));
         }
     }
 
@@ -124,7 +121,4 @@ public final class DnsNameDom {
         return encoded;
     }
 
-    private DnsNameDom(List<byte[]> labels) {
-        this.labels = labels;
-    }
 }
