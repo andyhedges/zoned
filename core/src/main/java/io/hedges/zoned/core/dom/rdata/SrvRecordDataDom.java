@@ -2,6 +2,7 @@
 package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import io.hedges.zoned.core.dom.RDataDom;
 import io.hedges.zoned.core.NameResolver;
 import lombok.Builder;
@@ -46,7 +47,11 @@ public class SrvRecordDataDom implements RDataDom {
         int priority = RDataUtils.readU16(rdata, 0);
         int weight = RDataUtils.readU16(rdata, 2);
         int port = RDataUtils.readU16(rdata, 4);
-        RDataUtils.DnsNameParseResult parsed = RDataUtils.parseDnsName(rdata, 6, resolver);
+        RDataUtils.DnsNameParseResult parsed = RDataUtils.parseDnsName(
+                rdata,
+                6,
+                resolver,
+                DnsNameDomPolicy.Builtin.HOSTNAME);
         if (parsed.nextIndex() != rdata.length) {
             throw new IllegalArgumentException("Extra bytes after SRV target");
         }

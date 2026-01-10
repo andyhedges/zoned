@@ -3,6 +3,7 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 
 import java.util.Map;
 import java.util.SortedMap;
@@ -19,7 +20,11 @@ final class SvcbRdataCodec {
             throw new IllegalArgumentException(label + " RDATA requires priority and target name");
         }
         int svcPriority = RDataUtils.readU16(rdata, 0);
-        RDataUtils.DnsNameParseResult parsedName = RDataUtils.parseDnsName(rdata, 2, resolver);
+        RDataUtils.DnsNameParseResult parsedName = RDataUtils.parseDnsName(
+                rdata,
+                2,
+                resolver,
+                DnsNameDomPolicy.Builtin.HOSTNAME);
         DnsNameDom targetName = parsedName.name();
         int idx = parsedName.nextIndex();
 
