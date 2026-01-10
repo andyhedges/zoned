@@ -3,7 +3,6 @@ package io.hedges.zoned.core.dom;
 
 import lombok.Builder;
 import lombok.NonNull;
-import lombok.Getter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
