@@ -11,8 +11,8 @@ import io.hedges.zoned.core.dom.DnsRecordTypeDom;
 import io.hedges.zoned.core.dom.DnsResourceRecordDom;
 import io.hedges.zoned.core.dom.rdata.ARecordDataDom;
 import io.hedges.zoned.core.dom.rdata.NsRecordDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -111,7 +111,7 @@ class IterativeResolverTest {
     }
 
     private static DnsNameDom name(String... labels) {
-        return DnsNameDom.labels(List.of(labels));
+        return DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of(labels));
     }
 
     private static DnsHeaderDom responseHeader() {

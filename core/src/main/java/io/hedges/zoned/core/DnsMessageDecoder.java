@@ -4,6 +4,7 @@ package io.hedges.zoned.core;
 import io.hedges.zoned.core.dom.DnsHeaderDom;
 import io.hedges.zoned.core.dom.DnsMessageDom;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import io.hedges.zoned.core.dom.DnsOpCodeDom;
 import io.hedges.zoned.core.dom.DnsQuestionDom;
 import io.hedges.zoned.core.dom.DnsRecordClassDom;
@@ -125,12 +126,18 @@ public final class DnsMessageDecoder {
     private static DnsNameDom readName(DnsWireReader reader) {
         NameParseResult result = readName(reader, reader.position(), new HashSet<>());
         reader.position(result.endIndex());
-        return DnsNameDom.builder().labels(result.labels()).build();
+        return DnsNameDom.builder()
+                .policy(DnsNameDomPolicy.Builtin.PROTOCOL)
+                .labels(result.labels())
+                .build();
     }
 
     private static DnsNameDom resolveNameAt(DnsWireReader reader, int start) {
         NameParseResult result = readName(reader, start, new HashSet<>());
-        return DnsNameDom.builder().labels(result.labels()).build();
+        return DnsNameDom.builder()
+                .policy(DnsNameDomPolicy.Builtin.PROTOCOL)
+                .labels(result.labels())
+                .build();
     }
 
     private static NameParseResult readName(DnsWireReader reader, int start, Set<Integer> visitedOffsets) {

@@ -3,6 +3,7 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -107,11 +108,15 @@ public class RDataUtils {
     }
 
     protected static DnsNameDom toDnsNameDom(byte[] rdata) {
-        return toDnsNameDom(rdata, null);
+        return toDnsNameDom(rdata, null, DnsNameDomPolicy.Builtin.PROTOCOL);
     }
 
     protected static DnsNameDom toDnsNameDom(byte[] rdata, NameResolver resolver) {
-        DnsNameParseResult parsed = parseDnsName(rdata, 0, resolver);
+        return toDnsNameDom(rdata, resolver, DnsNameDomPolicy.Builtin.PROTOCOL);
+    }
+
+    protected static DnsNameDom toDnsNameDom(byte[] rdata, NameResolver resolver, DnsNameDomPolicy policy) {
+        DnsNameParseResult parsed = parseDnsName(rdata, 0, resolver, policy);
         if (parsed.nextIndex() != rdata.length) {
             throw new IllegalArgumentException("Extra bytes after RDATA name");
         }
@@ -119,6 +124,10 @@ public class RDataUtils {
     }
 
     protected static DnsNameParseResult parseDnsName(byte[] rdata, int offset, NameResolver resolver) {
+        return parseDnsName(rdata, offset, resolver, DnsNameDomPolicy.Builtin.PROTOCOL);
+    }
+
+    protected static DnsNameParseResult parseDnsName(byte[] rdata, int offset, NameResolver resolver, DnsNameDomPolicy policy) {
         if (rdata == null || rdata.length == 0) {
             throw new IllegalArgumentException("Name RDATA cannot be empty");
         }
@@ -173,7 +182,7 @@ public class RDataUtils {
             idx += len;
         }
 
-        return new DnsNameParseResult(DnsNameDom.builder().labels(decoded).build(), idx);
+        return new DnsNameParseResult(DnsNameDom.builder().policy(policy).labels(decoded).build(), idx);
     }
 
     protected static byte[] toByteArray(DnsNameDom name) {

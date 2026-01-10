@@ -4,8 +4,8 @@ package io.hedges.zoned.core.dom.rdata;
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AfsDbRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.labels(List.of("afsdb", "example"));
+            offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("afsdb", "example"));
 
     @Test
     void fromRejectsShortInput() {
@@ -56,7 +56,7 @@ class AfsDbRecordDataDomTest {
 
     @Test
     void toRejectsInvalidSubtype() {
-        DnsNameDom name = DnsNameDom.labels(List.of("afsdb", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("afsdb", "example"));
         AfsDbRecordDataDom negative = AfsDbRecordDataDom.builder().subtype(-1).hostname(name).build();
         AfsDbRecordDataDom tooLarge = AfsDbRecordDataDom.builder().subtype(0x1_0000).hostname(name).build();
 
@@ -66,7 +66,7 @@ class AfsDbRecordDataDomTest {
 
     @Test
     void toSerializesSubtypeAndHostname() {
-        DnsNameDom name = DnsNameDom.labels(List.of("afsdb", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("afsdb", "example"));
         AfsDbRecordDataDom dom = AfsDbRecordDataDom.builder().subtype(1).hostname(name).build();
 
         byte[] encoded = dom.to();
@@ -82,7 +82,7 @@ class AfsDbRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.labels(List.of("afsdb", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("afsdb", "example"));
         AfsDbRecordDataDom original = AfsDbRecordDataDom.builder().subtype(2).hostname(name).build();
 
         RDataDom decoded = AfsDbRecordDataDom.from(original.to(), RESOLVER);

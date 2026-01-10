@@ -3,6 +3,7 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,7 +65,7 @@ public class NaptrRecordDataDom implements RDataDom {
         }
         byte[] nameBytes = new byte[rdata.length - idx];
         System.arraycopy(rdata, idx, nameBytes, 0, nameBytes.length);
-        DnsNameDom replacement = RDataUtils.toDnsNameDom(nameBytes, resolver);
+        DnsNameDom replacement = RDataUtils.toDnsNameDom(nameBytes, resolver, DnsNameDomPolicy.Builtin.PROTOCOL);
         return NaptrRecordDataDom.builder()
                 .order(order)
                 .preference(preference)

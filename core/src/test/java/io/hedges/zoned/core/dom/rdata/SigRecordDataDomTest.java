@@ -4,8 +4,8 @@ package io.hedges.zoned.core.dom.rdata;
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SigRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.labels(List.of("sig", "example"));
+            offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example"));
 
     @Test
     void fromRejectsTooShort() {
@@ -108,7 +108,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom tooLargeType = SigRecordDataDom.builder()
@@ -119,7 +119,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom negativeAlg = SigRecordDataDom.builder()
@@ -130,7 +130,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom tooLargeAlg = SigRecordDataDom.builder()
@@ -141,7 +141,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom negativeLabels = SigRecordDataDom.builder()
@@ -152,7 +152,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom tooLargeLabels = SigRecordDataDom.builder()
@@ -163,7 +163,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom negativeTtl = SigRecordDataDom.builder()
@@ -174,7 +174,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom tooLargeTtl = SigRecordDataDom.builder()
@@ -185,7 +185,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom negativeExpire = SigRecordDataDom.builder()
@@ -196,7 +196,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(-1)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom tooLargeExpire = SigRecordDataDom.builder()
@@ -207,7 +207,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0x1_0000_0000L)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom negativeIncept = SigRecordDataDom.builder()
@@ -218,7 +218,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(-1)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom tooLargeIncept = SigRecordDataDom.builder()
@@ -229,7 +229,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0x1_0000_0000L)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom negativeKeyTag = SigRecordDataDom.builder()
@@ -240,7 +240,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(-1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom tooLargeKeyTag = SigRecordDataDom.builder()
@@ -251,7 +251,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(0x1_0000)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[] {1})
                 .build();
         SigRecordDataDom missingSigner = SigRecordDataDom.builder()
@@ -272,7 +272,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .build();
         SigRecordDataDom emptySignature = SigRecordDataDom.builder()
                 .typeCovered(1)
@@ -282,7 +282,7 @@ class SigRecordDataDomTest {
                 .signatureExpiration(0)
                 .signatureInception(0)
                 .keyTag(1)
-                .signerName(DnsNameDom.labels(List.of("sig", "example")))
+                .signerName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example")))
                 .signature(new byte[0])
                 .build();
 
@@ -307,7 +307,7 @@ class SigRecordDataDomTest {
 
     @Test
     void toSerializesRdata() {
-        DnsNameDom signer = DnsNameDom.labels(List.of("sig", "example", "test"));
+        DnsNameDom signer = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example", "test"));
         SigRecordDataDom dom = SigRecordDataDom.builder()
                 .typeCovered(1)
                 .algorithm(2)
@@ -352,7 +352,7 @@ class SigRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom signer = DnsNameDom.labels(List.of("sig", "example", "test"));
+        DnsNameDom signer = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("sig", "example", "test"));
         SigRecordDataDom original = SigRecordDataDom.builder()
                 .typeCovered(1)
                 .algorithm(2)

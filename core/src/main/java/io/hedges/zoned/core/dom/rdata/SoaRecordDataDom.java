@@ -3,6 +3,7 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,12 +53,20 @@ public class SoaRecordDataDom implements RDataDom {
         if (rdata.length < 22) {
             throw new IllegalArgumentException("SOA RDATA is too short");
         }
-        RDataUtils.DnsNameParseResult mnameResult = RDataUtils.parseDnsName(rdata, 0, resolver);
+        RDataUtils.DnsNameParseResult mnameResult = RDataUtils.parseDnsName(
+                rdata,
+                0,
+                resolver,
+                DnsNameDomPolicy.Builtin.HOSTNAME);
         int idx = mnameResult.nextIndex();
         if (idx >= rdata.length) {
             throw new IllegalArgumentException("SOA RDATA missing rname");
         }
-        RDataUtils.DnsNameParseResult rnameResult = RDataUtils.parseDnsName(rdata, idx, resolver);
+        RDataUtils.DnsNameParseResult rnameResult = RDataUtils.parseDnsName(
+                rdata,
+                idx,
+                resolver,
+                DnsNameDomPolicy.Builtin.PROTOCOL);
         idx = rnameResult.nextIndex();
 
         int remaining = rdata.length - idx;

@@ -2,6 +2,7 @@
 package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import io.hedges.zoned.core.dom.RDataDom;
 import io.hedges.zoned.core.NameResolver;
 import lombok.Builder;
@@ -41,7 +42,7 @@ public class MxRecordDataDom implements RDataDom {
         int preference = RDataUtils.readU16(rdata, 0);
         byte[] nameBytes = new byte[rdata.length - 2];
         System.arraycopy(rdata, 2, nameBytes, 0, nameBytes.length);
-        DnsNameDom exchange = RDataUtils.toDnsNameDom(nameBytes, resolver);
+        DnsNameDom exchange = RDataUtils.toDnsNameDom(nameBytes, resolver, DnsNameDomPolicy.Builtin.HOSTNAME);
         return MxRecordDataDom.builder()
                 .preference(preference)
                 .exchange(exchange)

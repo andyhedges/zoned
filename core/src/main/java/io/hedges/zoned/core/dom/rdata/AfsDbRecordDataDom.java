@@ -3,6 +3,7 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,7 +44,11 @@ public class AfsDbRecordDataDom implements RDataDom {
             throw new IllegalArgumentException("AFSDB RDATA must be at least 4 bytes");
         }
         int subtype = RDataUtils.readU16(rdata, 0);
-        RDataUtils.DnsNameParseResult nameResult = RDataUtils.parseDnsName(rdata, 2, resolver);
+        RDataUtils.DnsNameParseResult nameResult = RDataUtils.parseDnsName(
+                rdata,
+                2,
+                resolver,
+                DnsNameDomPolicy.Builtin.HOSTNAME);
         if (nameResult.nextIndex() != rdata.length) {
             throw new IllegalArgumentException("Extra bytes after AFSDB hostname");
         }

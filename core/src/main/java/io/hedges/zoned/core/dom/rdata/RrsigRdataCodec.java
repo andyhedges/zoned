@@ -3,6 +3,7 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 
 final class RrsigRdataCodec {
 
@@ -21,7 +22,11 @@ final class RrsigRdataCodec {
         long signatureInception = RDataUtils.readU32(rdata, 12);
         int keyTag = RDataUtils.readU16(rdata, 16);
         int idx = 18;
-        RDataUtils.DnsNameParseResult signerResult = RDataUtils.parseDnsName(rdata, idx, resolver);
+        RDataUtils.DnsNameParseResult signerResult = RDataUtils.parseDnsName(
+                rdata,
+                idx,
+                resolver,
+                DnsNameDomPolicy.Builtin.PROTOCOL);
         idx = signerResult.nextIndex();
         if (idx >= rdata.length) {
             throw new IllegalArgumentException(typeLabel + " signature is missing");

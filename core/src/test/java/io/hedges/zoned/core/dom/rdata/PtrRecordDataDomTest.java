@@ -4,8 +4,8 @@ package io.hedges.zoned.core.dom.rdata;
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PtrRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.labels(List.of("ptr", "example"));
+            offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("ptr", "example"));
 
     @Test
     void fromRejectsInvalidName() {
@@ -51,7 +51,7 @@ class PtrRecordDataDomTest {
 
     @Test
     void toSerializesName() {
-        DnsNameDom name = DnsNameDom.labels(List.of("ptr", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("ptr", "example"));
         PtrRecordDataDom dom = PtrRecordDataDom.builder().ptrName(name).build();
 
         byte[] encoded = dom.to();
@@ -61,7 +61,7 @@ class PtrRecordDataDomTest {
 
     @Test
     void roundTripPreservesName() {
-        DnsNameDom name = DnsNameDom.labels(List.of("host", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("host", "example"));
         PtrRecordDataDom original = PtrRecordDataDom.builder().ptrName(name).build();
 
         RDataDom decoded = PtrRecordDataDom.from(original.to(), RESOLVER);

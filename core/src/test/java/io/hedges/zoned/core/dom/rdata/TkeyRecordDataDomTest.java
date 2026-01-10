@@ -4,8 +4,8 @@ package io.hedges.zoned.core.dom.rdata;
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TkeyRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.labels(List.of("alg", "example"));
+            offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("alg", "example"));
 
     @Test
     void fromRejectsInvalidLength() {
@@ -333,7 +333,7 @@ class TkeyRecordDataDomTest {
     }
 
     private static DnsNameDom nameDom() {
-        return DnsNameDom.labels(List.of("alg", "example", "test"));
+        return DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("alg", "example", "test"));
     }
 
     private static byte[] nameBytes() {

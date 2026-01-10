@@ -4,8 +4,8 @@ package io.hedges.zoned.core.dom.rdata;
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class HipRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.labels(List.of("rvs", "example"));
+            offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("rvs", "example"));
 
     @Test
     void fromRejectsInvalidLength() {
@@ -47,7 +47,7 @@ class HipRecordDataDomTest {
 
     @Test
     void fromParsesRendezvousServers() {
-        DnsNameDom name = DnsNameDom.labels(List.of("rvs", "example", "test"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("rvs", "example", "test"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         byte[] rdata = new byte[4 + 4 + 3 + nameBytes.length];
         int idx = 0;
@@ -150,7 +150,7 @@ class HipRecordDataDomTest {
 
     @Test
     void toSerializesRdata() {
-        DnsNameDom name = DnsNameDom.labels(List.of("rvs", "example", "test"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("rvs", "example", "test"));
         HipRecordDataDom dom = HipRecordDataDom.builder()
                 .hit(new byte[] {1, 2, 3, 4})
                 .algorithm(2)
@@ -176,7 +176,7 @@ class HipRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.labels(List.of("rvs", "example", "test"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("rvs", "example", "test"));
         HipRecordDataDom original = HipRecordDataDom.builder()
                 .hit(new byte[] {10, 11, 12, 13})
                 .algorithm(1)
