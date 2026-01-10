@@ -4,8 +4,8 @@ package io.hedges.zoned.core.dom.rdata;
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SoaRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.labels(List.of("ns", "example"));
+            offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("ns", "example"));
 
     @Test
     void fromRejectsInvalidData() {
@@ -70,7 +70,7 @@ class SoaRecordDataDomTest {
 
     @Test
     void toRejectsInvalidFields() {
-        DnsNameDom name = DnsNameDom.labels(List.of("ns", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("ns", "example"));
         SoaRecordDataDom missingNames = SoaRecordDataDom.builder().build();
         SoaRecordDataDom missingRname = SoaRecordDataDom.builder().mname(name).build();
         SoaRecordDataDom negative = SoaRecordDataDom.builder()
@@ -92,8 +92,8 @@ class SoaRecordDataDomTest {
 
     @Test
     void toSerializesFields() {
-        DnsNameDom mname = DnsNameDom.labels(List.of("ns", "example"));
-        DnsNameDom rname = DnsNameDom.labels(List.of("hostmaster", "example"));
+        DnsNameDom mname = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("ns", "example"));
+        DnsNameDom rname = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("hostmaster", "example"));
         SoaRecordDataDom dom = SoaRecordDataDom.builder()
                 .mname(mname)
                 .rname(rname)
@@ -122,8 +122,8 @@ class SoaRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom mname = DnsNameDom.labels(List.of("ns", "example"));
-        DnsNameDom rname = DnsNameDom.labels(List.of("hostmaster", "example"));
+        DnsNameDom mname = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("ns", "example"));
+        DnsNameDom rname = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("hostmaster", "example"));
         SoaRecordDataDom original = SoaRecordDataDom.builder()
                 .mname(mname)
                 .rname(rname)

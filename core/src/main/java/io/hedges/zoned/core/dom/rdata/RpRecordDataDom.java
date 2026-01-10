@@ -3,6 +3,7 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,12 +40,20 @@ public class RpRecordDataDom implements RDataDom {
         if (rdata == null || rdata.length == 0) {
             throw new IllegalArgumentException("RP RDATA cannot be empty");
         }
-        RDataUtils.DnsNameParseResult mailboxResult = RDataUtils.parseDnsName(rdata, 0, resolver);
+        RDataUtils.DnsNameParseResult mailboxResult = RDataUtils.parseDnsName(
+                rdata,
+                0,
+                resolver,
+                DnsNameDomPolicy.Builtin.PROTOCOL);
         int idx = mailboxResult.nextIndex();
         if (idx >= rdata.length) {
             throw new IllegalArgumentException("RP RDATA missing text domain name");
         }
-        RDataUtils.DnsNameParseResult textResult = RDataUtils.parseDnsName(rdata, idx, resolver);
+        RDataUtils.DnsNameParseResult textResult = RDataUtils.parseDnsName(
+                rdata,
+                idx,
+                resolver,
+                DnsNameDomPolicy.Builtin.PROTOCOL);
         if (textResult.nextIndex() != rdata.length) {
             throw new IllegalArgumentException("Extra bytes after RP text domain name");
         }

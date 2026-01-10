@@ -17,8 +17,8 @@ class DnsNameDomPolicyTest {
 
     @Test
     void equalNamesIsCaseInsensitiveForHostnames() {
-        DnsNameDom a = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom b = DnsNameDom.labels("WWW", "EXAMPLE", "COM");
+        DnsNameDom a = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom b = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "WWW", "EXAMPLE", "COM");
 
         assertTrue(HOSTNAME.equalNames(a, b));
         assertTrue(HOSTNAME.equalNames(b, a));
@@ -26,16 +26,16 @@ class DnsNameDomPolicyTest {
 
     @Test
     void hashFlatLabelsReturnDiffer() {
-        DnsNameDom a = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom b = DnsNameDom.labels("www", "examplecom");
+        DnsNameDom a = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom b = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "examplecom");
 
         assertNotEquals(HOSTNAME.hashName(a), HOSTNAME.hashName(b));
     }
 
     @Test
     void equalFlatLabelsArentEqual() {
-        DnsNameDom a = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom b = DnsNameDom.labels("www", "examplecom");
+        DnsNameDom a = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom b = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "examplecom");
 
         assertFalse(HOSTNAME.equalNames(a, b));
         assertFalse(HOSTNAME.equalNames(b, a));
@@ -43,90 +43,90 @@ class DnsNameDomPolicyTest {
 
     @Test
     void equalNamesReturnsFalseWhenLabelCountDiffers() {
-        DnsNameDom a = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom b = DnsNameDom.labels("example", "com");
+        DnsNameDom a = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom b = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "example", "com");
 
         assertFalse(HOSTNAME.equalNames(a, b));
     }
 
     @Test
     void equalNamesReturnsFalseWhenLabelsDiffer() {
-        DnsNameDom a = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom b = DnsNameDom.labels("www", "example", "org");
+        DnsNameDom a = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom b = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "org");
 
         assertFalse(HOSTNAME.equalNames(a, b));
     }
 
     @Test
     void hashNameMatchesForCaseInsensitiveEquals() {
-        DnsNameDom a = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom b = DnsNameDom.labels("WWW", "EXAMPLE", "COM");
+        DnsNameDom a = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom b = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "WWW", "EXAMPLE", "COM");
 
         assertEquals(HOSTNAME.hashName(a), HOSTNAME.hashName(b));
     }
 
     @Test
     void validateOrThrowRejectsEmptyHostnameLabel() {
-        DnsNameDom name = DnsNameDom.labels("www", "", "com");
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "", "com");
 
         assertThrows(IllegalArgumentException.class, () -> HOSTNAME.validateOrThrow(name));
     }
 
     @Test
     void validateOrThrowRejectsLeadingHyphenHostnameLabel() {
-        DnsNameDom name = DnsNameDom.labels("-example", "com");
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "-example", "com");
 
         assertThrows(IllegalArgumentException.class, () -> HOSTNAME.validateOrThrow(name));
     }
 
     @Test
     void validateOrThrowRejectsTrailingHyphenHostnameLabel() {
-        DnsNameDom name = DnsNameDom.labels("example-", "com");
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "example-", "com");
 
         assertThrows(IllegalArgumentException.class, () -> HOSTNAME.validateOrThrow(name));
     }
 
     @Test
     void validateOrThrowRejectsInvalidHostnameCharacters() {
-        DnsNameDom name = DnsNameDom.labels("exa_mple", "com");
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "exa_mple", "com");
 
         assertThrows(IllegalArgumentException.class, () -> HOSTNAME.validateOrThrow(name));
     }
 
     @Test
     void validateOrThrowAcceptsValidHostnameLabels() {
-        DnsNameDom name = DnsNameDom.labels("www", "exa-mple", "com");
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "exa-mple", "com");
 
         assertDoesNotThrow(() -> HOSTNAME.validateOrThrow(name));
     }
 
     @Test
     void protocolEqualNamesIsCaseSensitive() {
-        DnsNameDom a = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom b = DnsNameDom.labels("WWW", "example", "com");
+        DnsNameDom a = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom b = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "WWW", "example", "com");
 
         assertFalse(PROTOCOL.equalNames(a, b));
     }
 
     @Test
     void protocolHashNameDiffersForDifferentCase() {
-        DnsNameDom a = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom b = DnsNameDom.labels("WWW", "example", "com");
+        DnsNameDom a = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom b = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "WWW", "example", "com");
 
         assertNotEquals(PROTOCOL.hashName(a), PROTOCOL.hashName(b));
     }
 
     @Test
     void protocolEqualNamesReturnsFalseWhenLabelsDiffer() {
-        DnsNameDom a = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom b = DnsNameDom.labels("www", "example", "org");
+        DnsNameDom a = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom b = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "org");
 
         assertFalse(PROTOCOL.equalNames(a, b));
     }
 
     @Test
     void protocolValidateOrThrowRejectsEmptyLabel() {
-        DnsNameDom name = DnsNameDom.labels("www", "", "com");
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "", "com");
 
         assertThrows(IllegalArgumentException.class, () -> PROTOCOL.validateOrThrow(name));
     }

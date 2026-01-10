@@ -2,6 +2,8 @@
 package io.hedges.zoned.core.dom;
 
 import lombok.Builder;
+import lombok.NonNull;
+import lombok.Getter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -10,29 +12,53 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+
+/**
+ * DNS name representation with policy-specific validation and comparison rules.
+ *
+ * <p>Labels are stored as raw ASCII byte arrays and validated at build time by the configured policy.
+ * The {@link #labels()} view is unmodifiable to prevent structural changes, but the underlying
+ * byte arrays are not defensively copied, so label contents remain mutable to save allocations.
+ * Do not mutate them unless you want to have a bad time.</p>
+ */
 @Builder
 public final class DnsNameDom {
 
+    @NonNull
     @Builder.Default
     private final List<byte[]> labels = Collections.emptyList();
 
-    @Builder.Default
-    private final DnsNameDomPolicy policy = DnsNameDomPolicy.Builtin.PROTOCOL;
+    @NonNull
+    private final DnsNameDomPolicy policy;
 
-    public static final DnsNameDom ROOT = DnsNameDom.builder().build();
+    public static final DnsNameDom ROOT = DnsNameDom.builder()
+            .policy(DnsNameDomPolicy.Builtin.PROTOCOL)
+            .build();
 
     public static DnsNameDom labels(List<String> labels) {
-        Objects.requireNonNull(labels, "labels cannot be null");
-        return DnsNameDom.builder().labelStrings(labels).build();
+        return labels(DnsNameDomPolicy.Builtin.PROTOCOL, labels);
+    }
+
+    public static DnsNameDom labels(DnsNameDomPolicy policy, List<String> labels) {
+        return DnsNameDom.builder()
+                .policy(policy)
+                .labelStrings(labels)
+                .build();
     }
 
     public static DnsNameDom labels(String... labels) {
-        Objects.requireNonNull(labels, "labels cannot be null");
-        return DnsNameDom.builder().labelStrings(Arrays.asList(labels)).build();
+        return labels(DnsNameDomPolicy.Builtin.PROTOCOL, labels);
+    }
+
+    public static DnsNameDom labels(DnsNameDomPolicy policy, String... labels) {
+        return DnsNameDom.builder()
+                .policy(policy)
+                .labelStrings(Arrays.asList(labels))
+                .build();
     }
 
     public List<byte[]> labels() {
-        return labels;
+        return Collections.unmodifiableList(labels);
     }
 
     public byte[] label(int index) {

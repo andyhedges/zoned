@@ -4,8 +4,8 @@ package io.hedges.zoned.core.dom.rdata;
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SrvRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.labels("srv", "example");
+            offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "srv", "example");
 
     @Test
     void fromRejectsInvalidLength() {
@@ -74,37 +74,37 @@ class SrvRecordDataDomTest {
                 .priority(-1)
                 .weight(2)
                 .port(3)
-                .target(DnsNameDom.labels(List.of("srv", "example")))
+                .target(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("srv", "example")))
                 .build();
         SrvRecordDataDom tooLargePriority = SrvRecordDataDom.builder()
                 .priority(0x1_0000)
                 .weight(2)
                 .port(3)
-                .target(DnsNameDom.labels(List.of("srv", "example")))
+                .target(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("srv", "example")))
                 .build();
         SrvRecordDataDom negativeWeight = SrvRecordDataDom.builder()
                 .priority(1)
                 .weight(-1)
                 .port(3)
-                .target(DnsNameDom.labels(List.of("srv", "example")))
+                .target(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("srv", "example")))
                 .build();
         SrvRecordDataDom tooLargeWeight = SrvRecordDataDom.builder()
                 .priority(1)
                 .weight(0x1_0000)
                 .port(3)
-                .target(DnsNameDom.labels(List.of("srv", "example")))
+                .target(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("srv", "example")))
                 .build();
         SrvRecordDataDom negativePort = SrvRecordDataDom.builder()
                 .priority(1)
                 .weight(2)
                 .port(-1)
-                .target(DnsNameDom.labels(List.of("srv", "example")))
+                .target(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("srv", "example")))
                 .build();
         SrvRecordDataDom tooLargePort = SrvRecordDataDom.builder()
                 .priority(1)
                 .weight(2)
                 .port(0x1_0000)
-                .target(DnsNameDom.labels(List.of("srv", "example")))
+                .target(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("srv", "example")))
                 .build();
 
         assertThrows(IllegalArgumentException.class, missingTarget::to);
@@ -118,7 +118,7 @@ class SrvRecordDataDomTest {
 
     @Test
     void toSerializesRdata() {
-        DnsNameDom name = DnsNameDom.labels(List.of("srv", "example", "test"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("srv", "example", "test"));
         SrvRecordDataDom dom = SrvRecordDataDom.builder()
                 .priority(10)
                 .weight(20)
@@ -135,7 +135,7 @@ class SrvRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.labels(List.of("srv", "example", "test"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("srv", "example", "test"));
         SrvRecordDataDom original = SrvRecordDataDom.builder()
                 .priority(1)
                 .weight(2)

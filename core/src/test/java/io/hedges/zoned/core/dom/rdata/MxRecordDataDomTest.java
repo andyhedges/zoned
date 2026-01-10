@@ -4,8 +4,8 @@ package io.hedges.zoned.core.dom.rdata;
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -37,7 +37,7 @@ class MxRecordDataDomTest {
     @Test
     void fromUsesResolverForCompressedName() {
         byte[] rdata = new byte[] {0, 5, (byte) 0xC0, 0x10};
-        NameResolver resolver = offset -> DnsNameDom.labels(List.of("mail", "example"));
+        NameResolver resolver = offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("mail", "example"));
 
         RDataDom dom = MxRecordDataDom.from(rdata, resolver);
         MxRecordDataDom mx = assertInstanceOf(MxRecordDataDom.class, dom);
@@ -54,7 +54,7 @@ class MxRecordDataDomTest {
 
     @Test
     void toRejectsInvalidPreference() {
-        DnsNameDom name = DnsNameDom.labels(List.of("mx", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("mx", "example"));
         MxRecordDataDom negative = MxRecordDataDom.builder().preference(-1).exchange(name).build();
         MxRecordDataDom tooLarge = MxRecordDataDom.builder().preference(0x1_0000).exchange(name).build();
 
@@ -64,7 +64,7 @@ class MxRecordDataDomTest {
 
     @Test
     void toSerializesPreferenceAndExchange() {
-        DnsNameDom name = DnsNameDom.labels(List.of("mx1", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("mx1", "example"));
         MxRecordDataDom dom = MxRecordDataDom.builder().preference(10).exchange(name).build();
 
         byte[] encoded = dom.to();
@@ -80,7 +80,7 @@ class MxRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.labels(List.of("mail", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("mail", "example"));
         MxRecordDataDom original = MxRecordDataDom.builder().preference(25).exchange(name).build();
 
         RDataDom decoded = MxRecordDataDom.from(original.to(), offset -> null);

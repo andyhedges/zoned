@@ -3,6 +3,7 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +40,11 @@ public class NsecRecordDataDom implements RDataDom {
         if (rdata == null || rdata.length == 0) {
             throw new IllegalArgumentException("NSEC RDATA is empty");
         }
-        RDataUtils.DnsNameParseResult parsed = RDataUtils.parseDnsName(rdata, 0, resolver);
+        RDataUtils.DnsNameParseResult parsed = RDataUtils.parseDnsName(
+                rdata,
+                0,
+                resolver,
+                DnsNameDomPolicy.Builtin.PROTOCOL);
         int idx = parsed.nextIndex();
         if (idx >= rdata.length) {
             throw new IllegalArgumentException("NSEC type bitmaps are missing");

@@ -4,9 +4,9 @@ package io.hedges.zoned.core.dom.rdata;
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -35,7 +35,7 @@ class SvcbAndHttpsRecordDataDomTest {
     @ParameterizedTest
     @MethodSource("recordTypes")
     void fromParsesTargetNameAndParams(RecordType type) {
-        DnsNameDom name = DnsNameDom.labels(List.of("svc", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("svc", "example"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         byte[] priorityBytes = new byte[] {0, 1};
         byte[] paramKey3 = new byte[] {0, 3, 0, 0};
@@ -67,7 +67,7 @@ class SvcbAndHttpsRecordDataDomTest {
     @MethodSource("recordTypes")
     void fromUsesResolverForCompressedName(RecordType type) {
         byte[] rdata = new byte[] {0, 5, (byte) 0xC0, 0x10};
-        NameResolver resolver = offset -> DnsNameDom.labels(List.of("svc", "example"));
+        NameResolver resolver = offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("svc", "example"));
 
         RDataDom dom = type.from(rdata, resolver);
 
@@ -85,7 +85,7 @@ class SvcbAndHttpsRecordDataDomTest {
     @ParameterizedTest
     @MethodSource("recordTypes")
     void toRejectsInvalidPriority(RecordType type) {
-        DnsNameDom name = DnsNameDom.labels(List.of("svc", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("svc", "example"));
         RDataDom negative = type.build(-1, name, null);
         RDataDom tooLarge = type.build(0x1_0000, name, null);
 
@@ -96,7 +96,7 @@ class SvcbAndHttpsRecordDataDomTest {
     @ParameterizedTest
     @MethodSource("recordTypes")
     void toRejectsNullParamValue(RecordType type) {
-        DnsNameDom name = DnsNameDom.labels(List.of("svc", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("svc", "example"));
         SortedMap<Integer, byte[]> params = new TreeMap<>();
         params.put(1, null);
         RDataDom dom = type.build(1, name, params);
@@ -107,7 +107,7 @@ class SvcbAndHttpsRecordDataDomTest {
     @ParameterizedTest
     @MethodSource("recordTypes")
     void toSerializesPriorityNameAndParams(RecordType type) {
-        DnsNameDom name = DnsNameDom.labels(List.of("svc", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("svc", "example"));
         SortedMap<Integer, byte[]> params = new TreeMap<>();
         params.put(3, new byte[0]);
         params.put(5, new byte[] {1, 2, 3});
@@ -127,7 +127,7 @@ class SvcbAndHttpsRecordDataDomTest {
     @ParameterizedTest
     @MethodSource("recordTypes")
     void roundTripPreservesFields(RecordType type) {
-        DnsNameDom name = DnsNameDom.labels(List.of("svc", "example"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("svc", "example"));
         SortedMap<Integer, byte[]> params = new TreeMap<>();
         params.put(1, new byte[0]);
         params.put(10, new byte[] {9, 8, 7});

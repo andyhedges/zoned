@@ -4,8 +4,8 @@ package io.hedges.zoned.core.dom.rdata;
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RpRecordDataDomTest {
     private static final NameResolver RESOLVER =
-            offset -> DnsNameDom.labels(List.of("txt", "example"));
+            offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("txt", "example"));
 
     @Test
     void fromRejectsEmpty() {
@@ -61,10 +61,10 @@ class RpRecordDataDomTest {
     @Test
     void toRejectsInvalidFields() {
         RpRecordDataDom missingMailbox = RpRecordDataDom.builder()
-                .textDomain(DnsNameDom.labels(List.of("txt", "example")))
+                .textDomain(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("txt", "example")))
                 .build();
         RpRecordDataDom missingText = RpRecordDataDom.builder()
-                .mailbox(DnsNameDom.labels(List.of("mbx", "example")))
+                .mailbox(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("mbx", "example")))
                 .build();
 
         assertThrows(IllegalArgumentException.class, missingMailbox::to);
@@ -73,8 +73,8 @@ class RpRecordDataDomTest {
 
     @Test
     void toSerializesRdata() {
-        DnsNameDom mailbox = DnsNameDom.labels(List.of("mbx", "example", "test"));
-        DnsNameDom text = DnsNameDom.labels(List.of("txt", "example", "test"));
+        DnsNameDom mailbox = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("mbx", "example", "test"));
+        DnsNameDom text = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("txt", "example", "test"));
         RpRecordDataDom dom = RpRecordDataDom.builder().mailbox(mailbox).textDomain(text).build();
 
         byte[] mailboxBytes = RDataUtils.toByteArray(mailbox);
@@ -88,8 +88,8 @@ class RpRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom mailbox = DnsNameDom.labels(List.of("mbx", "example", "test"));
-        DnsNameDom text = DnsNameDom.labels(List.of("txt", "example", "test"));
+        DnsNameDom mailbox = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("mbx", "example", "test"));
+        DnsNameDom text = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("txt", "example", "test"));
         RpRecordDataDom original = RpRecordDataDom.builder().mailbox(mailbox).textDomain(text).build();
 
         RDataDom decoded = RpRecordDataDom.from(original.to(), RESOLVER);

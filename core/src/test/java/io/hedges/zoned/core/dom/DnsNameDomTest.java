@@ -14,39 +14,39 @@ class DnsNameDomTest {
 
     @Test
     void endsWithReturnsTrueForExactMatch() {
-        DnsNameDom name = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom suffix = DnsNameDom.labels("www", "example", "com");
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom suffix = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
 
         assertTrue(name.endsWith(suffix));
     }
 
     @Test
     void endsWithReturnsTrueForSuffixMatch() {
-        DnsNameDom name = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom suffix = DnsNameDom.labels("example", "com");
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom suffix = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "example", "com");
 
         assertTrue(name.endsWith(suffix));
     }
 
     @Test
     void endsWithReturnsFalseWhenSuffixLongerThanName() {
-        DnsNameDom name = DnsNameDom.labels("example", "com");
-        DnsNameDom suffix = DnsNameDom.labels("www", "example", "com");
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "example", "com");
+        DnsNameDom suffix = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
 
         assertFalse(name.endsWith(suffix));
     }
 
     @Test
     void endsWithReturnsFalseWhenLabelsDoNotMatch() {
-        DnsNameDom name = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom suffix = DnsNameDom.labels("example", "org");
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom suffix = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "example", "org");
 
         assertFalse(name.endsWith(suffix));
     }
 
     @Test
     void endsWithReturnsTrueWhenSuffixIsRoot() {
-        DnsNameDom name = DnsNameDom.labels("www", "example", "com");
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
         DnsNameDom suffix = DnsNameDom.ROOT;
 
         assertTrue(name.endsWith(suffix));
@@ -82,8 +82,8 @@ class DnsNameDomTest {
 
     @Test
     void equalsAndHashCodeMatchForSameLabels() {
-        DnsNameDom a = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom b = DnsNameDom.labels("www", "example", "com");
+        DnsNameDom a = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom b = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
 
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
@@ -91,8 +91,8 @@ class DnsNameDomTest {
 
     @Test
     void equalsAndHashCodeDifferForDifferentLabels() {
-        DnsNameDom a = DnsNameDom.labels("www", "example", "com");
-        DnsNameDom b = DnsNameDom.labels("www", "example", "org");
+        DnsNameDom a = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "com");
+        DnsNameDom b = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, "www", "example", "org");
 
         assertNotEquals(a, b);
         assertNotEquals(a.hashCode(), b.hashCode());

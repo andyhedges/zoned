@@ -3,6 +3,7 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,7 +53,11 @@ public class TkeyRecordDataDom implements RDataDom {
         if (rdata == null) {
             throw new IllegalArgumentException("TKEY RDATA cannot be null");
         }
-        RDataUtils.DnsNameParseResult algorithmResult = RDataUtils.parseDnsName(rdata, 0, resolver);
+        RDataUtils.DnsNameParseResult algorithmResult = RDataUtils.parseDnsName(
+                rdata,
+                0,
+                resolver,
+                DnsNameDomPolicy.Builtin.PROTOCOL);
         int idx = algorithmResult.nextIndex();
         if (rdata.length - idx < 16) {
             throw new IllegalArgumentException("TKEY RDATA is too short");

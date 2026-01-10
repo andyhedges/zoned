@@ -3,8 +3,8 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -172,7 +172,7 @@ class RDataUtilsTest {
     @Test
     void toDnsNameDomResolvesCompressedName() {
         byte[] rdata = new byte[] {(byte) 0xC0, 0x10};
-        NameResolver resolver = offset -> DnsNameDom.labels(List.of("alias", "example"));
+        NameResolver resolver = offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("alias", "example"));
 
         DnsNameDom name = RDataUtils.toDnsNameDom(rdata, resolver);
 
@@ -196,7 +196,7 @@ class RDataUtilsTest {
     @Test
     void toByteArrayFromDnsNameRejectsLongLabel() {
         String longLabel = "a".repeat(64);
-        DnsNameDom name = DnsNameDom.labels(List.of(longLabel));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of(longLabel));
 
         assertThrows(IllegalArgumentException.class, () -> RDataUtils.toByteArray(name));
     }
@@ -205,14 +205,14 @@ class RDataUtilsTest {
     void toByteArrayFromDnsNameRejectsOversizedName() {
         String label = "a".repeat(63);
         List<String> labels = List.of(label, label, label, label);
-        DnsNameDom name = DnsNameDom.labels(labels);
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, labels);
 
         assertThrows(IllegalArgumentException.class, () -> RDataUtils.toByteArray(name));
     }
 
     @Test
     void toByteArrayFromDnsNameSerializesLabels() {
-        DnsNameDom name = DnsNameDom.labels(List.of("www", "example", "test"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("www", "example", "test"));
 
         byte[] bytes = RDataUtils.toByteArray(name);
 
@@ -225,7 +225,7 @@ class RDataUtilsTest {
     @Test
     void dnsNameRoundTripPreservesLabels() {
         List<String> labels = List.of("service", "example", "test");
-        DnsNameDom name = DnsNameDom.labels(labels);
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, labels);
 
         byte[] bytes = RDataUtils.toByteArray(name);
         DnsNameDom decoded = RDataUtils.toDnsNameDom(bytes);
@@ -235,7 +235,7 @@ class RDataUtilsTest {
 
     @Test
     void dnsNameRootRoundTripUsesSingleTerminator() {
-        DnsNameDom root = DnsNameDom.labels(List.of());
+        DnsNameDom root = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of());
 
         byte[] bytes = RDataUtils.toByteArray(root);
         DnsNameDom decoded = RDataUtils.toDnsNameDom(bytes);

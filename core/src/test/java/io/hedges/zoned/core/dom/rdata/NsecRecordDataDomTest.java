@@ -3,8 +3,8 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -28,7 +28,7 @@ class NsecRecordDataDomTest {
 
     @Test
     void fromParsesFields() {
-        DnsNameDom name = DnsNameDom.labels(List.of("next", "example", "test"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("next", "example", "test"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         byte[] typeBitmaps = new byte[] {0, 1, 64};
         byte[] rdata = new byte[nameBytes.length + typeBitmaps.length];
@@ -48,10 +48,10 @@ class NsecRecordDataDomTest {
                 .typeBitmaps(new byte[] {1})
                 .build();
         NsecRecordDataDom missingTypes = NsecRecordDataDom.builder()
-                .nextName(DnsNameDom.labels(List.of("next", "example")))
+                .nextName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("next", "example")))
                 .build();
         NsecRecordDataDom emptyTypes = NsecRecordDataDom.builder()
-                .nextName(DnsNameDom.labels(List.of("next", "example")))
+                .nextName(DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("next", "example")))
                 .typeBitmaps(new byte[0])
                 .build();
 
@@ -62,7 +62,7 @@ class NsecRecordDataDomTest {
 
     @Test
     void toSerializesRdata() {
-        DnsNameDom name = DnsNameDom.labels(List.of("next", "example", "test"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("next", "example", "test"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         byte[] typeBitmaps = new byte[] {0, 1, 64};
         NsecRecordDataDom dom = NsecRecordDataDom.builder()
@@ -79,7 +79,7 @@ class NsecRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.labels(List.of("next", "example", "test"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("next", "example", "test"));
         byte[] typeBitmaps = new byte[] {0, 1, 64};
         NsecRecordDataDom original = NsecRecordDataDom.builder()
                 .nextName(name)

@@ -5,8 +5,8 @@ import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.DnsRecordTypeDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +17,7 @@ class RDataFactoryTest {
 
     @Test
     void fromBytesUsesResolverForCname() {
-        NameResolver resolver = offset -> DnsNameDom.labels(List.of("alias", "example"));
+        NameResolver resolver = offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("alias", "example"));
         byte[] rdata = new byte[] {(byte) 0xC0, 0x10};
 
         RDataDom dom = RDataFactory.fromBytes(DnsRecordTypeDom.CNAME, rdata, resolver);
@@ -28,7 +28,7 @@ class RDataFactoryTest {
 
     @Test
     void fromBytesUsesResolverForNs() {
-        NameResolver resolver = offset -> DnsNameDom.labels(List.of("ns1", "example"));
+        NameResolver resolver = offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("ns1", "example"));
         byte[] rdata = new byte[] {(byte) 0xC0, 0x20};
 
         RDataDom dom = RDataFactory.fromBytes(DnsRecordTypeDom.NS, rdata, resolver);
@@ -39,7 +39,7 @@ class RDataFactoryTest {
 
     @Test
     void fromBytesUsesResolverForMx() {
-        NameResolver resolver = offset -> DnsNameDom.labels(List.of("mail", "example"));
+        NameResolver resolver = offset -> DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("mail", "example"));
         byte[] rdata = new byte[] {0, 5, (byte) 0xC0, 0x10};
 
         RDataDom dom = RDataFactory.fromBytes(DnsRecordTypeDom.MX, rdata, resolver);

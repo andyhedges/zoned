@@ -3,8 +3,8 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.dom.DnsNameDom;
 import io.hedges.zoned.core.dom.RDataDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -47,7 +47,7 @@ class IpseckeyRecordDataDomTest {
 
     @Test
     void fromParsesNameGateway() {
-        DnsNameDom name = DnsNameDom.labels(List.of("gw", "example", "test"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("gw", "example", "test"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         byte[] rdata = new byte[3 + nameBytes.length + 2];
         int idx = 0;
@@ -135,7 +135,7 @@ class IpseckeyRecordDataDomTest {
 
     @Test
     void roundTripPreservesFields() {
-        DnsNameDom name = DnsNameDom.labels(List.of("gw", "example", "test"));
+        DnsNameDom name = DnsNameDom.labels(DnsNameDomPolicy.Builtin.PROTOCOL, List.of("gw", "example", "test"));
         byte[] nameBytes = RDataUtils.toByteArray(name);
         IpseckeyRecordDataDom original = IpseckeyRecordDataDom.builder()
                 .precedence(3)

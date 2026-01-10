@@ -3,6 +3,7 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,7 +71,11 @@ public class HipRecordDataDom implements RDataDom {
 
         List<DnsNameDom> rendezvousServers = new ArrayList<>();
         while (idx < rdata.length) {
-            RDataUtils.DnsNameParseResult parsed = RDataUtils.parseDnsName(rdata, idx, resolver);
+            RDataUtils.DnsNameParseResult parsed = RDataUtils.parseDnsName(
+                    rdata,
+                    idx,
+                    resolver,
+                    DnsNameDomPolicy.Builtin.HOSTNAME);
             rendezvousServers.add(parsed.name());
             idx = parsed.nextIndex();
         }

@@ -3,6 +3,7 @@ package io.hedges.zoned.core.dom.rdata;
 
 import io.hedges.zoned.core.NameResolver;
 import io.hedges.zoned.core.dom.DnsNameDom;
+import io.hedges.zoned.core.dom.DnsNameDomPolicy;
 import io.hedges.zoned.core.dom.RDataDom;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,7 +36,7 @@ public class DnameRecordDataDom implements RDataDom {
 
     public static RDataDom from(byte[] rdata, NameResolver resolver) {
         return DnameRecordDataDom.builder()
-                .dname(RDataUtils.toDnsNameDom(rdata, resolver))
+                .dname(RDataUtils.toDnsNameDom(rdata, resolver, DnsNameDomPolicy.Builtin.PROTOCOL))
                 .build();
     }
 
