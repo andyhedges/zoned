@@ -25,7 +25,7 @@
     <junit.version>6.0.2</junit.version>
     <checkstyle.plugin.version>3.6.0</checkstyle.plugin.version>
     <maven.version>3.9.12</maven.version>
-    <compiler.plugin.version>3.14.1</compiler.plugin.version>
+    <compiler.plugin.version>3.15.0</compiler.plugin.version>
     <enforcer.plugin.version>3.6.2</enforcer.plugin.version>
     <versions.plugin.version>2.20.1</versions.plugin.version>
     <shade.plugin.version>3.6.1</shade.plugin.version>
