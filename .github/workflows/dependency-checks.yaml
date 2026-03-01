@@ -55,7 +55,7 @@ jobs:
             | tee "$REPORT"
 
       - name: Upload report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: dependency-report-${{ env.DATE }}
           path: ${{ env.REPORT }}
